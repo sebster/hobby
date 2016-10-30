@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet id="1" author="sebster">
+
+		<createTable tableName="person">
+			<column name="nick" type="varchar(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="telegram_user_id" type="int" />
+			<column name="city" type="varchar(255)" />
+			<column name="country" type="varchar(2)" />
+			<column name="zone" type="varchar(255)" />
+			<column name="birth_date" type="date" />
+		</createTable>
+
+		<createTable tableName="partner">
+			<column name="nick1" type="varchar(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="nick2" type="varchar(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="date" type="date" />
+		</createTable>
+
+		<createTable tableName="early_bird">
+			<column name="nick" type="varchar(255)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="date" type="date">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="wake_up_time" type="time">
+				<constraints nullable="false" />
+			</column>
+			<column name="winner" type="boolean">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+	</changeSet>
+
+</databaseChangeLog>
