@@ -72,6 +72,7 @@ public class WuvWavPlugin extends BasePlugin {
 			Matcher matcher = EURIBOR_PATTERN.matcher(IOUtils.toString(EURIBOR_URI, UTF_8));
 			return matcher.find() ? Optional.of(new BigDecimal(matcher.group(1))) : Optional.empty();
 		} catch (IOException e) {
+			logger.warn("Error fetching euribor rate", e);
 			return Optional.empty();
 		}
 	}
