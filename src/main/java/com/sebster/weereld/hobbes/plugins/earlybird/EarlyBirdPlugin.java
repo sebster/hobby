@@ -16,8 +16,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +45,6 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private EarlyBirdRepository earlyBirdRepository;
 
 	@Override
-	@Transactional
 	public void visitTextMessage(TelegramTextMessage textMessage) {
 
 		visitMessage(textMessage);
@@ -76,7 +73,6 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	@Override
-	@Transactional
 	public void visitMessage(TelegramMessage message) {
 		updateEarlyBirdForMessage(message);
 		checkForWinner(message.getChat());

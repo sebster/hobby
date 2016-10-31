@@ -9,6 +9,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	protected PersonRepository personRepository;
 
 	@Override
+	@Transactional
 	public void receiveMessage(TelegramMessage telegramMessage) {
 		telegramMessage.accept(this);
 	}
