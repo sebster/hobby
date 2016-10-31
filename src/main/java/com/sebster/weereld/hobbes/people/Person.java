@@ -53,10 +53,10 @@ public class Person {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj == this) {
 			return true;
 		}
-		if (this instanceof Person) {
+		if (obj instanceof Person) {
 			Person rhs = (Person) obj;
 			return new EqualsBuilder().append(nick, rhs.nick).isEquals();
 		}

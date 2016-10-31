@@ -61,10 +61,10 @@ public class EarlyBird {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj == this) {
 			return true;
 		}
-		if (this instanceof EarlyBird) {
+		if (obj instanceof EarlyBird) {
 			EarlyBird rhs = (EarlyBird) obj;
 			return new EqualsBuilder().append(nick, rhs.nick).append(date, rhs.date).isEquals();
 		}
