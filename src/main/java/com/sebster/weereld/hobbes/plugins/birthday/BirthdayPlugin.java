@@ -65,7 +65,7 @@ public class BirthdayPlugin extends BasePlugin {
 			sleep(Duration.ofSeconds(1));
 			StringBuilder message = new StringBuilder();
 			for (Birthday bday : bdays) {
-				message.append(String.format("%s, die is vandaag %d jaar geworden!\n", bday.name(), bday.age(today)));
+				message.append(format("%s, die is vandaag %d jaar geworden!\n", bday.name(), bday.age(today)));
 			}
 			sendMessage(singChatId, message.toString());
 		}
