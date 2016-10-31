@@ -25,6 +25,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -177,6 +178,7 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showBirthdaysForMonth(Optional<String> from, TelegramChat chat, int month) {
+		Validate.inclusiveBetween(1, 12, month);
 		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayRepository.findByMonth(month), bday -> bday.day());
 		if (bdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die in %s jarig is" + onlyIfPresent(from, ", %s") + "!", monthName(month));
