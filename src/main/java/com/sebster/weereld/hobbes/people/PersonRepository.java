@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonRepository extends CrudRepository<Person, String> {
 
+	@Override
 	List<Person> findAll();
 
 	Optional<Person> findByNickIgnoreCase(String nick);

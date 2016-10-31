@@ -44,6 +44,7 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private List<Plugin> plugins;
 
+	@Override
 	public void run(String... args) throws Exception {
 		int lastUpdateId = -1;
 		Duration duration = INITIAL_ERROR_DELAY;
