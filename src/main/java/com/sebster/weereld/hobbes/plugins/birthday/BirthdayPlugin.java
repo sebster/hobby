@@ -226,7 +226,7 @@ public class BirthdayPlugin extends BasePlugin {
 		// @formatter:on
 	}
 
-	public String monthName(int month) {
+	private String monthName(int month) {
 		return DateFormatSymbols.getInstance(new Locale("nl")).getMonths()[month - 1];
 	}
 
