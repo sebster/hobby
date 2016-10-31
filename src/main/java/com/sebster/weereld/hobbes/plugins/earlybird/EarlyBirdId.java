@@ -32,10 +32,10 @@ public class EarlyBirdId implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj == this) {
 			return true;
 		}
-		if (this instanceof EarlyBirdId) {
+		if (obj instanceof EarlyBirdId) {
 			EarlyBirdId rhs = (EarlyBirdId) obj;
 			return new EqualsBuilder().append(nick, rhs.nick).append(date, rhs.date).isEquals();
 		}

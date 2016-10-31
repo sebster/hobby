@@ -31,10 +31,10 @@ public class PartnerId implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj == this) {
 			return true;
 		}
-		if (this instanceof PartnerId) {
+		if (obj instanceof PartnerId) {
 			PartnerId rhs = (PartnerId) obj;
 			return new EqualsBuilder().append(nick1, rhs.nick1).append(nick2, rhs.nick2).isEquals();
 		}
