@@ -2,9 +2,12 @@ package com.sebster.weereld.hobbes.plugins.birthday;
 
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.comparing;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import java.time.LocalDate;
 import java.time.Period;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Birthday implements Comparable<Birthday> {
 
@@ -41,8 +44,30 @@ public class Birthday implements Comparable<Birthday> {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj instanceof Birthday) {
+			Birthday rhs = (Birthday) obj;
+			return name.equalsIgnoreCase(rhs.name);
+		}
+		return false;
+	}
+
+	@Override
 	public int compareTo(Birthday other) {
 		return comparing(Birthday::date).thenComparing(Birthday::name, CASE_INSENSITIVE_ORDER).compare(this, other);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(name.toLowerCase()).hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return reflectionToString(this);
 	}
 
 }
