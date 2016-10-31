@@ -85,7 +85,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 			String time = SHORT_TIME_FORMAT.format(time(person.get().zone().get()));
 			sendMessage(chat, "Bai %s ies it %s.", person.get().nick(), time);
 		} else {
-			sendMessage(chat, " Iek ib chein iedoi" + onlyIfPresent(message.getFrom(), ", %s") + ".");
+			sendMessage(chat, "Iek ib chein iedoi" + onlyIfPresent(message.getFrom(), ", %s") + ".");
 		}
 	}
 
