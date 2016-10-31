@@ -103,17 +103,17 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private void showEarlyBirdWeekList(TelegramChat chat) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("In dan noe di vroige voegils van di afgiloepin weik:");
-		sb.append("\n<pre>");
+		StringBuilder message = new StringBuilder();
+		message.append("In dan noe di vroige voegils van di afgiloepin weik:");
+		message.append("\n<pre>");
 		List<EarlyBird> ebs = earlyBirdRepository.findFirst7ByWinnerTrueOrderByDateDesc();
 		Collections.reverse(ebs);
 		for (EarlyBird eb : ebs) {
-			sb.append(format("%-10s %s %s %s\n", dayName(eb.date()), SHORT_DATE_FORMAT.format(eb.date()),
+			message.append(format("%-10s %s %s %s\n", dayName(eb.date()), SHORT_DATE_FORMAT.format(eb.date()),
 					SHORT_TIME_FORMAT.format(eb.wakeUpTime()), eb.nick()));
 		}
-		sb.append("</pre>");
-		sendMessage(chat, html(), sb.toString());
+		message.append("</pre>");
+		sendMessage(chat, html(), message.toString());
 	}
 
 	private void updateEarlyBirdForMessage(TelegramMessage message) {
