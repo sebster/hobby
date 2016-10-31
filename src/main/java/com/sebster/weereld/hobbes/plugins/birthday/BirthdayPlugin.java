@@ -144,7 +144,7 @@ public class BirthdayPlugin extends BasePlugin {
 	private void showBirthdayForName(Optional<String> from, TelegramChat chat, String name) {
 		Optional<Birthday> bdayOpt = birthdayRepository.findByName(name);
 		if (!bdayOpt.isPresent()) {
-			sendMessage(chat, "Ik ken helemaal geen %s" + onlyIfPresent(from, "%s, ") + "!", name);
+			sendMessage(chat, "Ik ken helemaal geen %s" + onlyIfPresent(from, ", %s") + "!", name);
 		} else {
 			Birthday bday = bdayOpt.get();
 			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.name(), bday.date(), bday.age(date()));
