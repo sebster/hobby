@@ -64,6 +64,8 @@ public class WuvWavPlugin extends BasePlugin {
 			BigDecimal wav = euriborRate.get().add(wavMarkup);
 			sendMessage(chat, "1 wav ies %s procint.", wav);
 			break;
+		default:
+			throw new IllegalStateException("Unmatched text: " + text);
 		}
 	}
 
