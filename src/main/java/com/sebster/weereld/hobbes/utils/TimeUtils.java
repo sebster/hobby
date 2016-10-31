@@ -19,6 +19,7 @@ public final class TimeUtils {
 			MILLISECONDS.sleep(duration.toMillis());
 		} catch (InterruptedException e) {
 			logger.warn("Sleep interrupted", e);
+			Thread.currentThread().interrupt();
 		}
 	}
 
