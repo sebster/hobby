@@ -1,7 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.earlybird;
 
 import static com.sebster.telegram.api.TelegramSendMessageOptions.html;
-import static com.sebster.weereld.hobbes.utils.StringUtils.onlyIfPresent;
+import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfPresent;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 
@@ -85,7 +85,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 			String time = SHORT_TIME_FORMAT.format(time(person.get().zone().get()));
 			sendMessage(chat, "Bai %s ies it %s.", person.get().nick(), time);
 		} else {
-			sendMessage(chat, "Iek ib chein iedoi" + onlyIfPresent(message.getFrom(), ", %s") + ".");
+			sendMessage(chat, "Iek ib chein iedoi" + formatIfPresent(message.getFrom(), ", %s") + ".");
 		}
 	}
 

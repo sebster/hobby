@@ -1,6 +1,6 @@
 package com.sebster.weereld.hobbes.plugins.birthday;
 
-import static com.sebster.weereld.hobbes.utils.StringUtils.onlyIfPresent;
+import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfPresent;
 import static com.sebster.weereld.hobbes.utils.TimeUtils.sleep;
 import static java.lang.String.format;
 import static java.util.function.Function.identity;
@@ -145,7 +145,7 @@ public class BirthdayPlugin extends BasePlugin {
 	private void showBirthdayForName(Optional<String> from, TelegramChat chat, String name) {
 		Optional<Birthday> bdayOpt = birthdayRepository.findByName(name);
 		if (!bdayOpt.isPresent()) {
-			sendMessage(chat, "Ik ken helemaal geen %s" + onlyIfPresent(from, ", %s") + "!", name);
+			sendMessage(chat, "Ik ken helemaal geen %s" + formatIfPresent(from, ", %s") + "!", name);
 		} else {
 			Birthday bday = bdayOpt.get();
 			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.name(), bday.date(), bday.age(date()));
@@ -181,7 +181,7 @@ public class BirthdayPlugin extends BasePlugin {
 		Validate.inclusiveBetween(1, 12, month);
 		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayRepository.findByMonth(month), bday -> bday.day());
 		if (bdays.isEmpty()) {
-			sendMessage(chat, "Ik ken niemand die in %s jarig is" + onlyIfPresent(from, ", %s") + "!", monthName(month));
+			sendMessage(chat, "Ik ken niemand die in %s jarig is" + formatIfPresent(from, ", %s") + "!", monthName(month));
 		} else {
 			StringBuilder message = new StringBuilder();
 			bdays.forEach((day, dayBdays) -> {
