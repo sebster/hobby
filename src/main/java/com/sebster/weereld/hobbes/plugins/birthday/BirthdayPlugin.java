@@ -179,7 +179,7 @@ public class BirthdayPlugin extends BasePlugin {
 
 	private void showBirthdaysForMonth(Optional<String> from, TelegramChat chat, int month) {
 		Validate.inclusiveBetween(1, 12, month);
-		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayRepository.findByMonth(month), bday -> bday.day());
+		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayRepository.findByMonth(month), Birthday::day);
 		if (bdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die in %s jarig is" + formatIfPresent(from, ", %s") + "!", monthName(month));
 		} else {
@@ -197,14 +197,14 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showBirthdaysForYear(TelegramChat chat, int year) {
-		Map<LocalDate, Set<Birthday>> bdays = groupBy(birthdayRepository.findByYear(year), bday -> bday.date());
+		Map<LocalDate, Set<Birthday>> bdays = groupBy(birthdayRepository.findByYear(year), Birthday::date);
 		if (bdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die in %d geboren is!", year);
 		} else {
 			StringBuilder message = new StringBuilder();
 			bdays.forEach((date, dateBdays) -> {
 				message.append(date).append(": ");
-				List<String> bdayStrings = dateBdays.stream().map(bday -> bday.name()).collect(toList());
+				List<String> bdayStrings = dateBdays.stream().map(Birthday::name).collect(toList());
 				message.append(join(bdayStrings, ", "));
 				message.append("\n");
 			});
