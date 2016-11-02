@@ -1,6 +1,6 @@
 package com.sebster.weereld.hobbes.plugins.birthday;
 
-import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfPresent;
+import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfNotNull;
 import static com.sebster.weereld.hobbes.utils.TimeUtils.sleep;
 import static java.lang.String.format;
 import static java.util.function.Function.identity;
@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -39,7 +38,7 @@ import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 public class BirthdayPlugin extends BasePlugin {
 
 	private static final Pattern BDAY_TODAY_PATTERN = compile("(?i)^bday$");
-	private static final Pattern BDAY_FOR_NAME_PATTERN = compile("(?i)^bday ([a-z &]+)$");
+	private static final Pattern BDAY_FOR_NAME_PATTERN = compile("(?i)^bday ([a-z]+)(?:\\s*&\\s*([a-z]+))?$");
 	private static final Pattern BDAY_FOR_DATE_PATTERN = compile("(?i)^bday (\\d{4}-\\d{2}-\\d{2})$");
 	private static final Pattern BDAY_FOR_MONTH_DAY_PATTERN = compile("(?i)^bday (\\d{2})-(\\d{2})$");
 	private static final Pattern BDAY_MONTH_PATTERN = compile("(?i)^bday (\\d{1,2})$");
@@ -93,8 +92,13 @@ public class BirthdayPlugin extends BasePlugin {
 
 		matcher = BDAY_FOR_NAME_PATTERN.matcher(text);
 		if (matcher.matches()) {
-			String name = matcher.group(1);
-			showBirthdayForName(from, chat, name);
+			String nick1 = matcher.group(1);
+			String nick2 = matcher.group(2);
+			if (nick2 == null) {
+				showBirthdayForName(from, chat, nick1);
+			} else {
+				showBirthdayForNames(from, chat, nick1, nick2);
+			}
 			return;
 		}
 
@@ -143,11 +147,17 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showBirthdayForName(String from, TelegramChat chat, String name) {
-		Optional<Birthday> bdayOpt = birthdayRepository.findByName(name);
-		if (!bdayOpt.isPresent()) {
+		showBirthdayForName(from, chat, name, birthdayRepository.findByName(name).orElse(null));
+	}
+
+	private void showBirthdayForNames(String from, TelegramChat chat, String name1, String name2) {
+		showBirthdayForName(from, chat, name1 + " & " + name2, birthdayRepository.findByNames(name1, name2).orElse(null));
+	}
+
+	private void showBirthdayForName(String from, TelegramChat chat, String name, Birthday bday) {
+		if (bday == null) {
 			sendMessage(chat, "Ik ken helemaal geen %s" + formatIfNotNull(from, ", %s") + "!", name);
 		} else {
-			Birthday bday = bdayOpt.get();
 			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.name(), bday.date(), bday.age(date()));
 		}
 	}

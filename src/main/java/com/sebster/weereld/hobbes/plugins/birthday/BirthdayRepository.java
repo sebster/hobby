@@ -42,6 +42,9 @@ public class BirthdayRepository {
 	public Optional<Birthday> findByName(String name) {
 		return filter(bday -> bday.hasName(name)).findAny();
 	}
+
+	public Optional<Birthday> findByNames(String name1, String name2) {
+		return filter(bday -> bday.hasName(name1 + " & " + name2) || bday.hasName(name2 + " & " + name1)).findAny();
 	}
 
 	public Set<Birthday> findByDate(LocalDate date) {
