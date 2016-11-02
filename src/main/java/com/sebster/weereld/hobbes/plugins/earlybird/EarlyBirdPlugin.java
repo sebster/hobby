@@ -23,7 +23,6 @@ import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.messages.TelegramMessage;
 import com.sebster.telegram.api.data.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.people.Person;
-import com.sebster.weereld.hobbes.people.PersonRepository;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
 @Component
@@ -37,9 +36,6 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private static final Pattern WEEK_LIST_PATTERN = compile("(?i)vv|vroegevogels");
 
 	private static final LocalTime VROEGE_VOGEL_CUTOFF_TIME = LocalTime.parse("03:30:00");
-
-	@Autowired
-	private PersonRepository personRepository;
 
 	@Autowired
 	private EarlyBirdRepository earlyBirdRepository;
