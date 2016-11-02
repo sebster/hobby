@@ -2,6 +2,7 @@ package com.sebster.weereld.hobbes.plugins.birthday;
 
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.comparing;
+import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import java.time.LocalDate;
@@ -15,8 +16,8 @@ public class Birthday implements Comparable<Birthday> {
 	private final LocalDate date;
 
 	public Birthday(String name, LocalDate date) {
-		this.name = name;
-		this.date = date;
+		this.name = requireNonNull(name, "name");
+		this.date = requireNonNull(date, "date");
 	}
 
 	public String name() {
