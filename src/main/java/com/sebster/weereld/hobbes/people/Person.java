@@ -48,7 +48,7 @@ public class Person {
 	}
 
 	public Optional<ZoneId> zone() {
-		return Optional.ofNullable(zone).map(zone -> ZoneId.of(zone));
+		return Optional.ofNullable(zone).map(ZoneId::of);
 	}
 
 	@Override

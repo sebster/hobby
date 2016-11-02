@@ -70,7 +70,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	}
 
 	protected Optional<Person> getFrom(TelegramMessage message) {
-		return getFromUserId(message).flatMap(userId -> personRepository.findByTelegramUserId(userId));
+		return getFromUserId(message).flatMap(personRepository::findByTelegramUserId);
 	}
 
 	protected Optional<String> getFirstName(Optional<TelegramUser> user) {
