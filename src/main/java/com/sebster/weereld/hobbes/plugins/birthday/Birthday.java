@@ -23,6 +23,10 @@ public class Birthday implements Comparable<Birthday> {
 		return name;
 	}
 
+	public boolean hasName(String name) {
+		return this.name.equalsIgnoreCase(name);
+	}
+
 	public LocalDate date() {
 		return date;
 	}
