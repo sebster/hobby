@@ -74,7 +74,7 @@ public class BirthdayPlugin extends BasePlugin {
 	@Override
 	public void visitTextMessage(TelegramTextMessage textMessage) {
 		TelegramChat chat = textMessage.getChat();
-		Optional<String> from = getFirstName(textMessage.getFrom());
+		String from = getFirstName(textMessage.getFrom()).orElse(null);
 		String text = textMessage.getText().trim();
 
 		Matcher matcher;
@@ -142,10 +142,10 @@ public class BirthdayPlugin extends BasePlugin {
 		}
 	}
 
-	private void showBirthdayForName(Optional<String> from, TelegramChat chat, String name) {
+	private void showBirthdayForName(String from, TelegramChat chat, String name) {
 		Optional<Birthday> bdayOpt = birthdayRepository.findByName(name);
 		if (!bdayOpt.isPresent()) {
-			sendMessage(chat, "Ik ken helemaal geen %s" + formatIfPresent(from, ", %s") + "!", name);
+			sendMessage(chat, "Ik ken helemaal geen %s" + formatIfNotNull(from, ", %s") + "!", name);
 		} else {
 			Birthday bday = bdayOpt.get();
 			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.name(), bday.date(), bday.age(date()));
@@ -177,11 +177,11 @@ public class BirthdayPlugin extends BasePlugin {
 		showBirthdaysForDate(chat, date.isBefore(today) ? date.plusYears(1) : date);
 	}
 
-	private void showBirthdaysForMonth(Optional<String> from, TelegramChat chat, int month) {
+	private void showBirthdaysForMonth(String from, TelegramChat chat, int month) {
 		Validate.inclusiveBetween(1, 12, month);
 		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayRepository.findByMonth(month), Birthday::day);
 		if (bdays.isEmpty()) {
-			sendMessage(chat, "Ik ken niemand die in %s jarig is" + formatIfPresent(from, ", %s") + "!", monthName(month));
+			sendMessage(chat, "Ik ken niemand die in %s jarig is" + formatIfNotNull(from, ", %s") + "!", monthName(month));
 		} else {
 			StringBuilder message = new StringBuilder();
 			bdays.forEach((day, dayBdays) -> {
