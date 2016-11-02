@@ -3,6 +3,7 @@ package com.sebster.weereld.hobbes.plugins.birthday;
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import java.time.LocalDate;
@@ -55,7 +56,7 @@ public class Birthday implements Comparable<Birthday> {
 		}
 		if (obj instanceof Birthday) {
 			Birthday rhs = (Birthday) obj;
-			return name.equalsIgnoreCase(rhs.name);
+			return equalsIgnoreCase(name, rhs.name);
 		}
 		return false;
 	}

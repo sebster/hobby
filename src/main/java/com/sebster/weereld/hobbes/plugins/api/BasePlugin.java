@@ -1,6 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.api;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -78,7 +79,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	}
 
 	protected boolean isMe(String nick) {
-		return nick.equalsIgnoreCase("mij");
+		return equalsIgnoreCase(nick, "mij");
 	}
 
 	protected Optional<Person> meOrPersonByNick(TelegramMessage message, String nick) {
