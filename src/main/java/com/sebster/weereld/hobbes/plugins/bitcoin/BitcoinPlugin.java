@@ -32,10 +32,12 @@ public class BitcoinPlugin extends BasePlugin {
 		String text = textMessage.getText().trim();
 
 		Matcher matcher = BITCOIN_PRICE_PATTERN.matcher(text);
-		if (matcher.matches()) {
+		int start = 0;
+		while (matcher.find(start)) {
 			BigDecimal amount = new BigDecimal(matcher.group(1));
 			String code = matcher.group(2) != null ? matcher.group(2) : DEFAULT_CURRENCY_CODE;
 			showBitcoinRate(textMessage.getChat(), code, amount);
+			start = matcher.end();
 		}
 	}
 
