@@ -31,6 +31,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.api.data.TelegramChat;
+import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.data.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
@@ -73,7 +74,7 @@ public class BirthdayPlugin extends BasePlugin {
 	@Override
 	public void visitTextMessage(TelegramTextMessage textMessage) {
 		TelegramChat chat = textMessage.getChat();
-		String from = getFirstName(textMessage.getFrom()).orElse(null);
+		String from = textMessage.getFrom().map(TelegramUser::getFirstName).orElse(null);
 		String text = textMessage.getText().trim();
 
 		Matcher matcher;

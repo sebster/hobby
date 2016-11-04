@@ -74,10 +74,6 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 		return getFromUserId(message).flatMap(personRepository::findByTelegramUserId);
 	}
 
-	protected Optional<String> getFirstName(Optional<TelegramUser> user) {
-		return user.map(TelegramUser::getFirstName);
-	}
-
 	protected boolean isMe(String nick) {
 		return equalsIgnoreCase(nick, "mij");
 	}
