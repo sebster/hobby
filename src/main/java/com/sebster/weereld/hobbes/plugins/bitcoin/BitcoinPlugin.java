@@ -50,7 +50,7 @@ public class BitcoinPlugin extends BasePlugin {
 
 	private Optional<BigDecimal> getBitcoinPrice(String code, BigDecimal amount) {
 		try {
-			CoinDeskBitcoinPriceIndex bpi = restTemplate.getForObject(COINDESK_BPI_URI,	CoinDeskBitcoinPriceIndex.class);
+			CoinDeskBitcoinPriceIndex bpi = restTemplate.getForObject(COINDESK_BPI_URI, CoinDeskBitcoinPriceIndex.class);
 			return bpi.getPrice(code).map(price -> price.rate().multiply(amount));
 		} catch (RuntimeException e) {
 			logger.warn("Error fetching bitcoin price", e);
