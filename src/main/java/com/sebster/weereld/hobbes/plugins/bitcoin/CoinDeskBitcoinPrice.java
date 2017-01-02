@@ -13,7 +13,7 @@ public class CoinDeskBitcoinPrice {
 	private BigDecimal rate;
 
 	@JsonCreator
-	public CoinDeskBitcoinPrice(@JsonProperty("code") String code, @JsonProperty("rate") BigDecimal rate) {
+	public CoinDeskBitcoinPrice(@JsonProperty("code") String code, @JsonProperty("rate_float") BigDecimal rate) {
 		this.code = code;
 		this.rate = rate;
 	}
