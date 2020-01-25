@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.ToString;
 
+@ToString(callSuper = true)
 public class KrakenTickerResponse extends KrakenResponse<Map<String, KrakenTicker>> {
 
 	@JsonCreator
