@@ -3,7 +3,6 @@ package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NonNull;
 import lombok.Value;
@@ -12,7 +11,8 @@ import lombok.Value;
 public class CoinDeskBitcoinPrice {
 
 	@NonNull String code;
-	@JsonIgnore
+
+	@JsonProperty("rate_float")
 	@NonNull BigDecimal rate;
 
 	@JsonCreator

@@ -9,13 +9,13 @@ import java.util.TreeMap;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
 
 @Value
 public class CoinDeskBitcoinPriceIndex {
 
+	@JsonProperty("bpi")
 	@NonNull Map<String, CoinDeskBitcoinPrice> priceMap;
 
 	@JsonCreator

@@ -26,8 +26,7 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 	private static final Pattern COINDESK_PRICE_PATTERN = compile("(?i)([0-9]+(?:\\.?[0-9]+)?) bitcoin(?: in ([a-z]+))?");
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
 
-	private @NonNull
-	final RestTemplate restTemplate;
+	private final @NonNull RestTemplate restTemplate;
 
 	@Override
 	public void visitTextMessage(TelegramTextMessage textMessage) {
