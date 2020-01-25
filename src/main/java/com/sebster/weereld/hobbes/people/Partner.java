@@ -1,19 +1,24 @@
 package com.sebster.weereld.hobbes.people;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
 import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "nick1", "nick2" }))
 @IdClass(PartnerId.class)
+@Getter
+@EqualsAndHashCode(of = { "nick1", "nick2" })
+@ToString
 public class Partner {
 
 	@Id
@@ -24,39 +29,5 @@ public class Partner {
 
 	@Column
 	private LocalDate date;
-
-	public String nick1() {
-		return nick1;
-	}
-
-	public String nick2() {
-		return nick2;
-	}
-
-	public LocalDate date() {
-		return date;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj instanceof Partner) {
-			Partner rhs = (Partner) obj;
-			return new EqualsBuilder().append(nick1, rhs.nick1).append(nick2, rhs.nick2).isEquals();
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(nick1).append(nick2).toHashCode();
-	}
-
-	@Override
-	public String toString() {
-		return reflectionToString(this);
-	}
 
 }

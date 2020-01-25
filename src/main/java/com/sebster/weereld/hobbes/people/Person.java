@@ -1,6 +1,6 @@
 package com.sebster.weereld.hobbes.people;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static lombok.AccessLevel.PROTECTED;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -10,14 +10,22 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor
+@EqualsAndHashCode(of = "nick")
+@ToString
 public class Person {
 
 	@Id
 	@Column
+	@Getter
 	private String nick;
 
 	@Column
@@ -35,42 +43,16 @@ public class Person {
 	@Column(length = 2)
 	private String country;
 
-	public String nick() {
-		return nick;
-	}
-
-	public Optional<Integer> telegramUserId() {
+	public Optional<Integer> getTelegramUserId() {
 		return Optional.ofNullable(telegramUserId);
 	}
 
-	public Optional<LocalDate> birthDate() {
+	public Optional<LocalDate> getBirthDate() {
 		return Optional.ofNullable(birthDate);
 	}
 
-	public Optional<ZoneId> zone() {
+	public Optional<ZoneId> getZone() {
 		return Optional.ofNullable(zone).map(ZoneId::of);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj instanceof Person) {
-			Person rhs = (Person) obj;
-			return new EqualsBuilder().append(nick, rhs.nick).isEquals();
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(nick).toHashCode();
-	}
-
-	@Override
-	public String toString() {
-		return reflectionToString(this);
 	}
 
 }

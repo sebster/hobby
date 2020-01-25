@@ -29,12 +29,12 @@ public class BirthdayRepository {
 	public Set<Birthday> findAll() {
 		Set<Birthday> bdays = new TreeSet<>();
 		for (Person person : personRepository.findAll()) {
-			person.birthDate().ifPresent(birthDate -> {
-				bdays.add(new Birthday(person.nick(), birthDate));
+			person.getBirthDate().ifPresent(birthDate -> {
+				bdays.add(new Birthday(person.getNick(), birthDate));
 			});
 		}
 		for (Partner partner : partnerRepository.findByDateNotNull()) {
-			bdays.add(new Birthday(partner.nick1() + " & " + partner.nick2(), partner.date()));
+			bdays.add(new Birthday(partner.getNick1() + " & " + partner.getNick2(), partner.getDate()));
 		}
 		return bdays;
 	}

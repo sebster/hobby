@@ -78,9 +78,9 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private void showLocalTime(TelegramMessage message, String nick) {
 		Optional<Person> person = meOrPersonByNick(message, nick);
 		TelegramChat chat = message.getChat();
-		if (person.isPresent() && person.get().zone().isPresent()) {
-			String time = SHORT_TIME_FORMAT.format(time(person.get().zone().get()));
-			sendMessage(chat, "Bai %s ies it %s.", person.get().nick(), time);
+		if (person.isPresent() && person.get().getZone().isPresent()) {
+			String time = SHORT_TIME_FORMAT.format(time(person.get().getZone().get()));
+			sendMessage(chat, "Bai %s ies it %s.", person.get().getNick(), time);
 		} else {
 			String name = formatIfPresent(message.getFrom().map(TelegramUser::getFirstName), ", %s");
 			sendMessage(chat, "Iek ib chein iedoi" + name + ".");
@@ -125,7 +125,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		}
 		Person person = personOpt.get();
 
-		Optional<ZoneId> zoneOpt = person.zone();
+		Optional<ZoneId> zoneOpt = person.getZone();
 		if (!zoneOpt.isPresent()) {
 			// The time zone of the telegram user is unknown.
 			return;
@@ -143,7 +143,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		// Get the current early bird before we save the new one.
 		Optional<EarlyBird> oldEb = earlyBirdRepository.findFirstByDateOrderByWakeUpTime(ebDate);
 
-		EarlyBird eb = new EarlyBird(person.nick(), ebDate, ebDateTime.toLocalTime());
+		EarlyBird eb = new EarlyBird(person.getNick(), ebDate, ebDateTime.toLocalTime());
 		if (isWinner(eb)) {
 			eb.markWinner();
 		}
@@ -178,10 +178,10 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private boolean canStillBecomeEarlyBird(Person person, EarlyBird eb) {
-		if (!person.zone().isPresent()) {
+		if (!person.getZone().isPresent()) {
 			return false;
 		}
-		LocalDateTime personDateTime = dateTime(person.zone().get());
+		LocalDateTime personDateTime = dateTime(person.getZone().get());
 		if (earlyBirdDate(personDateTime).isAfter(eb.date())) {
 			return false;
 		}
