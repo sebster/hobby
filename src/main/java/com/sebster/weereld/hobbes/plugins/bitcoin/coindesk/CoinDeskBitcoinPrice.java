@@ -1,34 +1,24 @@
 package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.NonNull;
+import lombok.Value;
 
+@Value
 public class CoinDeskBitcoinPrice {
 
-	private String code;
-	private BigDecimal rate;
+	@NonNull String code;
+	@JsonIgnore
+	@NonNull BigDecimal rate;
 
 	@JsonCreator
 	public CoinDeskBitcoinPrice(@JsonProperty("code") String code, @JsonProperty("rate_float") BigDecimal rate) {
 		this.code = code;
 		this.rate = rate;
-	}
-
-	public String code() {
-		return code;
-	}
-
-	public BigDecimal rate() {
-		return rate;
-	}
-
-	@Override
-	public String toString() {
-		return reflectionToString(this);
 	}
 
 }

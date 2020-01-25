@@ -1,6 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
 
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Collections.unmodifiableMap;
 
 import java.util.Map;
 import java.util.Optional;
@@ -8,19 +9,24 @@ import java.util.TreeMap;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
 
+@Value
 public class CoinDeskBitcoinPriceIndex {
 
-	private final Map<String, CoinDeskBitcoinPrice> bpi;
+	@NonNull Map<String, CoinDeskBitcoinPrice> priceMap;
 
 	@JsonCreator
-	public CoinDeskBitcoinPriceIndex(@JsonProperty("bpi") Map<String, CoinDeskBitcoinPrice> bpi) {
-		this.bpi = new TreeMap<>(CASE_INSENSITIVE_ORDER);
-		this.bpi.putAll(bpi);
+	public CoinDeskBitcoinPriceIndex(@JsonProperty("bpi") Map<String, CoinDeskBitcoinPrice> priceMap) {
+		Map<String, CoinDeskBitcoinPrice> copy = new TreeMap<>(CASE_INSENSITIVE_ORDER);
+		copy.putAll(priceMap);
+		this.priceMap = unmodifiableMap(copy);
 	}
 
-	public Optional<CoinDeskBitcoinPrice> getPrice(String code) {
-		return Optional.ofNullable(bpi.get(code));
+	public Optional<CoinDeskBitcoinPrice> getPrice(@NonNull String code) {
+		return Optional.ofNullable(priceMap.get(code));
 	}
 
 }
