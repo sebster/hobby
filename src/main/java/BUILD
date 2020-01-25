@@ -14,6 +14,7 @@ java_library(
         "@maven//:org_springframework_boot_spring_boot_starter_json",
     ],
     deps = [
+        "//3rdparty/org/projectlombok/lombok",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:commons_io_commons_io",
