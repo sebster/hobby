@@ -1,12 +1,20 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
 
 java_library(
+    name = "properties",
+    resource_strip_prefix = "src/main/java/com/sebster/weereld/hobbes/",
+    resources = [
+        "com/sebster/weereld/hobbes/application.properties",
+        "com/sebster/weereld/hobbes/application-dev.properties",
+    ],
+)
+
+java_library(
     name = "hobbes",
     srcs = glob(["**/*.java"]),
+    resource_jars = ["properties"],
     resources = [
-        "application.properties",
-        "application-dev.properties",
-        "db/changelog/db.changelog-master.xml",
+        "com/sebster/weereld/hobbes/db.changelog-master.xml",
     ],
     runtime_deps = [
         "@maven//:com_h2database_h2",
