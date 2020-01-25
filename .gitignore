@@ -1,6 +1,3 @@
-.classpath
-.project
-.settings/
-.idea/
+.ijwb/
 *.iml
-target/
+/bazel-*
