@@ -1,0 +1,3 @@
+insert into person (nick, telegram_user_id, birth_date, zone, city, country) values ('Sebster', 89613640, '1975-02-21', 'Europe/Amsterdam', 'Utrecht', 'nl');
+insert into person (nick, telegram_user_id, birth_date, zone, city, country) values ('Moontje', null, '1974-03-31', 'Europe/Amsterdam', 'Utrecht', 'nl');
+insert into person (birth_date, city, country, nick, telegram_user_id, zone) values ('1972-10-09', 'San Diego', 'us', 'PAF', 248106881, 'US/Pacific')

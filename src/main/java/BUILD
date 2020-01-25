@@ -15,6 +15,7 @@ java_library(
     resource_jars = ["properties"],
     resources = [
         "com/sebster/weereld/hobbes/db.changelog-master.xml",
+        "com/sebster/weereld/hobbes/people/demo-data.sql",
     ],
     runtime_deps = [
         "@maven//:com_h2database_h2",
