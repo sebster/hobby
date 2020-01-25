@@ -63,6 +63,7 @@ maven_install(
         "org.springframework.boot:spring-boot-loader:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-actuator:2.2.4.RELEASE",
+        "org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-data-jpa:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-jdbc:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-json:2.2.4.RELEASE",
