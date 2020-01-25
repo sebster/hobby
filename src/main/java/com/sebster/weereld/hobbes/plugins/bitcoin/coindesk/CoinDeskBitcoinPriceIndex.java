@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.bitcoin;
+package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
 
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 

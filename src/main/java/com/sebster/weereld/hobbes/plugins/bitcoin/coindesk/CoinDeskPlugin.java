@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.bitcoin;
+package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
 
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.regex.Pattern.compile;
@@ -18,7 +18,7 @@ import com.sebster.telegram.api.data.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
 @Component
-public class BitcoinPlugin extends BasePlugin {
+public class CoinDeskPlugin extends BasePlugin {
 
 	private static final URI COINDESK_BPI_URI = URI.create("http://api.coindesk.com/v1/bpi/currentprice.json");
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
