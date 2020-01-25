@@ -10,7 +10,7 @@ import com.sebster.telegram.impl.TelegramServiceImpl;
 @Configuration
 public class TelegramConfig {
 
-	@Value("${telegram.authKey}")
+	@Value("${telegram.auth-key}")
 	private String token;
 
 	@Bean

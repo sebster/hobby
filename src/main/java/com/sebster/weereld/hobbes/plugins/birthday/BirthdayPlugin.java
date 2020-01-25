@@ -46,7 +46,7 @@ public class BirthdayPlugin extends BasePlugin {
 	private static final Pattern BDAY_YEAR_PATTERN = compile("(?i)^bday (\\d{4})$");
 	private static final Pattern BDAY_HELP_PATTERN = compile("(?i)^bday help$");
 
-	@Value("${birthday.sing.chatId}")
+	@Value("${birthday.sing.chat-id}")
 	private long singChatId;
 
 	@Autowired
