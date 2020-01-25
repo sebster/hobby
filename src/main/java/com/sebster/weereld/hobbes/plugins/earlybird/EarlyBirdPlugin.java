@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.api.data.TelegramChat;
+import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.data.messages.TelegramMessage;
 import com.sebster.telegram.api.data.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.people.Person;
@@ -81,7 +82,8 @@ public class EarlyBirdPlugin extends BasePlugin {
 			String time = SHORT_TIME_FORMAT.format(time(person.get().zone().get()));
 			sendMessage(chat, "Bai %s ies it %s.", person.get().nick(), time);
 		} else {
-			sendMessage(chat, "Iek ib chein iedoi" + formatIfPresent(message.getFrom(), ", %s") + ".");
+			String name = formatIfPresent(message.getFrom().map(TelegramUser::getFirstName), ", %s");
+			sendMessage(chat, "Iek ib chein iedoi" + name + ".");
 		}
 	}
 

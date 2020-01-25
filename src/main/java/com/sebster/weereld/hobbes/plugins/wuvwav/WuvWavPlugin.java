@@ -58,7 +58,7 @@ public class WuvWavPlugin extends BasePlugin {
 		case "1 wuv":
 			BigDecimal wuv = euriborRate.get().add(wuvMarkup);
 			BigDecimal amount = wuv.multiply(mortgageSebster).divide(BigDecimal.valueOf(12 * 100), 2, HALF_UP);
-			sendMessage(chat, "1 woev ies %s procint. Voier Sibstir ies dat %s eoero pir maand.", wuv, amount);
+			sendMessage(chat, "1 woev ies %s procint. Voier Sibstir was dat %s eoero pir maand.", wuv, amount);
 			break;
 		case "1 wav":
 			BigDecimal wav = euriborRate.get().add(wavMarkup);
