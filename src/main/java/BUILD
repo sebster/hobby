@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/rules_images:spring_java_image.bzl", "spring_java_image")
 
 java_library(
     name = "properties",
@@ -48,5 +49,11 @@ java_binary(
     name = "hobbes_bin",
     main_class = "com.sebster.weereld.hobbes.Application",
     visibility = ["//visibility:public"],
+    runtime_deps = [":hobbes"],
+)
+
+spring_java_image(
+    name = "hobbes_image",
+    main_class = "com.sebster.weereld.hobbes.Application",
     runtime_deps = [":hobbes"],
 )
