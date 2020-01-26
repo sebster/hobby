@@ -88,6 +88,11 @@ public class TelegramMessageVisitorAdapter implements TelegramMessageVisitor {
 		visitMessage(chatMigratedFromGroupMessage);
 	}
 
+	@Override
+	public void visitUnknownMessage(TelegramUnknownMessage unknownMessage) {
+		visitMessage(unknownMessage);
+	}
+
 	public void visitMessage(TelegramMessage message) {
 		throw new UnsupportedOperationException("Unhandled message: " + message);
 	}

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sebster.telegram.api.TelegramException;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.data.messages.TelegramAudioMessage;
@@ -28,6 +27,7 @@ import com.sebster.telegram.api.data.messages.TelegramMessage;
 import com.sebster.telegram.api.data.messages.TelegramPhotoMessage;
 import com.sebster.telegram.api.data.messages.TelegramStickerMessage;
 import com.sebster.telegram.api.data.messages.TelegramTextMessage;
+import com.sebster.telegram.api.data.messages.TelegramUnknownMessage;
 import com.sebster.telegram.api.data.messages.TelegramUserJoinedChatMessage;
 import com.sebster.telegram.api.data.messages.TelegramUserLeftChatMessage;
 import com.sebster.telegram.api.data.messages.TelegramVideoMessage;
@@ -401,7 +401,7 @@ public final class TelegramMessageDto {
 			return new TelegramChatMigratedFromGroupMessage(messageId, from, date, chat, forwardFrom, forwardDate,
 					replyToMessage, migrateFromChatId.get());
 		}
-		throw new TelegramException("Unknown message type: " + this);
+		return new TelegramUnknownMessage(messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage);
 	}
 
 	@Override

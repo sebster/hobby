@@ -89,6 +89,11 @@ public class TelegramMessageTransformerAdapter<RETURN_TYPE> implements TelegramM
 		return transformMessage(chatMigratedFromGroupMessage);
 	}
 
+	@Override
+	public RETURN_TYPE transformUnknownMessage(TelegramUnknownMessage unknownMessage) {
+		return transformMessage(unknownMessage);
+	}
+
 	public RETURN_TYPE transformMessage(TelegramMessage message) {
 		throw new UnsupportedOperationException("Unhandled message: " + message);
 	}

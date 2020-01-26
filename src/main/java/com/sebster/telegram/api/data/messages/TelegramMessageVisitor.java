@@ -36,4 +36,6 @@ public interface TelegramMessageVisitor {
 
 	void visitChatMigratedFromGroupMessage(TelegramChatMigratedFromGroupMessage chatMigratedFromGroupMessage);
 
+	void visitUnknownMessage(TelegramUnknownMessage unknownMessage);
+
 }

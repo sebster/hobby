@@ -37,5 +37,7 @@ public interface TelegramMessageTransformer<RESULT_TYPE> {
 
 	RESULT_TYPE transformChatMigratedFromGroupMessage(
 			TelegramChatMigratedFromGroupMessage chatMigratedFromGroupMessage);
-	
+
+	RESULT_TYPE transformUnknownMessage(TelegramUnknownMessage unknownMessage);
+
 }
