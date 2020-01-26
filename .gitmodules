@@ -1,0 +1,3 @@
+[submodule "deployment"]
+	path = deployment
+	url = git@sources.dev.sebster.com:hobby/telegram-weereld-bot-kube.git
