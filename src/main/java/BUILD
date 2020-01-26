@@ -21,6 +21,7 @@ java_library(
     runtime_deps = [
         "@maven//:com_h2database_h2",
         "@maven//:org_apache_httpcomponents_httpclient",
+        "@maven//:org_postgresql_postgresql",
         "@maven//:org_springframework_boot_spring_boot_starter_json",
         "@maven//:org_springframework_boot_spring_boot_starter_web",
     ],
