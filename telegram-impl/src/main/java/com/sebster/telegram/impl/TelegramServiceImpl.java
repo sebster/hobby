@@ -35,7 +35,7 @@ import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.messages.TelegramMessage;
 import com.sebster.telegram.impl.dto.data.TelegramFileDto;
 import com.sebster.telegram.impl.dto.data.TelegramMessageDto;
-import com.sebster.telegram.impl.dto.methods.BaseTelegramResponseDto;
+import com.sebster.telegram.impl.dto.methods.TelegramResponseDto;
 import com.sebster.telegram.impl.dto.methods.getfile.TelegramGetFileResponseDto;
 import com.sebster.telegram.impl.dto.methods.getme.TelegramGetMeResponseDto;
 import com.sebster.telegram.impl.dto.methods.getupdates.TelegramGetUpdatesResponseDto;
@@ -156,11 +156,11 @@ public class TelegramServiceImpl implements TelegramService {
 		return response.toTelegramMessage();
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT doGet(String method, Class<RESPONSE> responseClass) {
+	private <RESULT, RESPONSE extends TelegramResponseDto<RESULT>> RESULT doGet(String method, Class<RESPONSE> responseClass) {
 		return doGet(method, emptyMap(), responseClass);
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT doGet(
+	private <RESULT, RESPONSE extends TelegramResponseDto<RESULT>> RESULT doGet(
 			String method, Map<String, Object> queryParams, Class<RESPONSE> responseClass
 	) {
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(telegramApiBaseUrl()).path(method);
@@ -169,7 +169,7 @@ public class TelegramServiceImpl implements TelegramService {
 		return getResult(response);
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT doPost(
+	private <RESULT, RESPONSE extends TelegramResponseDto<RESULT>> RESULT doPost(
 			String method, Object request, Class<RESPONSE> responseClass
 	) {
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(telegramApiBaseUrl()).path(method);
@@ -177,7 +177,7 @@ public class TelegramServiceImpl implements TelegramService {
 		return getResult(response);
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT getResult(RESPONSE response) {
+	private <RESULT, RESPONSE extends TelegramResponseDto<RESULT>> RESULT getResult(RESPONSE response) {
 		if (!response.isOk()) {
 			throw new TelegramServiceException(response.getErrorCode(), response.getDescription());
 		}
