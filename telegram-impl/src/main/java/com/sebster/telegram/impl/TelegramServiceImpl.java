@@ -4,7 +4,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SNAKE_CASE;
 import static com.sebster.telegram.api.TelegramSendMessageOptions.defaultOptions;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilder.json;
@@ -18,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -56,9 +57,9 @@ public class TelegramServiceImpl implements TelegramService {
 	private final @NonNull String token;
 	private final @NonNull RestTemplate restTemplate;
 
-	public TelegramServiceImpl(String token) {
+	public TelegramServiceImpl(String token, RestTemplateBuilder restTemplateBuilder) {
 		this.token = token;
-		this.restTemplate = restTemplate();
+		this.restTemplate = restTemplateBuilder.messageConverters(jsonMessageConverter()).build();
 	}
 
 	@Override
@@ -191,8 +192,8 @@ public class TelegramServiceImpl implements TelegramService {
 		return TELEGRAM_API_FILE_BASE_URL + token + "/";
 	}
 
-	private static RestTemplate restTemplate() {
-		return new RestTemplate(singletonList(new MappingJackson2HttpMessageConverter(objectMapper())));
+	private static HttpMessageConverter<Object> jsonMessageConverter() {
+		return new MappingJackson2HttpMessageConverter(objectMapper());
 	}
 
 	private static ObjectMapper objectMapper() {
