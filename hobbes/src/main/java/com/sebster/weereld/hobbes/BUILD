@@ -19,6 +19,7 @@ java_library(
         "people/demo-data.sql",
     ],
     runtime_deps = [
+        "//telegram-impl",
         "@maven//:com_h2database_h2",
         "@maven//:org_apache_httpcomponents_httpclient",
         "@maven//:org_postgresql_postgresql",
@@ -28,7 +29,6 @@ java_library(
     deps = [
         "//3rdparty/org/projectlombok/lombok",
         "//telegram-api",
-        "//telegram-impl",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:commons_io_commons_io",
