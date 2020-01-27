@@ -3,7 +3,7 @@ load("//tools/rules_images:spring_java_image.bzl", "spring_java_image")
 
 java_library(
     name = "properties",
-    resource_strip_prefix = "src/main/java/com/sebster/weereld/hobbes/",
+    resource_strip_prefix = "hobbes/src/main/java/com/sebster/weereld/hobbes/",
     resources = [
         "application.properties",
         "application-dev.properties",
@@ -19,7 +19,6 @@ java_library(
         "people/demo-data.sql",
     ],
     runtime_deps = [
-        "//src/main/java/com/sebster/telegram/impl",
         "@maven//:com_h2database_h2",
         "@maven//:org_apache_httpcomponents_httpclient",
         "@maven//:org_postgresql_postgresql",
@@ -28,8 +27,8 @@ java_library(
     ],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
-        "//src/main/java/com/sebster/telegram/api",
-        "//src/main/java/com/sebster/telegram/impl",
+        "//telegram-api",
+        "//telegram-impl",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:commons_io_commons_io",
@@ -50,14 +49,15 @@ java_library(
 )
 
 java_binary(
-    name = "hobbes_bin",
+    name = "bin",
     main_class = "com.sebster.weereld.hobbes.Application",
     visibility = ["//visibility:public"],
     runtime_deps = [":hobbes"],
 )
 
 spring_java_image(
-    name = "hobbes_image",
+    name = "image",
     main_class = "com.sebster.weereld.hobbes.Application",
+    visibility = ["//visibility:public"],
     runtime_deps = [":hobbes"],
 )
