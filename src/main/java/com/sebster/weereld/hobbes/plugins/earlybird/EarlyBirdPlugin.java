@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.data.messages.TelegramMessage;
-import com.sebster.telegram.api.data.messages.TelegramTextMessage;
+import com.sebster.telegram.api.messages.TelegramMessage;
+import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.people.Person;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
@@ -42,29 +42,29 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private EarlyBirdRepository earlyBirdRepository;
 
 	@Override
-	public void visitTextMessage(TelegramTextMessage textMessage) {
+	public void visitTextMessage(TelegramTextMessage message) {
 
-		visitMessage(textMessage);
+		visitMessage(message);
 
-		String text = textMessage.getText().trim();
+		String text = message.getText().trim();
 		Matcher matcher;
 
 		matcher = LOCAL_TIME_PATTERN.matcher(text);
 		if (matcher.matches()) {
 			String nick = matcher.group(1);
-			showLocalTime(textMessage, nick);
+			showLocalTime(message, nick);
 			return;
 		}
 
 		matcher = CURRENT_EARLY_BIRD_PATTERN.matcher(text);
 		if (matcher.matches()) {
-			showCurrentEarlyBird(textMessage);
+			showCurrentEarlyBird(message);
 			return;
 		}
 
 		matcher = WEEK_LIST_PATTERN.matcher(text);
 		if (matcher.matches()) {
-			showEarlyBirdWeekList(textMessage.getChat());
+			showEarlyBirdWeekList(message.getChat());
 			return;
 		}
 	}

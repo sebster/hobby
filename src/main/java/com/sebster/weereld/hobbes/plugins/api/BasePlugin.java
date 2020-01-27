@@ -21,8 +21,8 @@ import com.sebster.telegram.api.TelegramSendMessageOptions;
 import com.sebster.telegram.api.TelegramService;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.data.messages.TelegramMessage;
-import com.sebster.telegram.api.data.messages.TelegramMessageVisitorAdapter;
+import com.sebster.telegram.api.messages.TelegramMessage;
+import com.sebster.telegram.api.messages.TelegramMessageVisitorAdapter;
 import com.sebster.weereld.hobbes.people.Person;
 import com.sebster.weereld.hobbes.people.PersonRepository;
 

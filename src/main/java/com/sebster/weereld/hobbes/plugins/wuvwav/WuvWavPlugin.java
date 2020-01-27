@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.data.messages.TelegramTextMessage;
+import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
 @Component
@@ -36,14 +36,14 @@ public class WuvWavPlugin extends BasePlugin {
 	private BigDecimal mortgageSebster;
 
 	@Override
-	public void visitTextMessage(TelegramTextMessage textMessage) {
-		String text = textMessage.getText().trim();
+	public void visitTextMessage(TelegramTextMessage message) {
+		String text = message.getText().trim();
 
 		if (!text.matches("1 euribor|1 wuv|1 wav")) {
 			return;
 		}
 
-		TelegramChat chat = textMessage.getChat();
+		TelegramChat chat = message.getChat();
 
 		Optional<BigDecimal> euriborRate = lookUpEuriborRate();
 		if (!euriborRate.isPresent()) {

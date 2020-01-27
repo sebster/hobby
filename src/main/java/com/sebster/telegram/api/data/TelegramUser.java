@@ -1,37 +1,37 @@
 package com.sebster.telegram.api.data;
 
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
-import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
-import java.io.Serializable;
 import java.util.Optional;
+
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.Value;
 
 /**
  * This object represents a Telegram user or bot.
  */
-public final class TelegramUser implements Serializable {
+@Value
+@EqualsAndHashCode(of = "id")
+public class TelegramUser {
 
-	private static final long serialVersionUID = 1L;
-	
-	private final int id;
-	private final String firstName;
-	private final Optional<String> lastName;
-	private final Optional<String> username;
-
-	public TelegramUser(int id, String firstName, Optional<String> lastName, Optional<String> username) {
-		this.id = id;
-		this.firstName = requireNonNull(firstName, "firstName");
-		this.lastName = requireNonNull(lastName, "lastName");
-		this.username = requireNonNull(username, "username");
-	}
+	int id;
+	boolean bot;
+	@NonNull String firstName;
+	String lastName;
+	String username;
+	String languageCode;
 
 	/**
 	 * Unique identifier for this user or bot.
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * True, if this user is a bot.
+	 */
+	boolean isBot() {
+		return bot;
 	}
 
 	/**
@@ -45,29 +45,26 @@ public final class TelegramUser implements Serializable {
 	 * Optional. User‘s or bot’s last name.
 	 */
 	public Optional<String> getLastName() {
-		return lastName;
+		return Optional.ofNullable(lastName);
 	}
 
 	/**
 	 * Optional. User‘s or bot’s username.
 	 */
 	public Optional<String> getUsername() {
-		return username;
+		return Optional.ofNullable(username);
 	}
 
-	@Override
-	public final boolean equals(Object obj) {
-		return reflectionEquals(this, obj, false);
+	/**
+	 * Optional. IETF language tag of the user's language.
+	 */
+	public Optional<String> getLanguageCode() {
+		return Optional.ofNullable(languageCode);
 	}
 
-	@Override
-	public final int hashCode() {
-		return reflectionHashCode(this, false);
-	}
-
-	@Override
-	public final String toString() {
-		return reflectionToString(this);
-	}
+	// TODO:
+	//	can_join_groups 	Boolean 	Optional. True, if the bot can be invited to groups. Returned only in getMe.
+	//	can_read_all_group_messages 	Boolean 	Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
+	//	supports_inline_queries 	Boolean 	Optional. True, if the bot supports inline queries. Returned only in getMe.
 
 }

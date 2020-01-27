@@ -1,39 +1,22 @@
 package com.sebster.telegram.api.data;
 
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
-import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
-import java.io.Serializable;
 import java.util.Optional;
+
+import lombok.NonNull;
+import lombok.Value;
 
 /**
  * This object represents a sticker.
  */
-public final class TelegramSticker implements TelegramFile, WithDimension, WithThumbnail, Serializable {
+@Value
+public class TelegramSticker implements TelegramFile, WithDimension, WithThumbnail {
 
-	private static final long serialVersionUID = 1L;
-
-	private final String fileId;
-	private final int width;
-	private final int height;
-	private final Optional<TelegramPhoto> thumbnail;
-	private final Optional<Integer> fileSize;
-
-	public TelegramSticker(String fileId, int width, int height, Optional<TelegramPhoto> thumbnail,
-			Optional<Integer> fileSize) {
-		this.fileId = requireNonNull(fileId, "fileId");
-		this.width = width;
-		this.height = height;
-		this.thumbnail = requireNonNull(thumbnail, "thumbnail");
-		this.fileSize = requireNonNull(fileSize, "fileSize");
-	}
-
-	@Override
-	public String getFileId() {
-		return fileId;
-	}
+	@NonNull String fileId;
+	@NonNull String fileUniqueId;
+	int width;
+	int height;
+	TelegramPhoto thumbnail;
+	Integer fileSize;
 
 	/**
 	 * Sticker width.
@@ -52,31 +35,23 @@ public final class TelegramSticker implements TelegramFile, WithDimension, WithT
 	}
 
 	/**
-	 * Optional. Sticker thumbnail in .webp or .jpg format
+	 * Optional. Sticker thumbnail in .webp or .jpg format.
 	 */
 	@Override
 	public Optional<TelegramPhoto> getThumbnail() {
-		return thumbnail;
+		return Optional.ofNullable(thumbnail);
 	}
 
 	@Override
 	public Optional<Integer> getFileSize() {
-		return fileSize;
+		return Optional.ofNullable(fileSize);
 	}
 
-	@Override
-	public final boolean equals(Object obj) {
-		return reflectionEquals(this, obj, false);
-	}
-
-	@Override
-	public final int hashCode() {
-		return reflectionHashCode(this, false);
-	}
-
-	@Override
-	public final String toString() {
-		return reflectionToString(this);
-	}
+	// TODO:
+	//	is_animated 	Boolean 	True, if the sticker is animated
+	//	emoji 	String 	Optional. Emoji associated with the sticker
+	//	set_name 	String 	Optional. Name of the sticker set to which the sticker belongs
+	//	mask_position 	MaskPosition 	Optional. For mask stickers, the position where the mask should be placed
+	//	file_size 	Integer 	Optional. File size
 
 }

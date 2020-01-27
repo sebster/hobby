@@ -1,31 +1,21 @@
 package com.sebster.telegram.api.data;
 
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
-import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
-import java.io.Serializable;
 import java.util.Optional;
+
+import lombok.NonNull;
+import lombok.Value;
 
 /**
  * This object represents a phone contact.
  */
-public final class TelegramContact implements Serializable {
+@Value
+public class TelegramContact {
 
-	private static final long serialVersionUID = 1L;
-
-	private final String phoneNumber;
-	private final String firstName;
-	private final Optional<String> lastName;
-	private final Optional<String> userId;
-
-	public TelegramContact(String phoneNumber, String firstName, Optional<String> lastName, Optional<String> userId) {
-		this.phoneNumber = requireNonNull(phoneNumber, "phoneNumber");
-		this.firstName = requireNonNull(firstName, "firstName");
-		this.lastName = requireNonNull(lastName, "lastName");
-		this.userId = requireNonNull(userId, "userId");
-	}
+	@NonNull String phoneNumber;
+	@NonNull String firstName;
+	String lastName;
+	Integer userId;
+	String vCard;
 
 	/**
 	 * Contact's phone number.
@@ -45,29 +35,21 @@ public final class TelegramContact implements Serializable {
 	 * Optional. Contact's last name.
 	 */
 	public Optional<String> getLastName() {
-		return lastName;
+		return Optional.ofNullable(lastName);
 	}
 
 	/**
 	 * Optional. Contact's user identifier in Telegram.
 	 */
-	public Optional<String> getUsername() {
-		return userId;
+	public Optional<Integer> getUsername() {
+		return Optional.ofNullable(userId);
 	}
 
-	@Override
-	public final boolean equals(Object obj) {
-		return reflectionEquals(this, obj, false);
-	}
-
-	@Override
-	public final int hashCode() {
-		return reflectionHashCode(this, false);
-	}
-
-	@Override
-	public final String toString() {
-		return reflectionToString(this);
+	/**
+	 * Optional. Additional data about the contact in the form of a vCard.
+	 */
+	public Optional<String> getVCard() {
+		return Optional.ofNullable(vCard);
 	}
 
 }

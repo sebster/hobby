@@ -4,64 +4,62 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+
+@AllArgsConstructor
+@Getter
 public enum TelegramEmoji {
 
 	CAKE("cake", "\uD83C\uDF70");
 
-	private final String code;
-	private final String unicode;
+	private final @NonNull String code;
+	private final @NonNull String unicode;
 
 	private static final Map<String, TelegramEmoji> BY_CODE;
 
 	static {
 		BY_CODE = new HashMap<>();
 		for (TelegramEmoji emoji : values()) {
-			BY_CODE.put(emoji.code(), emoji);
+			BY_CODE.put(emoji.getCode(), emoji);
 		}
 	}
 
-	private TelegramEmoji(String code, String unicode) {
-		this.code = code;
-		this.unicode = unicode;
-	}
-
-	public String code() {
-		return code;
-	}
-
-	public String unicode() {
-		return unicode;
-	}
-
-	public static String expand(String text) {
+	/**
+	 * Replace all occurrences of :emoji_name: with the unicode of the emoji. If the emoji with the specified name is not found, the
+	 * text is left intact.
+	 */
+	public static String expand(@NonNull String text) {
 		StringBuilder sb = new StringBuilder();
-		int lastI = 0;
+		int index = 0;
 		while (true) {
-			int i = text.indexOf(':', lastI);
-			if (i < 0) {
+			int emojiNameStart = text.indexOf(':', index);
+			if (emojiNameStart < 0) {
 				break;
 			}
-			int j = text.indexOf(':', i + 1);
-			if (j < 0) {
+
+			int emojiNameEnd = text.indexOf(':', emojiNameStart + 1);
+			if (emojiNameEnd < 0) {
 				break;
 			}
-			String name = text.substring(i + 1, j);
-			Optional<TelegramEmoji> emoji = find(name);
-			if (emoji.isPresent()) {
-				sb.append(text.substring(lastI, i));
-				sb.append(emoji.get().unicode());
-				lastI = j + 1;
-			} else {
-				sb.append(text.substring(lastI, j));
-				lastI = j;
-			}
+
+			sb.append(text, index, emojiNameStart);
+
+			String emojiName = text.substring(emojiNameStart + 1, emojiNameEnd);
+			sb.append(toUnicode(emojiName).orElseGet(() -> ":" + emojiName + ":"));
+			index = emojiNameEnd + 1;
 		}
-		sb.append(text.substring(lastI));
+		sb.append(text, index, text.length());
 		return sb.toString();
 	}
 
-	private static Optional<TelegramEmoji> find(String name) {
-		return Optional.ofNullable(BY_CODE.get(name));
+	public static Optional<TelegramEmoji> byName(@NonNull String emojiName) {
+		return Optional.ofNullable(BY_CODE.get(emojiName));
+	}
+
+	public static Optional<String> toUnicode(@NonNull String emojiName) {
+		return byName(emojiName).map(TelegramEmoji::getUnicode);
 	}
 
 }

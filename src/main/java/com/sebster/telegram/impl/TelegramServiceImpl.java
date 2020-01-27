@@ -2,50 +2,48 @@ package com.sebster.telegram.impl;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SNAKE_CASE;
-import static com.sebster.telegram.api.TelegramSendMessageOptions.defaultSendMessageOptions;
-import static java.util.Arrays.asList;
+import static com.sebster.telegram.api.TelegramSendMessageOptions.defaultOptions;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilder.json;
 
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.lang3.Validate;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sebster.telegram.api.TelegramException;
 import com.sebster.telegram.api.TelegramSendMessageOptions;
 import com.sebster.telegram.api.TelegramService;
 import com.sebster.telegram.api.TelegramServiceException;
+import com.sebster.telegram.api.TelegramUpdate;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramFile;
 import com.sebster.telegram.api.data.TelegramFileLink;
-import com.sebster.telegram.api.data.TelegramUpdate;
 import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.data.messages.TelegramMessage;
-import com.sebster.telegram.impl.dto.TelegramFileDto;
-import com.sebster.telegram.impl.dto.TelegramMessageDto;
-import com.sebster.telegram.impl.dto.TelegramUpdateDto;
-import com.sebster.telegram.impl.dto.request.TelegramSendMessageRequest;
-import com.sebster.telegram.impl.dto.response.BaseTelegramResponse;
-import com.sebster.telegram.impl.dto.response.TelegramGetFileResponse;
-import com.sebster.telegram.impl.dto.response.TelegramGetMeResponse;
-import com.sebster.telegram.impl.dto.response.TelegramGetUpdatesResponse;
-import com.sebster.telegram.impl.dto.response.TelegramSendMessageResponse;
+import com.sebster.telegram.api.messages.TelegramMessage;
+import com.sebster.telegram.impl.dto.data.TelegramFileDto;
+import com.sebster.telegram.impl.dto.data.TelegramMessageDto;
+import com.sebster.telegram.impl.dto.methods.BaseTelegramResponseDto;
+import com.sebster.telegram.impl.dto.methods.getfile.TelegramGetFileResponseDto;
+import com.sebster.telegram.impl.dto.methods.getme.TelegramGetMeResponseDto;
+import com.sebster.telegram.impl.dto.methods.getupdates.TelegramGetUpdatesResponseDto;
+import com.sebster.telegram.impl.dto.methods.getupdates.TelegramUpdateDto;
+import com.sebster.telegram.impl.dto.methods.sendmessage.TelegramSendMessageRequestDto;
+import com.sebster.telegram.impl.dto.methods.sendmessage.TelegramSendMessageResponseDto;
+import lombok.NonNull;
 
-public class TelegramServiceImpl implements TelegramService, InitializingBean {
+public class TelegramServiceImpl implements TelegramService {
 
 	private static final String TELEGRAM_API_BASE_URL = "https://api.telegram.org/bot";
 	private static final String TELEGRAM_API_FILE_BASE_URL = "https://api.telegram.org/file/bot";
@@ -55,132 +53,130 @@ public class TelegramServiceImpl implements TelegramService, InitializingBean {
 	private static final String GET_FILE = "getFile";
 	private static final String SEND_MESSAGE = "sendMessage";
 
-	private String token;
-	private RestTemplate restTemplate;
-
-	public TelegramServiceImpl() {
-	}
+	private final @NonNull String token;
+	private final @NonNull RestTemplate restTemplate;
 
 	public TelegramServiceImpl(String token) {
 		this.token = token;
+		this.restTemplate = restTemplate();
 	}
 
 	@Override
 	public TelegramUser getMe() {
-		return doGet(GET_ME, TelegramGetMeResponse.class).toTelegramUser();
+		return doGet(GET_ME, TelegramGetMeResponseDto.class).toTelegramUser();
 	}
 
 	@Override
 	public List<TelegramUpdate> getUpdates(int offset) {
-		return getUpdates(offset, Optional.empty(), Optional.empty());
+		return getUpdatesImpl(offset, null, null);
 	}
 
 	@Override
-	public List<TelegramUpdate> getUpdates(int offset, Duration timeout) {
-		return getUpdates(offset, Optional.empty(), Optional.of(timeout));
+	public List<TelegramUpdate> getUpdates(int offset, @NonNull Duration timeout) {
+		return getUpdatesImpl(offset, null, timeout);
 	}
 
 	@Override
 	public List<TelegramUpdate> getUpdates(int offset, int limit) {
-		return getUpdates(offset, Optional.of(limit), Optional.empty());
+		return getUpdatesImpl(offset, limit, null);
 	}
 
 	@Override
-	public List<TelegramUpdate> getUpdates(int offset, int limit, Duration timeout) {
-		return getUpdates(offset, Optional.of(limit), Optional.of(timeout));
+	public List<TelegramUpdate> getUpdates(int offset, int limit, @NonNull Duration timeout) {
+		return getUpdatesImpl(offset, limit, timeout);
 	}
 
-	private List<TelegramUpdate> getUpdates(int offset, Optional<Integer> limit, Optional<Duration> timeout) {
-		if (limit.isPresent()) {
-			Validate.inclusiveBetween(1, 100, limit.get(), "limit must be between 1 and 100: %s", limit.get());
+	private List<TelegramUpdate> getUpdatesImpl(int offset, Integer limit, Duration timeout) {
+		if (limit != null) {
+			Validate.inclusiveBetween(1, 100, limit, "limit must be between 1 and 100: %s", limit);
 		}
 		Map<String, Object> queryParams = new LinkedHashMap<>();
 		queryParams.put("offset", offset);
-		if (limit.isPresent()) {
-			queryParams.put("limit", limit.get());
+		if (limit != null) {
+			queryParams.put("limit", limit);
 		}
-		if (timeout.isPresent()) {
-			queryParams.put("timeout", timeout.get().getSeconds());
+		if (timeout != null) {
+			queryParams.put("timeout", timeout.getSeconds());
 		}
-		List<TelegramUpdateDto> updates = doGet(GET_UPDATES, queryParams, TelegramGetUpdatesResponse.class);
-		return updates.stream().map(update -> update.toTelegramUpdate()).collect(toList());
+		List<TelegramUpdateDto> updates = doGet(GET_UPDATES, queryParams, TelegramGetUpdatesResponseDto.class);
+		return updates.stream().map(TelegramUpdateDto::toTelegramUpdate).collect(toList());
 	}
 
 	@Override
-	public TelegramFileLink getFileLink(String fileId) {
+	public TelegramFileLink getFileLink(@NonNull String fileId) {
 		try {
-			TelegramFileDto response = doGet(GET_FILE, singletonMap("file_id", fileId), TelegramGetFileResponse.class);
+			TelegramFileDto response = doGet(GET_FILE, singletonMap("file_id", fileId), TelegramGetFileResponseDto.class);
 			return response.toTelegramFileLink(new URL(telegramApiFileBaseUrl()));
 		} catch (MalformedURLException e) {
 			// Should not happen.
-			throw new TelegramException(e);
+			throw new UncheckedIOException(e);
 		}
 	}
 
 	@Override
-	public TelegramFileLink getFileLink(TelegramFile file) {
-		return getFileLink(requireNonNull(file, "file").getFileId());
+	public TelegramFileLink getFileLink(@NonNull TelegramFile file) {
+		return getFileLink(file.getFileId());
 	}
 
 	@Override
-	public TelegramMessage sendMessage(long chatId, String text) {
-		return sendMessageImpl(chatId, text, defaultSendMessageOptions());
+	public TelegramMessage sendMessage(long chatId, @NonNull String text) {
+		return sendMessageImpl(chatId, text, defaultOptions());
 	}
 
 	@Override
-	public TelegramMessage sendMessage(TelegramChat chat, String text) {
-		return sendMessage(requireNonNull(chat, "chat").getId(), defaultSendMessageOptions(), text);
+	public TelegramMessage sendMessage(@NonNull TelegramChat chat, @NonNull String text) {
+		return sendMessage(chat.getId(), defaultOptions(), text);
 	}
 
 	@Override
-	public TelegramMessage sendMessage(String channel, String text) {
-		return sendMessageImpl(requireNonNull(channel, "channel"), text, defaultSendMessageOptions());
+	public TelegramMessage sendMessage(@NonNull String channel, @NonNull String text) {
+		return sendMessageImpl(channel, text, defaultOptions());
 	}
 
 	@Override
-	public TelegramMessage sendMessage(long chatId, TelegramSendMessageOptions options, String text) {
+	public TelegramMessage sendMessage(long chatId, @NonNull TelegramSendMessageOptions options, @NonNull String text) {
 		return sendMessageImpl(chatId, text, options);
 	}
 
 	@Override
-	public TelegramMessage sendMessage(TelegramChat chat, TelegramSendMessageOptions options, String text) {
-		return sendMessage(requireNonNull(chat, "chat").getId(), text);
+	public TelegramMessage sendMessage(@NonNull TelegramChat chat, @NonNull TelegramSendMessageOptions options,
+			@NonNull String text) {
+		return sendMessageImpl(chat.getId(), text, options);
 	}
 
 	@Override
-	public TelegramMessage sendMessage(String channel, TelegramSendMessageOptions options, String text) {
-		return sendMessageImpl(requireNonNull(channel, "channel"), text, options);
+	public TelegramMessage sendMessage(@NonNull String channel, @NonNull TelegramSendMessageOptions options, @NonNull String text) {
+		return sendMessageImpl(channel, text, options);
 	}
 
 	private TelegramMessage sendMessageImpl(Object target, String text, TelegramSendMessageOptions options) {
-		TelegramSendMessageRequest request = new TelegramSendMessageRequest(target, requireNonNull(text, "text"),
-				options.getParseMode().orElse(null), options.getDisableWebPagePreview().orElse(null),
-				options.getDisableNotification().orElse(null));
-		TelegramMessageDto response = doPost(SEND_MESSAGE, request, TelegramSendMessageResponse.class);
+		TelegramSendMessageRequestDto request = new TelegramSendMessageRequestDto(target, text, options);
+		TelegramMessageDto response = doPost(SEND_MESSAGE, request, TelegramSendMessageResponseDto.class);
 		return response.toTelegramMessage();
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponse<RESULT>> RESULT doGet(String method,
-			Class<RESPONSE> responseClass) {
+	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT doGet(String method, Class<RESPONSE> responseClass) {
 		return doGet(method, emptyMap(), responseClass);
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponse<RESULT>> RESULT doGet(String method,
-			Map<String, Object> queryParams, Class<RESPONSE> responseClass) {
+	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT doGet(
+			String method, Map<String, Object> queryParams, Class<RESPONSE> responseClass
+	) {
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(telegramApiBaseUrl()).path(method);
-		queryParams.forEach((name, value) -> uriBuilder.queryParam(name, value));
+		queryParams.forEach(uriBuilder::queryParam);
 		RESPONSE response = restTemplate.getForObject(uriBuilder.toUriString(), responseClass);
 		return getResult(response);
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponse<RESULT>> RESULT doPost(String method, Object request,
-			Class<RESPONSE> responseClass) {
+	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT doPost(
+			String method, Object request, Class<RESPONSE> responseClass
+	) {
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(telegramApiBaseUrl()).path(method);
 		RESPONSE response = restTemplate.postForObject(uriBuilder.toUriString(), request, responseClass);
 		return getResult(response);
 	}
 
-	private <RESULT, RESPONSE extends BaseTelegramResponse<RESULT>> RESULT getResult(RESPONSE response) {
+	private <RESULT, RESPONSE extends BaseTelegramResponseDto<RESULT>> RESULT getResult(RESPONSE response) {
 		if (!response.isOk()) {
 			throw new TelegramServiceException(response.getErrorCode(), response.getDescription());
 		}
@@ -195,23 +191,14 @@ public class TelegramServiceImpl implements TelegramService, InitializingBean {
 		return TELEGRAM_API_FILE_BASE_URL + token + "/";
 	}
 
-	public void setToken(String token) {
-		this.token = requireNonNull(token, "token");
+	private static RestTemplate restTemplate() {
+		return new RestTemplate(singletonList(new MappingJackson2HttpMessageConverter(objectMapper())));
 	}
 
-	public void setRestTemplate(RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if (restTemplate == null) {
-			restTemplate = new RestTemplate(asList(new MappingJackson2HttpMessageConverter(objectMapper())));
-		}
-	}
-
-	private ObjectMapper objectMapper() {
-		return Jackson2ObjectMapperBuilder.json().serializationInclusion(NON_NULL).propertyNamingStrategy(SNAKE_CASE)
+	private static ObjectMapper objectMapper() {
+		return json()
+				.serializationInclusion(NON_NULL)
+				.propertyNamingStrategy(SNAKE_CASE)
 				.build();
 	}
 

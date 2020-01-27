@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.data.messages.TelegramTextMessage;
+import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -29,15 +29,15 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 	private final @NonNull RestTemplate restTemplate;
 
 	@Override
-	public void visitTextMessage(TelegramTextMessage textMessage) {
-		String text = textMessage.getText().trim();
+	public void visitTextMessage(TelegramTextMessage message) {
+		String text = message.getText().trim();
 
 		Matcher matcher = COINDESK_PRICE_PATTERN.matcher(text);
 		int start = 0;
 		while (matcher.find(start)) {
 			BigDecimal amount = new BigDecimal(matcher.group(1));
 			String code = matcher.group(2) != null ? matcher.group(2).toUpperCase() : DEFAULT_CURRENCY_CODE;
-			showCoinDeskPrice(textMessage.getChat(), code, amount);
+			showCoinDeskPrice(message.getChat(), code, amount);
 			start = matcher.end();
 		}
 	}

@@ -4,6 +4,10 @@ import java.util.Optional;
 
 public interface WithMimeType {
 
-	public Optional<String> getMimeType();
+	Optional<String> getMimeType();
+
+	default boolean hasMimeType() {
+		return getMimeType().isPresent();
+	}
 
 }

@@ -1,93 +1,75 @@
 package com.sebster.telegram.api.data;
 
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
-import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
-import java.io.Serializable;
 import java.util.Optional;
+
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.Value;
 
 /**
  * This object represents a chat.
  */
-public final class TelegramChat implements Serializable {
+@Value
+@EqualsAndHashCode(of = "id")
+public class TelegramChat {
 
-	private static final long serialVersionUID = 1L;
-
-	private final long id;
-	private final TelegramChatType type;
-	private final Optional<String> title;
-	private final Optional<String> username;
-	private final Optional<String> firstName;
-	private final Optional<String> lastName;
-
-	public TelegramChat(long id, TelegramChatType type, Optional<String> title, Optional<String> username,
-			Optional<String> firstName, Optional<String> lastName) {
-		this.id = id;
-		this.type = requireNonNull(type, "type");
-		this.title = requireNonNull(title, "title");
-		this.username = requireNonNull(username, "username");
-		this.firstName = requireNonNull(firstName, "firstName");
-		this.lastName = requireNonNull(lastName, "lastName");
-	}
+	long id;
+	@NonNull TelegramChatType type;
+	String title;
+	String username;
+	String firstName;
+	String lastName;
 
 	/**
-	 * Unique identifier for this chat, not exceeding 1e13 by absolute value.
+	 * Unique identifier for this chat.
 	 */
 	public long getId() {
 		return id;
 	}
 
 	/**
-	 * Type of chat, can be either “private”, “group”, “supergroup” or
-	 * “channel”.
+	 * Type of chat, can be either “private”, “group”, “supergroup” or “channel”.
 	 */
 	public TelegramChatType getType() {
 		return type;
 	}
 
 	/**
-	 * Optional. Title, for channels and group chats.
+	 * Optional. Title, for supergroups, channels and group chats.
 	 */
 	public Optional<String> getTitle() {
-		return title;
+		return Optional.ofNullable(title);
 	}
 
 	/**
-	 * Optional. Username, for private chats and channels if available.
+	 * Optional. Username, for private chats, supergroups and channels if available.
 	 */
 	public Optional<String> getUsername() {
-		return username;
+		return Optional.ofNullable(username);
 	}
 
 	/**
 	 * Optional. First name of the other party in a private chat.
 	 */
 	public Optional<String> getFirstName() {
-		return firstName;
+		return Optional.ofNullable(firstName);
 	}
 
 	/**
 	 * Optional. Last name of the other party in a private chat.
 	 */
 	public Optional<String> getLastName() {
-		return lastName;
+		return Optional.ofNullable(lastName);
 	}
 
-	@Override
-	public final boolean equals(Object obj) {
-		return reflectionEquals(this, obj, false);
-	}
-
-	@Override
-	public final int hashCode() {
-		return reflectionHashCode(this, false);
-	}
-
-	@Override
-	public final String toString() {
-		return reflectionToString(this);
-	}
+	// TODO:
+	//	photo 	ChatPhoto 	Optional. Chat photo. Returned only in getChat.
+	//	description 	String 	Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
+	//	invite_link 	String 	Optional. Chat invite link, for groups, supergroups and channel chats. Each administrator in a chat generates their own invite links, so the bot must first generate the link using exportChatInviteLink. Returned only in getChat.
+	//	pinned_message 	Message 	Optional. Pinned message, for groups, supergroups and channels. Returned only in getChat.
+	//	permissions 	ChatPermissions 	Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
+	//	slow_mode_delay 	Integer 	Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user. Returned only in getChat.
+	//	sticker_set_name 	String 	Optional. For supergroups, name of group sticker set. Returned only in getChat.
+	//	can_set_sticker_set 	Boolean 	Optional. True, if the bot can change the group sticker set. Returned only in getChat.
 
 }

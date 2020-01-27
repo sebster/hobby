@@ -1,79 +1,44 @@
 package com.sebster.telegram.api.data;
 
-import static java.util.Objects.requireNonNull;
-import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
-import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
-import java.io.Serializable;
 import java.net.URL;
 import java.util.Optional;
 
+import lombok.NonNull;
+import lombok.Value;
+
 /**
- * This object represents a link to a file ready to be downloaded. The file can
- * be downloaded via the link https://api.telegram.org/file/bot<token>/
- * <file_path>. It is guaranteed that the link will be valid for at least 1
- * hour. When the link expires, a new one can be requested by calling getFile.
- *
- * Maximum file size to download is 20 MB
+ * This object represents a link to a file ready to be downloaded. The file can be downloaded via the URL
+ * https://api.telegram.org/file/bot&lt;token&gt;/ &lt;file_path&gt;. It is guaranteed that the link will be valid for at least 1
+ * hour. When the link expires, a new one can be requested by calling the getFile API method..
+ * <p>
+ * Maximum file size to download is 20 MB.
  */
-public final class TelegramFileLink implements TelegramFile, Serializable {
+@Value
+public class TelegramFileLink implements TelegramFile {
 
-	private static final long serialVersionUID = 1L;
-	
-	private final String fileId;
-	private final Optional<Integer> fileSize;
-	private final Optional<String> filePath;
-	private final Optional<URL> fileUrl;
-
-	public TelegramFileLink(String fileId, Optional<Integer> fileSize, Optional<String> filePath,
-			Optional<URL> fileUrl) {
-		this.fileId = requireNonNull(fileId, "fileId");
-		this.fileSize = requireNonNull(fileSize, "fileSize");
-		this.filePath = requireNonNull(filePath, "filePath");
-		this.fileUrl = requireNonNull(fileUrl, "fileUrl");
-	}
-
-	@Override
-	public String getFileId() {
-		return fileId;
-	}
+	@NonNull String fileId;
+	@NonNull String fileUniqueId;
+	Integer fileSize;
+	String filePath;
+	URL fileUrl;
 
 	@Override
 	public Optional<Integer> getFileSize() {
-		return fileSize;
+		return Optional.ofNullable(fileSize);
 	}
 
 	/**
-	 * Optional. File path. Use https://api.telegram.org/file/bot<token>/
-	 * <file_path> to get the file.
+	 * Optional. File path. Use https://api.telegram.org/file/bot&lt;token&gt;/&lt;file_path&gt; to get the file.
 	 */
 	public Optional<String> getFilePath() {
-		return filePath;
+		return Optional.ofNullable(filePath);
 	}
 
 	/**
-	 * Optional. File url. This is equal to https://api.telegram.org/file/bot
-	 * <token>/ <file_path>.
+	 * Optional. File url. This is equal to https://api.telegram.org/file/bot&lt;token&gt;/&lt;file_path&gt;.
 	 */
-
 	public Optional<URL> getFileUrl() {
-		return fileUrl;
-	}
-
-	@Override
-	public final boolean equals(Object obj) {
-		return reflectionEquals(this, obj, false);
-	}
-
-	@Override
-	public final int hashCode() {
-		return reflectionHashCode(this, false);
-	}
-
-	@Override
-	public final String toString() {
-		return reflectionToString(this);
+		return Optional.ofNullable(fileUrl);
 	}
 
 }

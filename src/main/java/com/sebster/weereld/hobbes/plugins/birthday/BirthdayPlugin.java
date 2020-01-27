@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.data.messages.TelegramTextMessage;
+import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
 @Component
@@ -72,10 +72,10 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	@Override
-	public void visitTextMessage(TelegramTextMessage textMessage) {
-		TelegramChat chat = textMessage.getChat();
-		String from = textMessage.getFrom().map(TelegramUser::getFirstName).orElse(null);
-		String text = textMessage.getText().trim();
+	public void visitTextMessage(TelegramTextMessage message) {
+		TelegramChat chat = message.getChat();
+		String from = message.getFrom().map(TelegramUser::getFirstName).orElse(null);
+		String text = message.getText().trim();
 
 		Matcher matcher;
 

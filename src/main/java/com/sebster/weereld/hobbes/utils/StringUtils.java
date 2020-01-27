@@ -5,7 +5,7 @@ import static java.lang.String.format;
 import java.util.Optional;
 
 public class StringUtils {
-	
+
 	private StringUtils() {
 	}
 

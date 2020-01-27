@@ -25,7 +25,7 @@ public class EarlyBird {
 
 	@Column(nullable = false)
 	private LocalTime wakeUpTime;
-	
+
 	@Column(nullable = false)
 	private boolean winner;
 
@@ -54,11 +54,11 @@ public class EarlyBird {
 	public void markWinner() {
 		this.winner = true;
 	}
-	
+
 	public boolean isWinner() {
 		return winner;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) {

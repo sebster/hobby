@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.data.messages.TelegramTextMessage;
+import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -30,8 +30,8 @@ public class KrakenTickerPlugin extends BasePlugin {
 	private final @NonNull RestTemplate restTemplate;
 
 	@Override
-	public void visitTextMessage(TelegramTextMessage textMessage) {
-		String text = textMessage.getText().trim();
+	public void visitTextMessage(TelegramTextMessage message) {
+		String text = message.getText().trim();
 
 		Matcher matcher = PATTERN.matcher(text);
 		int start = 0;
@@ -39,7 +39,7 @@ public class KrakenTickerPlugin extends BasePlugin {
 			BigDecimal amount = new BigDecimal(matcher.group(1));
 			String baseAsset = matcher.group(2).toUpperCase();
 			String quoteAsset = matcher.group(3) != null ? matcher.group(3).toUpperCase() : DEFAULT_CURRENCY_CODE;
-			showKrakenRate(textMessage.getChat(), baseAsset, quoteAsset, amount);
+			showKrakenRate(message.getChat(), baseAsset, quoteAsset, amount);
 			start = matcher.end();
 		}
 	}
