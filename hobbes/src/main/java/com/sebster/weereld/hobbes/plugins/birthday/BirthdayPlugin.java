@@ -39,7 +39,7 @@ import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 public class BirthdayPlugin extends BasePlugin {
 
 	private static final Pattern BDAY_TODAY_PATTERN = compile("(?i)^bday$");
-	private static final Pattern BDAY_FOR_NAME_PATTERN = compile("(?i)^bday ([a-z]+)(?:\\s*&\\s*([a-z]+))?$");
+	private static final Pattern BDAY_FOR_NAME_PATTERN = compile("(?i)^(?:bday|age) ([a-z]+)(?:\\s*&\\s*([a-z]+))?$");
 	private static final Pattern BDAY_FOR_DATE_PATTERN = compile("(?i)^bday (\\d{4}-\\d{2}-\\d{2})$");
 	private static final Pattern BDAY_FOR_MONTH_DAY_PATTERN = compile("(?i)^bday (\\d{2})-(\\d{2})$");
 	private static final Pattern BDAY_MONTH_PATTERN = compile("(?i)^bday (\\d{1,2})$");
@@ -228,6 +228,7 @@ public class BirthdayPlugin extends BasePlugin {
 		sendMessage(chat,
 			"bday - wie is er vandaag jarig?\n" +
 			"bday <naam> - wanneer is <naam> geboren?\n" +
+			"age <naam> - hoe oud is <naam>?\n" +
 			"bday <jjjj-mm-dd> - wie is er op <jjjj-mm-dd> jarig?\n" +
 			"bday <mm-dd> - wie is er op <mm-dd> jarig?\n" +
 			"bday <maand> - wie is er in <maand> jarig?\n" +
