@@ -1,5 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
-load("//tools/rules_images:spring_java_image.bzl", "spring_java_image")
+load("//tools/rules_images:defs.bzl", "spring_java_image")
 
 java_library(
     name = "properties",
