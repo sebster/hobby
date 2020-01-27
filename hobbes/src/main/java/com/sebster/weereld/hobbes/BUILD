@@ -1,9 +1,9 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
 load("//tools/rules_images:defs.bzl", "java_image")
+load("//tools/rules_resources:defs.bzl", "resource_jar")
 
-java_library(
+resource_jar(
     name = "properties",
-    resource_strip_prefix = "hobbes/src/main/java/com/sebster/weereld/hobbes/",
     resources = [
         "application.properties",
         "application-dev.properties",
