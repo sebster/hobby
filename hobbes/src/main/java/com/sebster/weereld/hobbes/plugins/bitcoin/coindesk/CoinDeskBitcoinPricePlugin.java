@@ -1,6 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
 
 import static java.math.RoundingMode.HALF_UP;
+import static java.util.Collections.singletonList;
 import static java.util.regex.Pattern.compile;
 
 import java.math.BigDecimal;
@@ -9,17 +10,18 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @Component
-@AllArgsConstructor
 public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 
 	private static final URI COINDESK_BPI_URI = URI.create("http://api.coindesk.com/v1/bpi/currentprice.json");
@@ -27,6 +29,12 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
 
 	private final @NonNull RestTemplate restTemplate;
+
+	public CoinDeskBitcoinPricePlugin(@NonNull RestTemplateBuilder restTemplateBuilder) {
+		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
+		messageConverter.setSupportedMediaTypes(singletonList(new MediaType("application", "javascript")));
+		restTemplate = restTemplateBuilder.messageConverters(messageConverter).build();
+	}
 
 	@Override
 	public void visitTextMessage(TelegramTextMessage message) {

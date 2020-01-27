@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,7 +21,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @Component
-@AllArgsConstructor
 public class KrakenTickerPlugin extends BasePlugin {
 
 	private static final URI TICKER_URI = URI.create("https://api.kraken.com/0/public/Ticker");
@@ -28,6 +28,10 @@ public class KrakenTickerPlugin extends BasePlugin {
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
 
 	private final @NonNull RestTemplate restTemplate;
+
+	public KrakenTickerPlugin(@NonNull RestTemplateBuilder restTemplateBuilder) {
+		restTemplate = restTemplateBuilder.build();
+	}
 
 	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
