@@ -1,5 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_library")
-load("//tools/rules_spring:defs.bzl", "resource_jar")
+load("//tools/rules_resources:defs.bzl", "resource_jar")
 
 java_library(
     name = "impl",

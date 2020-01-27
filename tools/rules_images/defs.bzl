@@ -1,9 +1,9 @@
 load("@io_bazel_rules_docker//container:image.bzl", "container_image")
-load("@io_bazel_rules_docker//java:image.bzl", "DEFAULT_JAVA_BASE", "java_image")
+load("@io_bazel_rules_docker//java:image.bzl", "DEFAULT_JAVA_BASE", _java_image = "java_image")
 
 BASE_IMAGE = "//tools/rules_images:java_base_image"
 
-def spring_java_image(
+def java_image(
         name,
         main_class,
         runtime_deps,
@@ -26,7 +26,7 @@ def spring_java_image(
             layers = container_layers,
         )
 
-    java_image(
+    _java_image(
         name = name,
         base = BASE_IMAGE if container_layers == None else ":%s_base" % name,
         runtime_deps = runtime_deps + ["@maven//:org_springframework_boot_spring_boot_loader"],

@@ -1,6 +1,13 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
-def _zipper_arg_strip_pacakge(file):
+def resource_jar(name, jar = None, **kwargs):
+    _resource_jar(
+        name = name,
+        jar = jar or "%s.jar" % name,
+        **kwargs
+    )
+
+def _zipper_arg_strip_package(file):
     return "%s=%s" % (paths.relativize(file.short_path, file.owner.package), file.path)
 
 def _resource_jar_impl(ctx):
@@ -10,7 +17,7 @@ def _resource_jar_impl(ctx):
 
     jar_args.add_all(
         ctx.files.resources,
-        map_each = _zipper_arg_strip_pacakge,
+        map_each = _zipper_arg_strip_package,
         format_each = paths.join(ctx.attr.root, "%s"),
     )
 
@@ -35,7 +42,7 @@ def _resource_jar_impl(ctx):
         ),
     ]
 
-resource_jar = rule(
+_resource_jar = rule(
     implementation = _resource_jar_impl,
     attrs = {
         "absolute_resources": attr.label_keyed_string_dict(

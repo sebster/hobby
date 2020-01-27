@@ -1,5 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
-load("//tools/rules_images:defs.bzl", "spring_java_image")
+load("//tools/rules_images:defs.bzl", "java_image")
 
 java_library(
     name = "properties",
@@ -55,7 +55,7 @@ java_binary(
     runtime_deps = [":hobbes"],
 )
 
-spring_java_image(
+java_image(
     name = "image",
     main_class = "com.sebster.weereld.hobbes.Application",
     visibility = ["//visibility:public"],
