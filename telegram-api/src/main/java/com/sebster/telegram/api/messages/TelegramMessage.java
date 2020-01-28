@@ -3,7 +3,6 @@ package com.sebster.telegram.api.messages;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @EqualsAndHashCode(of = "messageId")
 @ToString(doNotUseGetters = true)
-public abstract class TelegramMessage implements Serializable {
+public abstract class TelegramMessage {
 
 	int messageId;
 	TelegramUser from;
