@@ -4,6 +4,9 @@ load("//tools/rules_resources:defs.bzl", "resource_jar")
 java_library(
     name = "impl",
     srcs = glob(["*.java"]),
+    plugins = [
+        "//3rdparty/org/springframework/boot:spring_boot_configuration_processor_plugin",
+    ],
     resource_jars = [":spring_autoconfig"],
     visibility = ["//visibility:public"],
     deps = [
