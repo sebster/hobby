@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
  */
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
-@ToString
+@ToString(doNotUseGetters = true, callSuper = true)
 public final class TelegramChatMigratedToSupergroupMessage extends TelegramMessage {
 
 	long supergroupChatId;

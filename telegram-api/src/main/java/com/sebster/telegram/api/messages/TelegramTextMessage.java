@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
-@ToString
+@ToString(doNotUseGetters = true, callSuper = true)
 public final class TelegramTextMessage extends TelegramMessage {
 
 	@NonNull String text;

@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
-@ToString
+@ToString(doNotUseGetters = true, callSuper = true)
 public final class TelegramStickerMessage extends TelegramMessage {
 
 	@NonNull TelegramSticker sticker;

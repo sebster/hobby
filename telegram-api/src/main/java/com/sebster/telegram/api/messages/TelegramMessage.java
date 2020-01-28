@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor(access = PROTECTED)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @EqualsAndHashCode(of = "messageId")
-@ToString
+@ToString(doNotUseGetters = true)
 public abstract class TelegramMessage implements Serializable {
 
 	int messageId;

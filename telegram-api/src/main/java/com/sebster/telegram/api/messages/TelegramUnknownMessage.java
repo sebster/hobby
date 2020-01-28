@@ -7,7 +7,7 @@ import com.sebster.telegram.api.data.TelegramUser;
 import lombok.NonNull;
 import lombok.ToString;
 
-@ToString
+@ToString(doNotUseGetters = true, callSuper = true)
 public final class TelegramUnknownMessage extends TelegramMessage {
 
 	public TelegramUnknownMessage(

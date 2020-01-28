@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.sebster.telegram.api.messages.TelegramMessage;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.Value;
 
 /**
@@ -11,6 +12,7 @@ import lombok.Value;
  */
 @Value
 @EqualsAndHashCode(of = "updateId")
+@ToString(doNotUseGetters = true)
 public final class TelegramUpdate {
 
 	int updateId;
