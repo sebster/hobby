@@ -35,7 +35,6 @@ http_archive(
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
-load("@rules_jvm_external//:specs.bzl", "maven")
 
 maven_install(
     artifacts = [
@@ -75,14 +74,9 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-test:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-tomcat:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE",
-        "org.apache.httpcomponents:httpclient:4.5.10",
-        maven.artifact(
-            group = "org.springframework.boot",
-            artifact = "spring-boot-configuration-processor",
-            version = "2.2.4.RELEASE",
-            neverlink = True,
-        ),
+        "org.springframework.boot:spring-boot-configuration-processor:2.2.4.RELEASE",
         "org.springframework.data:spring-data-commons:2.2.4.RELEASE",
+        "org.apache.httpcomponents:httpclient:4.5.10",
     ],
     fetch_sources = True,
     maven_install_json = "//:maven_install.json",
