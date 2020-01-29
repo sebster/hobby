@@ -1,6 +1,7 @@
 package com.sebster.weereld.hobbes.people;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,5 +30,13 @@ public class Partner {
 
 	@Column
 	private LocalDate date;
+
+	public Optional<LocalDate> getDate() {
+		return Optional.ofNullable(date);
+	}
+
+	public boolean hasDate() {
+		return date != null;
+	}
 
 }

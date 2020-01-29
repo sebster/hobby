@@ -1,20 +1,24 @@
 package com.sebster.weereld.hobbes.plugins.birthday;
 
+import static com.sebster.weereld.hobbes.plugins.birthday.Birthday.withBirthdayOn;
+import static com.sebster.weereld.hobbes.plugins.birthday.Birthday.withDay;
+import static com.sebster.weereld.hobbes.plugins.birthday.Birthday.withMonth;
+import static com.sebster.weereld.hobbes.plugins.birthday.Birthday.withName;
+import static com.sebster.weereld.hobbes.plugins.birthday.Birthday.withNames;
+import static com.sebster.weereld.hobbes.plugins.birthday.Birthday.withYear;
 import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfNotNull;
 import static com.sebster.weereld.hobbes.utils.TimeUtils.sleep;
 import static java.lang.String.format;
 import static java.util.function.Function.identity;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.join;
 
 import java.text.DateFormatSymbols;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -50,12 +54,12 @@ public class BirthdayPlugin extends BasePlugin {
 	private long singChatId;
 
 	@Autowired
-	private BirthdayRepository birthdayRepository;
+	private BirthdayService birthdayService;
 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void sing() {
 		LocalDate today = date();
-		Set<Birthday> bdays = birthdayRepository.findByDate(today);
+		Set<Birthday> bdays = birthdayService.birthdays(withBirthdayOn(today));
 		if (!bdays.isEmpty()) {
 			sendMessage(singChatId, "ER IS ER EEN JARIG!");
 			sleep(Duration.ofSeconds(1));
@@ -65,7 +69,7 @@ public class BirthdayPlugin extends BasePlugin {
 			sleep(Duration.ofSeconds(1));
 			StringBuilder message = new StringBuilder();
 			for (Birthday bday : bdays) {
-				message.append(format("%s, die is vandaag %d jaar geworden!\n", bday.name(), bday.age(today)));
+				message.append(format("%s, die is vandaag %d jaar geworden!\n", bday.getName(), bday.getAge(today)));
 			}
 			sendMessage(singChatId, message.toString());
 		}
@@ -135,47 +139,47 @@ public class BirthdayPlugin extends BasePlugin {
 
 	private void showBirthdaysToday(TelegramChat chat) {
 		LocalDate today = date();
-		Set<Birthday> birthdays = birthdayRepository.findByMonthAndDay(today.getMonthValue(), today.getDayOfMonth());
+		Set<Birthday> birthdays = birthdayService.birthdays(withMonth(today.getMonthValue()).and(withDay(today.getDayOfMonth())));
 		if (birthdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die vandaag jarig is!");
 		} else {
 			StringBuilder message = new StringBuilder();
 			for (Birthday bday : birthdays) {
-				message.append(format("%s is vandaag jarig en %d jaar geworden! :cake:", bday.name(), bday.age(today)));
+				message.append(format("%s is vandaag jarig en %d jaar geworden! :cake:", bday.getName(), bday.getAge(today)));
 			}
 			sendMessage(chat, message.toString());
 		}
 	}
 
 	private void showBirthdayForName(String from, TelegramChat chat, String name) {
-		showBirthdayForName(from, chat, name, birthdayRepository.findByName(name).orElse(null));
+		showBirthdayForName(from, chat, name, birthdayService.birthday(withName(name)).orElse(null));
 	}
 
 	private void showBirthdayForNames(String from, TelegramChat chat, String name1, String name2) {
-		showBirthdayForName(from, chat, name1 + " & " + name2, birthdayRepository.findByNames(name1, name2).orElse(null));
+		showBirthdayForName(from, chat, name1 + " & " + name2, birthdayService.birthday(withNames(name1, name2)).orElse(null));
 	}
 
 	private void showBirthdayForName(String from, TelegramChat chat, String name, Birthday bday) {
 		if (bday == null) {
 			sendMessage(chat, "Ik ken helemaal geen %s" + formatIfNotNull(from, ", %s") + "!", name);
 		} else {
-			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.name(), bday.date(), bday.age(date()));
+			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.getName(), bday.getDate(), bday.getAge(date()));
 		}
 	}
 
 	private void showBirthdaysForDate(TelegramChat chat, LocalDate date) {
-		Set<Birthday> bdays = birthdayRepository.findByDate(date);
+		Set<Birthday> bdays = birthdayService.birthdays(withBirthdayOn(date));
 		if (bdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die op %s jarig %s!", date, date.isBefore(date()) ? "was" : "is");
 		} else {
 			StringBuilder message = new StringBuilder();
 			for (Birthday bday : bdays) {
-				int age = bday.age(date);
+				int age = bday.getAge(date);
 				if (age == 0) {
-					message.append(format("%s is op %s geboren!\n", bday.name(), date));
+					message.append(format("%s is op %s geboren!\n", bday.getName(), date));
 				} else {
 					String verb = date.isBefore(date()) ? "werdt" : "wordt";
-					message.append(format("%s %s op %s maar liefst %d jaar oud!\n", bday.name(), verb, date, age));
+					message.append(format("%s %s op %s maar liefst %d jaar oud!\n", bday.getName(), verb, date, age));
 				}
 			}
 			sendMessage(chat, message.toString());
@@ -183,24 +187,23 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showBirthdaysForMonthDay(TelegramChat chat, int month, int day) {
-		LocalDate today = date();
-		LocalDate date = today.withMonth(month).withDayOfMonth(day);
-		showBirthdaysForDate(chat, date.isBefore(today) ? date.plusYears(1) : date);
+		showBirthdaysForDate(chat, getNextOccurrence(month, day));
 	}
 
 	private void showBirthdaysForMonth(String from, TelegramChat chat, int month) {
 		Validate.inclusiveBetween(1, 12, month);
-		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayRepository.findByMonth(month), Birthday::day);
+		Map<Integer, Set<Birthday>> bdays = groupBy(birthdayService.birthdays(withMonth(month)), Birthday::getDay);
 		if (bdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die in %s jarig is" + formatIfNotNull(from, ", %s") + "!", monthName(month));
 		} else {
 			StringBuilder message = new StringBuilder();
 			bdays.forEach((day, dayBdays) -> {
 				message.append(format("%02d-%02d: ", month, day));
-				List<String> bdayStrings = dayBdays.stream()
-						.map(bday -> format("%s (%d)", bday.name(), bday.year()))
-						.collect(toList());
-				message.append(join(bdayStrings, ", "));
+				message.append(
+						dayBdays.stream()
+								.map(bday -> format("%s (%d)", bday.getName(), bday.getYear()))
+								.collect(joining(", "))
+				);
 				message.append("\n");
 			});
 			sendMessage(chat, message.toString());
@@ -208,15 +211,14 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showBirthdaysForYear(TelegramChat chat, int year) {
-		Map<LocalDate, Set<Birthday>> bdays = groupBy(birthdayRepository.findByYear(year), Birthday::date);
+		Map<LocalDate, Set<Birthday>> bdays = groupBy(birthdayService.birthdays(withYear(year)), Birthday::getDate);
 		if (bdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die in %d geboren is!", year);
 		} else {
 			StringBuilder message = new StringBuilder();
 			bdays.forEach((date, dateBdays) -> {
 				message.append(date).append(": ");
-				List<String> bdayStrings = dateBdays.stream().map(Birthday::name).collect(toList());
-				message.append(join(bdayStrings, ", "));
+				message.append(dateBdays.stream().map(Birthday::getName).collect(joining(", ")));
 				message.append("\n");
 			});
 			sendMessage(chat, message.toString());
@@ -224,22 +226,29 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showHelp(TelegramChat chat) {
-		// @formatter:off
 		sendMessage(chat,
-			"bday - wie is er vandaag jarig?\n" +
-			"bday <naam> - wanneer is <naam> geboren?\n" +
-			"age <naam> - hoe oud is <naam>?\n" +
-			"bday <jjjj-mm-dd> - wie is er op <jjjj-mm-dd> jarig?\n" +
-			"bday <mm-dd> - wie is er op <mm-dd> jarig?\n" +
-			"bday <maand> - wie is er in <maand> jarig?\n" +
-			"bday <jaar> - wie is in <jaar> geboren?\n" +
-			"bday help - hoe werkt deze plugin?"
+				"bday - wie is er vandaag jarig?\n" +
+						"bday <naam> - wanneer is <naam> geboren?\n" +
+						"age <naam> - hoe oud is <naam>?\n" +
+						"bday <jjjj-mm-dd> - wie is er op <jjjj-mm-dd> jarig?\n" +
+						"bday <mm-dd> - wie is er op <mm-dd> jarig?\n" +
+						"bday <maand> - wie is er in <maand> jarig?\n" +
+						"bday <jaar> - wie is in <jaar> geboren?\n" +
+						"bday help - hoe werkt deze plugin?"
 		);
-		// @formatter:on
 	}
 
 	private String monthName(int month) {
 		return DateFormatSymbols.getInstance(new Locale("nl")).getMonths()[month - 1];
+	}
+
+	private LocalDate getNextOccurrence(int month, int day) {
+		LocalDate today = date();
+		LocalDate nextDate = today.withMonth(month).withDayOfMonth(day);
+		if (nextDate.isBefore(today)) {
+			nextDate = nextDate.plusYears(1);
+		}
+		return nextDate;
 	}
 
 	private <T> Map<T, Set<Birthday>> groupBy(Set<Birthday> bdays, Function<Birthday, T> group) {

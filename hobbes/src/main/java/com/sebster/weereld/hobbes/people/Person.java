@@ -51,6 +51,10 @@ public class Person {
 		return Optional.ofNullable(birthDate);
 	}
 
+	public boolean hasBirthDate() {
+		return birthDate != null;
+	}
+
 	public Optional<ZoneId> getZone() {
 		return Optional.ofNullable(zone).map(ZoneId::of);
 	}
