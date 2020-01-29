@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder(builderMethodName = "withOptions")
+@Builder(builderMethodName = "withOptions", toBuilder = true)
 public class TelegramSendMessageOptions {
 
 	TelegramParseMode parseMode;

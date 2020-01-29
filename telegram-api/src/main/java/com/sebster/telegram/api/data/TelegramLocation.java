@@ -1,11 +1,15 @@
 package com.sebster.telegram.api.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
 /**
  * This object represents a point on the map.
  */
 @Value
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TelegramLocation {
 
 	double longitude;

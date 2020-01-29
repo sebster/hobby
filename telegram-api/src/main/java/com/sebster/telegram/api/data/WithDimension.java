@@ -12,4 +12,14 @@ public interface WithDimension {
 	 */
 	int getHeight();
 
+	interface TelegramDimensionBuilder {
+
+		TelegramDimensionBuilder width(int width);
+
+		TelegramDimensionBuilder height(int height);
+
+		WithDimension build();
+
+	}
+
 }

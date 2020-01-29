@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
@@ -15,6 +16,7 @@ import lombok.Value;
  * This object represents a photo or a file / sticker thumbnail. The photo consists one or more sizes.
  */
 @Value
+@Builder(toBuilder = true)
 public class TelegramPhotoList implements Iterable<TelegramPhoto> {
 
 	@NonNull List<TelegramPhoto> photos;

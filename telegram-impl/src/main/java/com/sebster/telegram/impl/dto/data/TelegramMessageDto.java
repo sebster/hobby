@@ -8,8 +8,6 @@ import static com.sebster.telegram.impl.dto.data.TelegramPhotoSizeDto.toTelegram
 import java.util.Date;
 import java.util.List;
 
-import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.messages.TelegramAudioMessage;
 import com.sebster.telegram.api.messages.TelegramChatCreatedMessage;
 import com.sebster.telegram.api.messages.TelegramChatMigratedFromGroupMessage;
@@ -21,6 +19,7 @@ import com.sebster.telegram.api.messages.TelegramContactMessage;
 import com.sebster.telegram.api.messages.TelegramDocumentMessage;
 import com.sebster.telegram.api.messages.TelegramLocationMessage;
 import com.sebster.telegram.api.messages.TelegramMessage;
+import com.sebster.telegram.api.messages.TelegramMessage.TelegramMessageBuilder;
 import com.sebster.telegram.api.messages.TelegramPhotoMessage;
 import com.sebster.telegram.api.messages.TelegramStickerMessage;
 import com.sebster.telegram.api.messages.TelegramTextMessage;
@@ -63,124 +62,79 @@ public class TelegramMessageDto {
 	Long migrateFromChatId;
 
 	public TelegramMessage toTelegramMessage() {
-		TelegramUser from = this.from != null ? this.from.toTelegramUser() : null;
-		Date date = unixTimeToDate(this.date);
-		TelegramChat chat = this.chat.toTelegramChat();
-		TelegramUser forwardFrom = this.forwardFrom != null ? this.forwardFrom.toTelegramUser() : null;
-		Date forwardDate = this.forwardDate != null ? unixTimeToDate(this.forwardDate) : null;
-		TelegramMessage replyToMessage = this.replyToMessage != null ? this.replyToMessage.toTelegramMessage() : null;
-
 		if (text != null) {
-			return new TelegramTextMessage(messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage, text);
+			return build(TelegramTextMessage.builder().text(text));
 		}
 		if (audio != null) {
-			return new TelegramAudioMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					audio.toTelegramAudio()
-			);
+			return build(TelegramAudioMessage.builder().audio(audio.toTelegramAudio()));
 		}
 		if (document != null) {
-			return new TelegramDocumentMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					document.toTelegramDocument()
-			);
+			return build(TelegramDocumentMessage.builder().document(document.toTelegramDocument()));
 		}
 		if (photo != null) {
-			return new TelegramPhotoMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					toTelegramPhotoList(photo), caption
-			);
+			return build(TelegramPhotoMessage.builder().photoList(toTelegramPhotoList(photo)).caption(caption));
 		}
 		if (sticker != null) {
-			return new TelegramStickerMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					sticker.toTelegramSticker()
-			);
+			return build(TelegramStickerMessage.builder().sticker(sticker.toTelegramSticker()));
 		}
 		if (video != null) {
-			return new TelegramVideoMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					video.toTelegramVideo(), caption
-			);
+			return build(TelegramVideoMessage.builder().video(video.toTelegramVideo()).caption(caption));
 		}
 		if (voice != null) {
-			return new TelegramVoiceMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					voice.toTelegramVoice()
-			);
+			return build(TelegramVoiceMessage.builder().voice(voice.toTelegramVoice()));
 		}
 		if (contact != null) {
-			return new TelegramContactMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					contact.toTelegramContact()
-			);
+			return build(TelegramContactMessage.builder().contact(contact.toTelegramContact()));
 		}
 		if (location != null) {
-			return new TelegramLocationMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					location.toTelegramLocation()
-			);
+			return build(TelegramLocationMessage.builder().location(location.toTelegramLocation()));
 		}
 		if (newChatParticipant != null) {
-			return new TelegramUserJoinedChatMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					newChatParticipant.toTelegramUser()
-			);
+			return build(TelegramUserJoinedChatMessage.builder().user(newChatParticipant.toTelegramUser()));
 		}
 		if (leftChatParticipant != null) {
-			return new TelegramUserLeftChatMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					leftChatParticipant.toTelegramUser()
-			);
+			return build(TelegramUserLeftChatMessage.builder().user(leftChatParticipant.toTelegramUser()));
 		}
 		if (newChatTitle != null) {
-			return new TelegramChatTitleChangedMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					newChatTitle
-			);
+			return build(TelegramChatTitleChangedMessage.builder().newChatTitle(newChatTitle));
 		}
 		if (newChatPhoto != null) {
-			return new TelegramChatPhotoChangedMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					toTelegramPhotoList(newChatPhoto));
+			return build(TelegramChatPhotoChangedMessage.builder().newChatPhoto(toTelegramPhotoList(newChatPhoto)));
 		}
 		if (deleteChatPhoto != null) {
-			return new TelegramChatPhotoDeletedMessage(messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage);
+			return build(TelegramChatPhotoDeletedMessage.builder());
 		}
 		if (groupChatCreated != null) {
-			return new TelegramChatCreatedMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					GROUP
-			);
+			return build(TelegramChatCreatedMessage.builder().chatType(GROUP));
 		}
 		if (supergroupChatCreated != null) {
-			return new TelegramChatCreatedMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					SUPERGROUP
-			);
+			return build(TelegramChatCreatedMessage.builder().chatType(SUPERGROUP));
 		}
 		if (channelChatCreated != null) {
-			return new TelegramChatCreatedMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					CHANNEL
-			);
+			return build(TelegramChatCreatedMessage.builder().chatType(CHANNEL));
 		}
 		if (migrateToChatId != null) {
-			return new TelegramChatMigratedToSupergroupMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					migrateToChatId
-			);
+			return build(TelegramChatMigratedToSupergroupMessage.builder().supergroupChatId(migrateFromChatId));
 		}
 		if (migrateFromChatId != null) {
-			return new TelegramChatMigratedFromGroupMessage(
-					messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage,
-					migrateFromChatId
-			);
+			return build(TelegramChatMigratedFromGroupMessage.builder().groupChatId(migrateFromChatId));
 		}
-		return new TelegramUnknownMessage(messageId, from, date, chat, forwardFrom, forwardDate, replyToMessage);
+		return build(TelegramUnknownMessage.builder());
 	}
 
-	private Date unixTimeToDate(int unixTime) {
+	private TelegramMessage build(TelegramMessageBuilder builder) {
+		return builder
+				.messageId(messageId)
+				.from(from != null ? from.toTelegramUser() : null)
+				.date(toDate(date))
+				.chat(chat.toTelegramChat())
+				.forwardFrom(forwardFrom != null ? forwardFrom.toTelegramUser() : null)
+				.forwardDate(forwardDate != null ? toDate(forwardDate) : null)
+				.replyToMessage(replyToMessage != null ? replyToMessage.toTelegramMessage() : null)
+				.build();
+	}
+
+	private Date toDate(int unixTime) {
 		return new Date(unixTime * 1000L);
 	}
 

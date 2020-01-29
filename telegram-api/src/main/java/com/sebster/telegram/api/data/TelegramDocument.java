@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
@@ -10,7 +12,9 @@ import lombok.Value;
  * This object represents a general file (as opposed to photos, voice messages and audio files).
  */
 @Value
+@AllArgsConstructor
 @EqualsAndHashCode(of = "fileUniqueId")
+@Builder(toBuilder = true)
 public class TelegramDocument implements TelegramFile, WithThumbnail, WithMimeType {
 
 	@NonNull String fileId;
@@ -46,6 +50,9 @@ public class TelegramDocument implements TelegramFile, WithThumbnail, WithMimeTy
 	@Override
 	public Optional<Integer> getFileSize() {
 		return Optional.ofNullable(fileSize);
+	}
+
+	public static class TelegramDocumentBuilder implements TelegramFileBuilder, TelegramThumbnailBuilder, TelegramMimeTypeBuilder {
 	}
 
 }

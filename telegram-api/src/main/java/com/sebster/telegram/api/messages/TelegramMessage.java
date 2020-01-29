@@ -1,6 +1,5 @@
 package com.sebster.telegram.api.messages;
 
-import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
 import java.util.Date;
@@ -18,7 +17,7 @@ import lombok.experimental.FieldDefaults;
  * This object represents a message.
  */
 @AllArgsConstructor(access = PROTECTED)
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@FieldDefaults(level = PROTECTED, makeFinal = true)
 @EqualsAndHashCode(of = "messageId")
 @ToString(doNotUseGetters = true)
 public abstract class TelegramMessage {
@@ -84,5 +83,25 @@ public abstract class TelegramMessage {
 	public abstract <T> T accept(TelegramMessageTransformer<T> transformer);
 
 	public abstract void accept(TelegramMessageVisitor visitor);
+
+	public interface TelegramMessageBuilder {
+
+		TelegramMessageBuilder messageId(int messageId);
+
+		TelegramMessageBuilder from(TelegramUser from);
+
+		TelegramMessageBuilder date(@NonNull Date date);
+
+		TelegramMessageBuilder chat(@NonNull TelegramChat chat);
+
+		TelegramMessageBuilder forwardFrom(TelegramUser forwardFrom);
+
+		TelegramMessageBuilder forwardDate(Date forwardDate);
+
+		TelegramMessageBuilder replyToMessage(TelegramMessage replyToMessage);
+
+		TelegramMessage build();
+
+	}
 
 }

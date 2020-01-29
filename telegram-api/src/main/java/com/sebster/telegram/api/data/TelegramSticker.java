@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
@@ -9,6 +11,8 @@ import lombok.Value;
  * This object represents a sticker.
  */
 @Value
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TelegramSticker implements TelegramFile, WithDimension, WithThumbnail {
 
 	@NonNull String fileId;
@@ -53,5 +57,8 @@ public class TelegramSticker implements TelegramFile, WithDimension, WithThumbna
 	//	set_name 	String 	Optional. Name of the sticker set to which the sticker belongs
 	//	mask_position 	MaskPosition 	Optional. For mask stickers, the position where the mask should be placed
 	//	file_size 	Integer 	Optional. File size
+
+	public static class TelegramStickerBuilder implements TelegramFileBuilder, TelegramDimensionBuilder, TelegramThumbnailBuilder {
+	}
 
 }

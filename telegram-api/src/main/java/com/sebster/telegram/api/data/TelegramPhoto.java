@@ -2,12 +2,16 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Value;
 
 /**
  * This object represents one size of a photo or a file / sticker thumbnail.
  */
 @Value
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TelegramPhoto implements TelegramFile, WithDimension {
 
 	String fileId;
@@ -35,6 +39,9 @@ public class TelegramPhoto implements TelegramFile, WithDimension {
 	@Override
 	public Optional<Integer> getFileSize() {
 		return Optional.ofNullable(fileSize);
+	}
+
+	public static class TelegramPhotoBuilder implements TelegramFileBuilder, TelegramDimensionBuilder {
 	}
 
 }

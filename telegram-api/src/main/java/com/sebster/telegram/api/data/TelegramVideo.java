@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
@@ -10,6 +12,8 @@ import lombok.Value;
  * This object represents a video file.
  */
 @Value
+@Builder(toBuilder = true)
+@AllArgsConstructor
 @EqualsAndHashCode(of = "fileUniqueId")
 public final class TelegramVideo implements TelegramFile, WithDimension, WithDuration, WithThumbnail, WithMimeType {
 
@@ -65,6 +69,11 @@ public final class TelegramVideo implements TelegramFile, WithDimension, WithDur
 	@Override
 	public Optional<Integer> getFileSize() {
 		return Optional.ofNullable(fileSize);
+	}
+
+	public static class TelegramVideoBuilder
+			implements TelegramFileBuilder, TelegramDimensionBuilder, TelegramDurationBuilder, TelegramThumbnailBuilder,
+			TelegramMimeTypeBuilder {
 	}
 
 }

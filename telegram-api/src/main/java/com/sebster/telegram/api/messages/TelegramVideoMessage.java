@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.data.TelegramVideo;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -21,6 +22,7 @@ public final class TelegramVideoMessage extends TelegramMessage implements WithC
 	@NonNull TelegramVideo video;
 	String caption;
 
+	@Builder(toBuilder = true)
 	public TelegramVideoMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -44,6 +46,9 @@ public final class TelegramVideoMessage extends TelegramMessage implements WithC
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitVideoMessage(this);
+	}
+
+	public static class TelegramVideoMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

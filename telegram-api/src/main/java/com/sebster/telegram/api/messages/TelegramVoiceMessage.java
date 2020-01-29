@@ -7,6 +7,7 @@ import java.util.Date;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
 import com.sebster.telegram.api.data.TelegramVoice;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -19,6 +20,7 @@ public final class TelegramVoiceMessage extends TelegramMessage {
 
 	@NonNull TelegramVoice voice;
 
+	@Builder(toBuilder = true)
 	public TelegramVoiceMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -36,6 +38,9 @@ public final class TelegramVoiceMessage extends TelegramMessage {
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitVoiceMessage(this);
+	}
+
+	public static class TelegramVoiceMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

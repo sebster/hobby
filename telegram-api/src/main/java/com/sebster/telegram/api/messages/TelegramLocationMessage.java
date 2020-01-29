@@ -7,6 +7,7 @@ import java.util.Date;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramLocation;
 import com.sebster.telegram.api.data.TelegramUser;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -19,6 +20,7 @@ public final class TelegramLocationMessage extends TelegramMessage {
 
 	@NonNull TelegramLocation location;
 
+	@Builder(toBuilder = true)
 	public TelegramLocationMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -36,6 +38,9 @@ public final class TelegramLocationMessage extends TelegramMessage {
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitLocationMessage(this);
+	}
+
+	public static class TelegramLocationMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

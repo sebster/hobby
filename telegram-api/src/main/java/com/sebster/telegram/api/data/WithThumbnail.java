@@ -10,4 +10,12 @@ public interface WithThumbnail {
 		return getThumbnail().isPresent();
 	}
 
+	interface TelegramThumbnailBuilder {
+
+		TelegramThumbnailBuilder thumbnail(TelegramPhoto thumbnail);
+
+		WithThumbnail build();
+
+	}
+
 }

@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
@@ -9,6 +11,8 @@ import lombok.Value;
  * This object represents a phone contact.
  */
 @Value
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TelegramContact {
 
 	@NonNull String phoneNumber;

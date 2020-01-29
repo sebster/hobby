@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -18,6 +19,7 @@ public final class TelegramTextMessage extends TelegramMessage {
 
 	@NonNull String text;
 
+	@Builder(toBuilder = true)
 	public TelegramTextMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -35,6 +37,9 @@ public final class TelegramTextMessage extends TelegramMessage {
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitTextMessage(this);
+	}
+
+	public static class TelegramTextMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

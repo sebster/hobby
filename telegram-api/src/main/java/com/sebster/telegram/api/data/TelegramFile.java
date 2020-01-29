@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.NonNull;
+
 /**
  * This interface represents any object that is a file. To download the file, the getFile API method should be used to get a {@link
  * TelegramFileLink}.
@@ -23,5 +25,17 @@ public interface TelegramFile {
 	 * Optional. File size, if known.
 	 */
 	Optional<Integer> getFileSize();
+
+	interface TelegramFileBuilder {
+
+		TelegramFileBuilder fileId(@NonNull String fileId);
+
+		TelegramFileBuilder fileUniqueId(@NonNull String fileUniqueId);
+
+		TelegramFileBuilder fileSize(Integer fileSize);
+
+		TelegramFile build();
+
+	}
 
 }

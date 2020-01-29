@@ -10,4 +10,12 @@ public interface WithMimeType {
 		return getMimeType().isPresent();
 	}
 
+	interface TelegramMimeTypeBuilder {
+
+		TelegramMimeTypeBuilder mimeType(String mimeType);
+
+		WithMimeType build();
+
+	}
+
 }

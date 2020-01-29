@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
@@ -10,7 +12,9 @@ import lombok.Value;
  * This object represents a voice note.
  */
 @Value
+@AllArgsConstructor
 @EqualsAndHashCode(of = "fileUniqueId")
+@Builder(toBuilder = true)
 public class TelegramVoice implements TelegramFile, WithDuration, WithMimeType {
 
 	@NonNull String fileId;
@@ -38,6 +42,9 @@ public class TelegramVoice implements TelegramFile, WithDuration, WithMimeType {
 	@Override
 	public Optional<Integer> getFileSize() {
 		return Optional.ofNullable(fileSize);
+	}
+
+	public static class TelegramVoiceBuilder implements TelegramFileBuilder, TelegramDurationBuilder, TelegramMimeTypeBuilder {
 	}
 
 }

@@ -2,6 +2,8 @@ package com.sebster.telegram.api.data;
 
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
@@ -10,7 +12,9 @@ import lombok.Value;
  * This object represents an audio file to be treated as music by the Telegram clients.
  */
 @Value
+@AllArgsConstructor
 @EqualsAndHashCode(of = "fileUniqueId")
+@Builder(toBuilder = true)
 public class TelegramAudio implements TelegramFile, WithDuration, WithMimeType {
 
 	@NonNull String fileId;
@@ -62,6 +66,9 @@ public class TelegramAudio implements TelegramFile, WithDuration, WithMimeType {
 	@Override
 	public final Optional<Integer> getFileSize() {
 		return Optional.ofNullable(fileSize);
+	}
+
+	public static class TelegramAudioBuilder implements TelegramFileBuilder, TelegramDurationBuilder, TelegramMimeTypeBuilder {
 	}
 
 }

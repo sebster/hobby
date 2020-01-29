@@ -3,6 +3,8 @@ package com.sebster.telegram.api;
 import java.util.Optional;
 
 import com.sebster.telegram.api.messages.TelegramMessage;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -11,8 +13,10 @@ import lombok.Value;
  * This object represents an incoming update.
  */
 @Value
+@AllArgsConstructor
 @EqualsAndHashCode(of = "updateId")
 @ToString(doNotUseGetters = true)
+@Builder(toBuilder = true)
 public final class TelegramUpdate {
 
 	int updateId;

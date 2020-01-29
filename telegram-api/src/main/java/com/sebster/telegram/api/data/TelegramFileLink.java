@@ -3,6 +3,8 @@ package com.sebster.telegram.api.data;
 import java.net.URL;
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
@@ -14,6 +16,8 @@ import lombok.Value;
  * Maximum file size to download is 20 MB.
  */
 @Value
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class TelegramFileLink implements TelegramFile {
 
 	@NonNull String fileId;
@@ -39,6 +43,9 @@ public class TelegramFileLink implements TelegramFile {
 	 */
 	public Optional<URL> getFileUrl() {
 		return Optional.ofNullable(fileUrl);
+	}
+
+	public static class TelegramFileLinkBuilder implements TelegramFileBuilder {
 	}
 
 }

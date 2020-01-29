@@ -4,12 +4,14 @@ import java.util.Date;
 
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.ToString;
 
 @ToString(doNotUseGetters = true, callSuper = true)
 public final class TelegramUnknownMessage extends TelegramMessage {
 
+	@Builder(toBuilder = true)
 	public TelegramUnknownMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage
@@ -25,6 +27,9 @@ public final class TelegramUnknownMessage extends TelegramMessage {
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitUnknownMessage(this);
+	}
+
+	public static class TelegramUnknownMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

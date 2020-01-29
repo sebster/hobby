@@ -7,4 +7,12 @@ public interface WithDuration {
 	 */
 	int getDuration();
 
+	interface TelegramDurationBuilder {
+
+		TelegramDurationBuilder duration(int duration);
+
+		WithDuration build();
+
+	}
+
 }
