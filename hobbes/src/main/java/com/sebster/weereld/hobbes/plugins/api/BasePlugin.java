@@ -1,7 +1,6 @@
 package com.sebster.weereld.hobbes.plugins.api;
 
 import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -25,6 +24,7 @@ import com.sebster.telegram.api.messages.TelegramMessage;
 import com.sebster.telegram.api.messages.TelegramMessageVisitorAdapter;
 import com.sebster.weereld.hobbes.people.Person;
 import com.sebster.weereld.hobbes.people.PersonRepository;
+import lombok.NonNull;
 
 public abstract class BasePlugin extends TelegramMessageVisitorAdapter implements Plugin {
 
@@ -74,11 +74,11 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 		return getFromUserId(message).flatMap(personRepository::findByTelegramUserId);
 	}
 
-	protected boolean isMe(String nick) {
-		return equalsIgnoreCase(nick, "mij");
+	protected boolean isMe(@NonNull String nick) {
+		return nick.equalsIgnoreCase("mij");
 	}
 
-	protected Optional<Person> meOrPersonByNick(TelegramMessage message, String nick) {
+	protected Optional<Person> meOrPersonByNick(@NonNull TelegramMessage message, @NonNull String nick) {
 		return isMe(nick) ? getFrom(message) : personRepository.findByNickIgnoreCase(nick);
 	}
 
