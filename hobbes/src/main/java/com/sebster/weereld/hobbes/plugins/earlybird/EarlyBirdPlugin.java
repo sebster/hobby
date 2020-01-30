@@ -111,7 +111,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		if (ebOpt.isPresent()) {
 			EarlyBird eb = ebOpt.get();
 			sendMessage(message.getChat(), "De %svroige voegil van vandaag ies %s oem %s.",
-					eb.isWinner() ? "" : "voierloepiege ", eb.nick(), SHORT_TIME_FORMAT.format(eb.wakeUpTime()));
+					eb.isWinner() ? "" : "voierloepiege ", eb.getNick(), SHORT_TIME_FORMAT.format(eb.getWakeUpTime()));
 		}
 	}
 
@@ -122,8 +122,8 @@ public class EarlyBirdPlugin extends BasePlugin {
 		List<EarlyBird> ebs = earlyBirdRepository.findFirst7ByWinnerTrueOrderByDateDesc();
 		Collections.reverse(ebs);
 		for (EarlyBird eb : ebs) {
-			message.append(format("%-10s %s %s %s\n", dayName(eb.date()), SHORT_DATE_FORMAT.format(eb.date()),
-					SHORT_TIME_FORMAT.format(eb.wakeUpTime()), eb.nick()));
+			message.append(format("%-10s %s %s %s\n", dayName(eb.getDate()), SHORT_DATE_FORMAT.format(eb.getDate()),
+					SHORT_TIME_FORMAT.format(eb.getWakeUpTime()), eb.getNick()));
 		}
 		message.append("</pre>");
 		sendMessage(chat, html(), message.toString());
@@ -170,11 +170,11 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 		TelegramChat chat = message.getChat();
 		if (!oldEb.isPresent() && eb.isWinner()) {
-			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.date(), eb.nick());
+			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
 		} else if (!oldEb.isPresent()) {
-			sendMessage(chat, "Jai maakt noeg kans oep de vroige voegil vandaag, %s!", eb.nick());
-		} else if (eb.wakeUpTime().isBefore(oldEb.get().wakeUpTime())) {
-			sendMessage(chat, "Jai ibt de vroigivoegil van %s afgipiekt, %s!", oldEb.get().nick(), eb.nick());
+			sendMessage(chat, "Jai maakt noeg kans oep de vroige voegil vandaag, %s!", eb.getNick());
+		} else if (eb.getWakeUpTime().isBefore(oldEb.get().getWakeUpTime())) {
+			sendMessage(chat, "Jai ibt de vroigivoegil van %s afgipiekt, %s!", oldEb.get().getNick(), eb.getNick());
 		}
 	}
 
@@ -187,7 +187,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		EarlyBird eb = ebOpt.get();
 		if (isWinner(eb)) {
 			eb.markWinner();
-			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.date(), eb.nick());
+			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
 		}
 	}
 
@@ -201,10 +201,10 @@ public class EarlyBirdPlugin extends BasePlugin {
 			return false;
 		}
 		LocalDateTime personDateTime = dateTime(person.getZone().get());
-		if (earlyBirdDate(personDateTime).isAfter(eb.date())) {
+		if (earlyBirdDate(personDateTime).isAfter(eb.getDate())) {
 			return false;
 		}
-		return personDateTime.toLocalTime().isBefore(eb.wakeUpTime());
+		return personDateTime.toLocalTime().isBefore(eb.getWakeUpTime());
 	}
 
 	private LocalDate earlyBirdDate() {

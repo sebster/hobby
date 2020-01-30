@@ -1,6 +1,6 @@
 package com.sebster.weereld.hobbes.plugins.earlybird;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static lombok.AccessLevel.PROTECTED;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,11 +10,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @IdClass(EarlyBirdId.class)
+@NoArgsConstructor(access = PROTECTED)
+@Getter
+@EqualsAndHashCode(of = { "nick", "date" })
 public class EarlyBird {
 
 	@Id
@@ -29,56 +34,15 @@ public class EarlyBird {
 	@Column(nullable = false)
 	private boolean winner;
 
-	protected EarlyBird() {
-	}
-
-	public EarlyBird(String nick, LocalDate date, LocalTime wakeUpTime) {
+	public EarlyBird(@NonNull String nick, @NonNull LocalDate date, @NonNull LocalTime wakeUpTime) {
 		this.nick = nick;
 		this.date = date;
 		this.wakeUpTime = wakeUpTime;
 		this.winner = false;
 	}
 
-	public String nick() {
-		return nick;
-	}
-
-	public LocalDate date() {
-		return date;
-	}
-
-	public LocalTime wakeUpTime() {
-		return wakeUpTime;
-	}
-
 	public void markWinner() {
 		this.winner = true;
-	}
-
-	public boolean isWinner() {
-		return winner;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj instanceof EarlyBird) {
-			EarlyBird rhs = (EarlyBird) obj;
-			return new EqualsBuilder().append(nick, rhs.nick).append(date, rhs.date).isEquals();
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(nick).append(date).toHashCode();
-	}
-
-	@Override
-	public String toString() {
-		return reflectionToString(this);
 	}
 
 }
