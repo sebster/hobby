@@ -17,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @Component
