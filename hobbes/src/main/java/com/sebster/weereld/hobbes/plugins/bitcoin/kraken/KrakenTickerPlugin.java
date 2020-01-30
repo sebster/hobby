@@ -66,7 +66,8 @@ public class KrakenTickerPlugin extends BasePlugin {
 	private void showKrakenRate(TelegramChat chat, String baseAsset, String quoteAsset, BigDecimal amount) {
 		Optional<BigDecimal> price = getKrakenPrice(baseAsset, quoteAsset, amount);
 		if (price.isPresent()) {
-			sendMessage(chat, "%s %s is %s %s.", amount, baseAsset, price.get(), quoteAsset);
+			String priceString = price.get().stripTrailingZeros().toPlainString();
+			sendMessage(chat, "%s %s is %s %s.", amount, baseAsset, priceString, quoteAsset);
 		} else {
 			sendMessage(chat, "Ik weet even niet hoeveel %s %s is in %s.", amount, baseAsset, quoteAsset);
 		}
