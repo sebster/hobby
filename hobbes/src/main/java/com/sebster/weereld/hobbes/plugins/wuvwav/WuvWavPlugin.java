@@ -36,6 +36,16 @@ public class WuvWavPlugin extends BasePlugin {
 	private BigDecimal mortgageSebster;
 
 	@Override
+	public String getName() {
+		return "wuvwav";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Hypotheekrentetracker voor Sebster en Riep.";
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 

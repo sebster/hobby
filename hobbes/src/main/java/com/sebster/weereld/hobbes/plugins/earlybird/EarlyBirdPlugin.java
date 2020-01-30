@@ -42,6 +42,16 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private EarlyBirdRepository earlyBirdRepository;
 
 	@Override
+	public String getName() {
+		return "vroegevogel";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Wie is er het eerste op en maakt het meeste van zijn dag?";
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 
 		visitMessage(message);

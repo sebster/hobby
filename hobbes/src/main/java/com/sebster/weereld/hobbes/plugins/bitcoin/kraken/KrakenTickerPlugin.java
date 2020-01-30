@@ -34,6 +34,16 @@ public class KrakenTickerPlugin extends BasePlugin {
 	}
 
 	@Override
+	public String getName() {
+		return "kraken";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Vraag naar cryptomunt prijzen op de Kraken exchange.";
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 

@@ -56,6 +56,16 @@ public class BirthdayPlugin extends BasePlugin {
 	@Autowired
 	private BirthdayService birthdayService;
 
+	@Override
+	public String getName() {
+		return "bday";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Vraag naar de verjaardagen en leeftijden van #weereld-gangers.";
+	}
+
 	@Scheduled(cron = "0 0 0 * * *")
 	public void sing() {
 		LocalDate today = date();

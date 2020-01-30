@@ -37,6 +37,16 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 	}
 
 	@Override
+	public String getName() {
+		return "coindesk";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Vraag naar de bitcoin prijs via de CoinDesk bitcoin prijs index.";
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 
