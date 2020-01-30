@@ -7,20 +7,20 @@ import java.util.Date;
 import com.sebster.telegram.api.data.TelegramAudio;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
 @ToString(doNotUseGetters = true, callSuper = true)
+@SuperBuilder(toBuilder = true)
 public final class TelegramAudioMessage extends TelegramMessage {
 
 	@NonNull TelegramAudio audio;
 
-	@Builder(toBuilder = true)
 	public TelegramAudioMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -40,7 +40,7 @@ public final class TelegramAudioMessage extends TelegramMessage {
 		visitor.visitAudioMessage(this);
 	}
 
-	public static class TelegramAudioMessageBuilder implements TelegramMessageBuilder {
-	}
+	//	public static class TelegramAudioMessageBuilder implements TelegramMessageBuilder {
+	//	}
 
 }

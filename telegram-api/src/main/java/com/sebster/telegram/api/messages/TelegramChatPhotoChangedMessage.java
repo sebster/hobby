@@ -7,20 +7,20 @@ import java.util.Date;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramPhotoList;
 import com.sebster.telegram.api.data.TelegramUser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
 @ToString(doNotUseGetters = true, callSuper = true)
+@SuperBuilder(toBuilder = true)
 public class TelegramChatPhotoChangedMessage extends TelegramMessage {
 
 	@NonNull TelegramPhotoList newChatPhoto;
 
-	@Builder(toBuilder = true)
 	public TelegramChatPhotoChangedMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -38,9 +38,6 @@ public class TelegramChatPhotoChangedMessage extends TelegramMessage {
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitChatPhotoChangedMessage(this);
-	}
-
-	public static class TelegramChatPhotoChangedMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

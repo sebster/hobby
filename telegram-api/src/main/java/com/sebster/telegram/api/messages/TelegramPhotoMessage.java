@@ -8,21 +8,21 @@ import java.util.Optional;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramPhotoList;
 import com.sebster.telegram.api.data.TelegramUser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
 @ToString(doNotUseGetters = true, callSuper = true)
+@SuperBuilder(toBuilder = true)
 public final class TelegramPhotoMessage extends TelegramMessage implements WithCaption {
 
 	@NonNull TelegramPhotoList photoList;
 	String caption;
 
-	@Builder(toBuilder = true)
 	public TelegramPhotoMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -46,9 +46,6 @@ public final class TelegramPhotoMessage extends TelegramMessage implements WithC
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitPhotoMessage(this);
-	}
-
-	public static class TelegramPhotoMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

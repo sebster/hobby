@@ -1,5 +1,6 @@
 package com.sebster.telegram.api.messages;
 
+import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
 import java.util.Date;
@@ -12,14 +13,16 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 /**
  * This object represents a message.
  */
 @AllArgsConstructor(access = PROTECTED)
-@FieldDefaults(level = PROTECTED, makeFinal = true)
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 @EqualsAndHashCode(of = "messageId")
 @ToString(doNotUseGetters = true)
+@SuperBuilder(toBuilder = true)
 public abstract class TelegramMessage {
 
 	int messageId;
@@ -84,24 +87,24 @@ public abstract class TelegramMessage {
 
 	public abstract void accept(TelegramMessageVisitor visitor);
 
-	public interface TelegramMessageBuilder {
-
-		TelegramMessageBuilder messageId(int messageId);
-
-		TelegramMessageBuilder from(TelegramUser from);
-
-		TelegramMessageBuilder date(@NonNull Date date);
-
-		TelegramMessageBuilder chat(@NonNull TelegramChat chat);
-
-		TelegramMessageBuilder forwardFrom(TelegramUser forwardFrom);
-
-		TelegramMessageBuilder forwardDate(Date forwardDate);
-
-		TelegramMessageBuilder replyToMessage(TelegramMessage replyToMessage);
-
-		TelegramMessage build();
-
-	}
+	//	public interface TelegramMessageBuilder {
+	//
+	//		TelegramMessageBuilder messageId(int messageId);
+	//
+	//		TelegramMessageBuilder from(TelegramUser from);
+	//
+	//		TelegramMessageBuilder date(@NonNull Date date);
+	//
+	//		TelegramMessageBuilder chat(@NonNull TelegramChat chat);
+	//
+	//		TelegramMessageBuilder forwardFrom(TelegramUser forwardFrom);
+	//
+	//		TelegramMessageBuilder forwardDate(Date forwardDate);
+	//
+	//		TelegramMessageBuilder replyToMessage(TelegramMessage replyToMessage);
+	//
+	//		TelegramMessage build();
+	//
+	//	}
 
 }

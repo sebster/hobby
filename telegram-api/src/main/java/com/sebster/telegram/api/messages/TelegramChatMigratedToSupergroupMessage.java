@@ -6,11 +6,11 @@ import java.util.Date;
 
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramUser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 /**
  * The group has been migrated to a supergroup with the specified identifier, not exceeding 1e13 by absolute value.
@@ -18,11 +18,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
 @ToString(doNotUseGetters = true, callSuper = true)
+@SuperBuilder(toBuilder = true)
 public final class TelegramChatMigratedToSupergroupMessage extends TelegramMessage {
 
 	long supergroupChatId;
 
-	@Builder(toBuilder = true)
 	public TelegramChatMigratedToSupergroupMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -40,9 +40,6 @@ public final class TelegramChatMigratedToSupergroupMessage extends TelegramMessa
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitChatMigratedToSupergroupMessage(this);
-	}
-
-	public static class TelegramChatMigratedToSupergroupMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }

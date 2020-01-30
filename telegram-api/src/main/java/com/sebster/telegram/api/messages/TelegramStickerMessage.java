@@ -7,20 +7,20 @@ import java.util.Date;
 import com.sebster.telegram.api.data.TelegramChat;
 import com.sebster.telegram.api.data.TelegramSticker;
 import com.sebster.telegram.api.data.TelegramUser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @Getter
 @ToString(doNotUseGetters = true, callSuper = true)
+@SuperBuilder(toBuilder = true)
 public final class TelegramStickerMessage extends TelegramMessage {
 
 	@NonNull TelegramSticker sticker;
 
-	@Builder(toBuilder = true)
 	public TelegramStickerMessage(
 			int messageId, TelegramUser from, @NonNull Date date, @NonNull TelegramChat chat,
 			TelegramUser forwardFrom, Date forwardDate, TelegramMessage replyToMessage,
@@ -38,9 +38,6 @@ public final class TelegramStickerMessage extends TelegramMessage {
 	@Override
 	public void accept(TelegramMessageVisitor visitor) {
 		visitor.visitStickerMessage(this);
-	}
-
-	public static class TelegramStickerMessageBuilder implements TelegramMessageBuilder {
 	}
 
 }
