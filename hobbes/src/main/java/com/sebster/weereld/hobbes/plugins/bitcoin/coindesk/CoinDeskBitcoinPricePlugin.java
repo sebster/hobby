@@ -47,6 +47,12 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 	}
 
 	@Override
+	public void showHelp(TelegramChat chat) {
+		sendMessage(chat, "<aantal> bitcoin [in <munt>] - haal de CoinDesk prijs op van <aantal> bitcoin in <munt>");
+		sendMessage(chat, "voorbeeld: 1.5 bitcoin in usd");
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 

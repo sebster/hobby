@@ -52,6 +52,15 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	@Override
+	public void showHelp(TelegramChat chat) {
+		sendMessage(chat,
+				"Hoe laat is het bij <naam>?\n" +
+						"voorlopig - toon de voorlopige vroege vogels\n" +
+						"vv|vroegevogels - toon de vroege vogels van de afgelopen week\n"
+		);
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 
 		visitMessage(message);

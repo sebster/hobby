@@ -44,6 +44,12 @@ public class KrakenTickerPlugin extends BasePlugin {
 	}
 
 	@Override
+	public void showHelp(TelegramChat chat) {
+		sendMessage(chat, "<aantal> kraken <munt1> [in <munt2>] - haal de kraken prijs op van <aantal> <munt1> in <munt2>");
+		sendMessage(chat, "voorbeeld: 1.5 kraken btc in usd");
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 

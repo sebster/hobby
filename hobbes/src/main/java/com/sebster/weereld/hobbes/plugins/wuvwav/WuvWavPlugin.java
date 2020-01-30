@@ -46,6 +46,12 @@ public class WuvWavPlugin extends BasePlugin {
 	}
 
 	@Override
+	public void showHelp(TelegramChat chat) {
+		sendMessage(chat, "1 wuv|wav|euribor - haal de wuv, wav, of euribor koers op");
+		sendMessage(chat, "voorbeeld: 1 wav");
+	}
+
+	@Override
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 

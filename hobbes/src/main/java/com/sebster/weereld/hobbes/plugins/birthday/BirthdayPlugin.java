@@ -48,7 +48,6 @@ public class BirthdayPlugin extends BasePlugin {
 	private static final Pattern BDAY_FOR_MONTH_DAY_PATTERN = compile("(?i)^bday (\\d{2})-(\\d{2})$");
 	private static final Pattern BDAY_MONTH_PATTERN = compile("(?i)^bday (\\d{1,2})$");
 	private static final Pattern BDAY_YEAR_PATTERN = compile("(?i)^bday (\\d{4})$");
-	private static final Pattern BDAY_HELP_PATTERN = compile("(?i)^bday help$");
 
 	@Value("${birthday.sing.chat-id}")
 	private long singChatId;
@@ -64,6 +63,19 @@ public class BirthdayPlugin extends BasePlugin {
 	@Override
 	public String getDescription() {
 		return "Vraag naar de verjaardagen en leeftijden van #weereld-gangers.";
+	}
+
+	@Override
+	public void showHelp(TelegramChat chat) {
+		sendMessage(chat,
+				"bday - wie is er vandaag jarig?\n" +
+						"bday <naam> - wanneer is <naam> geboren?\n" +
+						"age <naam> - hoe oud is <naam>?\n" +
+						"bday <jjjj-mm-dd> - wie is er op <jjjj-mm-dd> jarig?\n" +
+						"bday <mm-dd> - wie is er op <mm-dd> jarig?\n" +
+						"bday <maand> - wie is er in <maand> jarig?\n" +
+						"bday <jaar> - wie is in <jaar> geboren?\n"
+		);
 	}
 
 	@Scheduled(cron = "0 0 0 * * *")
@@ -92,12 +104,6 @@ public class BirthdayPlugin extends BasePlugin {
 		String text = message.getText().trim();
 
 		Matcher matcher;
-
-		matcher = BDAY_HELP_PATTERN.matcher(text);
-		if (matcher.matches()) {
-			showHelp(chat);
-			return;
-		}
 
 		matcher = BDAY_TODAY_PATTERN.matcher(text);
 		if (matcher.matches()) {
@@ -233,19 +239,6 @@ public class BirthdayPlugin extends BasePlugin {
 			});
 			sendMessage(chat, message.toString());
 		}
-	}
-
-	private void showHelp(TelegramChat chat) {
-		sendMessage(chat,
-				"bday - wie is er vandaag jarig?\n" +
-						"bday <naam> - wanneer is <naam> geboren?\n" +
-						"age <naam> - hoe oud is <naam>?\n" +
-						"bday <jjjj-mm-dd> - wie is er op <jjjj-mm-dd> jarig?\n" +
-						"bday <mm-dd> - wie is er op <mm-dd> jarig?\n" +
-						"bday <maand> - wie is er in <maand> jarig?\n" +
-						"bday <jaar> - wie is in <jaar> geboren?\n" +
-						"bday help - hoe werkt deze plugin?"
-		);
 	}
 
 	private String monthName(int month) {
