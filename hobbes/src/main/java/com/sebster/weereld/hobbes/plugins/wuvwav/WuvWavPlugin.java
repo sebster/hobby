@@ -22,9 +22,10 @@ import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 @Component
 public class WuvWavPlugin extends BasePlugin {
 
-	private static final URI EURIBOR_URI = URI.create("http://euribor-rates.eu");
+	private static final URI EURIBOR_URI = URI.create("https://euribor-rates.eu");
 	private static final Pattern EURIBOR_PATTERN = compile(
-			"(?im)<td nowrap>\\s*1 month\\s*</td>\\s*<td align=\"center\">\\s*(-?\\d+\\.\\d+)%\\s*</td>");
+			"(?i)<tr><td><a href=\"/en/current-euribor-rates/1/euribor-rate-1-month/\".*>(-?\\d+\\.\\d+) %</td></tr>"
+	);
 
 	@Value("${wuvwav.wuv.markup:2.0}")
 	private BigDecimal wuvMarkup;
