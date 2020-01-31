@@ -61,12 +61,10 @@ public class PluginsPlugin extends BasePlugin {
 	}
 
 	private void showHelp(TelegramChat chat, String pluginName) {
-		Plugin plugin = findPlugin(pluginName).orElse(null);
-		if (plugin != null) {
-			plugin.showHelp(chat);
-		} else {
-			sendMessage(chat, "Er bestaat helemaal geen plugin '" + pluginName + "'...");
-		}
+		findPlugin(pluginName).ifPresentOrElse(
+				plugin -> plugin.showHelp(chat),
+				() -> sendMessage(chat, "Er bestaat helemaal geen plugin '" + pluginName + "'...")
+		);
 	}
 
 	private Optional<Plugin> findPlugin(String pluginName) {
