@@ -1,3 +1,8 @@
-# #Weereld Telegram Bot
+# Hobby
 
-This is a telegram bot which migrates the TU/e #weereld IRC bots to the new Telegram group.
+This repository contains some of my hobby projects.
+
+Currently this includes:
+
+- Telegram client for the BOT API.
+- A silly telegram bot with plugins to do all kinds of silly stuff.
