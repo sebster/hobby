@@ -15,8 +15,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.messages.TelegramTextMessage;
+import com.sebster.telegram.botapi.data.TelegramChat;
+import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
 @Component

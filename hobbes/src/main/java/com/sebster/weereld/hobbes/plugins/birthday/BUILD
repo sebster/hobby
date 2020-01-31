@@ -9,7 +9,7 @@ java_library(
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/people",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/api",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/utils",
-        "//lib/telegram/telegram-api",
+        "//lib/telegram/botapi",
         "@maven//:org_apache_commons_commons_lang3",
         "@maven//:org_springframework_spring_beans",
         "@maven//:org_springframework_spring_context",

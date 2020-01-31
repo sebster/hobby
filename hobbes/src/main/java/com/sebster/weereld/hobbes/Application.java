@@ -16,10 +16,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.sebster.telegram.api.TelegramService;
-import com.sebster.telegram.api.TelegramUpdate;
-import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.messages.TelegramMessage;
+import com.sebster.telegram.botapi.TelegramService;
+import com.sebster.telegram.botapi.TelegramUpdate;
+import com.sebster.telegram.botapi.data.TelegramUser;
+import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.weereld.hobbes.plugins.api.Plugin;
 
 @SpringBootApplication

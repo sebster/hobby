@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.messages.TelegramTextMessage;
+import com.sebster.telegram.botapi.data.TelegramChat;
+import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import com.sebster.weereld.hobbes.plugins.api.Plugin;
 

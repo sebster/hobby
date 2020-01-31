@@ -1,6 +1,6 @@
 package com.sebster.weereld.hobbes.plugins.earlybird;
 
-import static com.sebster.telegram.api.TelegramSendMessageOptions.html;
+import static com.sebster.telegram.botapi.TelegramSendMessageOptions.html;
 import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfPresent;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.messages.TelegramMessage;
-import com.sebster.telegram.api.messages.TelegramTextMessage;
+import com.sebster.telegram.botapi.data.TelegramChat;
+import com.sebster.telegram.botapi.data.TelegramUser;
+import com.sebster.telegram.botapi.messages.TelegramMessage;
+import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.people.Person;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 

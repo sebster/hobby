@@ -34,9 +34,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.data.TelegramUser;
-import com.sebster.telegram.api.messages.TelegramTextMessage;
+import com.sebster.telegram.botapi.data.TelegramChat;
+import com.sebster.telegram.botapi.data.TelegramUser;
+import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 
 @Component

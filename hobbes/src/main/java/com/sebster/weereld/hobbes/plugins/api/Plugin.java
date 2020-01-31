@@ -1,7 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.api;
 
-import com.sebster.telegram.api.data.TelegramChat;
-import com.sebster.telegram.api.messages.TelegramMessage;
+import com.sebster.telegram.botapi.data.TelegramChat;
+import com.sebster.telegram.botapi.messages.TelegramMessage;
 
 public interface Plugin {
 

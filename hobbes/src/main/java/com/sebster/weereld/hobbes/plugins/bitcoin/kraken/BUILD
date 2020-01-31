@@ -7,7 +7,7 @@ java_library(
     deps = [
         "//3rdparty/org/projectlombok/lombok",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/api",
-        "//lib/telegram/telegram-api",
+        "//lib/telegram/botapi",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_spring_context",
