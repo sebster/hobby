@@ -1,5 +1,5 @@
 workspace(
-    name = "hobbes",
+    name = "hobby",
 )
 
 # Tools to import rules
