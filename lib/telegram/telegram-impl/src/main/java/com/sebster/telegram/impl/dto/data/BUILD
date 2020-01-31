@@ -3,9 +3,9 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "data",
     srcs = glob(["*.java"]),
-    visibility = ["//telegram-api/src/main/java/com/sebster/telegram/api:__subpackages__"],
+    visibility = ["//lib/telegram/telegram-impl/src/main/java/com/sebster/telegram/impl:__subpackages__"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
-        "@maven//:org_apache_commons_commons_lang3",
+        "//lib/telegram/telegram-api",
     ],
 )

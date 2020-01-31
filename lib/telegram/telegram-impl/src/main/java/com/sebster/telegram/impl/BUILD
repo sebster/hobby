@@ -11,9 +11,9 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
-        "//telegram-api",
-        "//telegram-impl/src/main/java/com/sebster/telegram/impl/dto/data",
-        "//telegram-impl/src/main/java/com/sebster/telegram/impl/dto/methods",
+        "//lib/telegram/telegram-api",
+        "//lib/telegram/telegram-impl/src/main/java/com/sebster/telegram/impl/dto/data",
+        "//lib/telegram/telegram-impl/src/main/java/com/sebster/telegram/impl/dto/methods",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:javax_validation_validation_api",
