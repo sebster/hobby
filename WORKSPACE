@@ -46,7 +46,7 @@ maven_install(
         "javax.servlet:javax.servlet-api:4.0.1",
         "javax.validation:validation-api:2.0.1.Final",
         "javax.transaction:javax.transaction-api:1.3",
-        "junit:junit:4.12",
+        "org.junit.jupiter:junit-jupiter-api:jar:5.6.0",
         "org.apache.commons:commons-lang3:3.9",
         "org.bouncycastle:bcpkix-jdk15on:1.55",
         "org.hamcrest:hamcrest:2.1",
