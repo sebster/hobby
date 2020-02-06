@@ -1,5 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.plugins;
 
+import static com.sebster.telegram.botapi.TelegramSendMessageOptions.html;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,8 +58,9 @@ public class PluginsPlugin extends BasePlugin {
 	}
 
 	private void listPlugins(TelegramChat chat) {
-		plugins.forEach(plugin -> sendMessage(chat, plugin.getName() + ": " + plugin.getDescription()));
-		sendMessage(chat, "Gebruik 'help <plugin>' voor help voor een plugin.");
+		sendMessage(chat, "De volgende plugins zijn beschikbaar:");
+		plugins.forEach(plugin -> sendMessage(chat, html(), "<b>" + plugin.getName() + "</b>: " + plugin.getDescription()));
+		sendMessage(chat, html(), "Gebruik <code>help &lt;plugin&gt;</code> voor help voor een plugin.");
 	}
 
 	private void showHelp(TelegramChat chat, String pluginName) {
