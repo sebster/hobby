@@ -1,10 +1,9 @@
 package com.sebster.weereld.hobbes.plugins.bitcoin.kraken;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
+import static java.util.List.copyOf;
 import static lombok.AccessLevel.PRIVATE;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
@@ -23,7 +22,7 @@ public abstract class KrakenResponse<T> {
 	T result;
 
 	public KrakenResponse(List<String> errors, T result) {
-		this.errors = errors == null ? emptyList() : unmodifiableList(new ArrayList<>(errors));
+		this.errors = errors == null ? emptyList() : copyOf(errors);
 		this.result = result;
 	}
 

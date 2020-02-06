@@ -45,7 +45,7 @@ public class Application implements CommandLineRunner {
 	private List<Plugin> plugins;
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 		int lastUpdateId = -1;
 		Duration duration = INITIAL_ERROR_DELAY;
 		while (true) {

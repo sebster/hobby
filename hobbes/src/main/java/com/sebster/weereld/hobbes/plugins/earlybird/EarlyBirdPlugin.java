@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.botapi.data.TelegramChat;
@@ -25,8 +24,10 @@ import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.people.Person;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
 public class EarlyBirdPlugin extends BasePlugin {
 
 	private static final DateTimeFormatter SHORT_DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd");
@@ -38,7 +39,6 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private static final LocalTime VROEGE_VOGEL_CUTOFF_TIME = LocalTime.parse("03:30:00");
 
-	@Autowired
 	private EarlyBirdRepository earlyBirdRepository;
 
 	@Override
@@ -131,21 +131,21 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private void updateEarlyBirdForMessage(TelegramMessage message) {
 		Optional<Integer> fromIdOpt = getFromUserId(message);
-		if (!fromIdOpt.isPresent()) {
+		if (fromIdOpt.isEmpty()) {
 			// This message is not from a user.
 			return;
 		}
 		int fromId = fromIdOpt.get();
 
 		Optional<Person> personOpt = personRepository.findByTelegramUserId(fromId);
-		if (!personOpt.isPresent()) {
+		if (personOpt.isEmpty()) {
 			// This message is from a telegram user we don't know about.
 			return;
 		}
 		Person person = personOpt.get();
 
 		Optional<ZoneId> zoneOpt = person.getZone();
-		if (!zoneOpt.isPresent()) {
+		if (zoneOpt.isEmpty()) {
 			// The time zone of the telegram user is unknown.
 			return;
 		}
@@ -169,9 +169,9 @@ public class EarlyBirdPlugin extends BasePlugin {
 		eb = earlyBirdRepository.save(eb);
 
 		TelegramChat chat = message.getChat();
-		if (!oldEb.isPresent() && eb.isWinner()) {
+		if (oldEb.isEmpty() && eb.isWinner()) {
 			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
-		} else if (!oldEb.isPresent()) {
+		} else if (oldEb.isEmpty()) {
 			sendMessage(chat, "Jai maakt noeg kans oep de vroige voegil vandaag, %s!", eb.getNick());
 		} else if (eb.getWakeUpTime().isBefore(oldEb.get().getWakeUpTime())) {
 			sendMessage(chat, "Jai ibt de vroigivoegil van %s afgipiekt, %s!", oldEb.get().getNick(), eb.getNick());
@@ -180,7 +180,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private void checkForWinner(TelegramChat chat) {
 		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirstByDateOrderByWakeUpTime(earlyBirdDate());
-		if (!ebOpt.isPresent() || ebOpt.get().isWinner()) {
+		if (ebOpt.isEmpty() || ebOpt.get().isWinner()) {
 			// We already have a winner.
 			return;
 		}
@@ -197,7 +197,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private boolean canStillBecomeEarlyBird(Person person, EarlyBird eb) {
-		if (!person.getZone().isPresent()) {
+		if (person.getZone().isEmpty()) {
 			return false;
 		}
 		LocalDateTime personDateTime = dateTime(person.getZone().get());

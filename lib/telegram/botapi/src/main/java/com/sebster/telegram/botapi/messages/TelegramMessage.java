@@ -87,24 +87,4 @@ public abstract class TelegramMessage {
 
 	public abstract void accept(TelegramMessageVisitor visitor);
 
-	//	public interface TelegramMessageBuilder {
-	//
-	//		TelegramMessageBuilder messageId(int messageId);
-	//
-	//		TelegramMessageBuilder from(TelegramUser from);
-	//
-	//		TelegramMessageBuilder date(@NonNull Date date);
-	//
-	//		TelegramMessageBuilder chat(@NonNull TelegramChat chat);
-	//
-	//		TelegramMessageBuilder forwardFrom(TelegramUser forwardFrom);
-	//
-	//		TelegramMessageBuilder forwardDate(Date forwardDate);
-	//
-	//		TelegramMessageBuilder replyToMessage(TelegramMessage replyToMessage);
-	//
-	//		TelegramMessage build();
-	//
-	//	}
-
 }

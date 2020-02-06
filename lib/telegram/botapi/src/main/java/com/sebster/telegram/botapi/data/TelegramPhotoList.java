@@ -1,8 +1,7 @@
 package com.sebster.telegram.botapi.data;
 
-import static java.util.Collections.unmodifiableList;
+import static java.util.List.copyOf;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class TelegramPhotoList implements Iterable<TelegramPhoto> {
 
 	public TelegramPhotoList(@NonNull List<TelegramPhoto> photos) {
 		Validate.noNullElements(photos, "photos[%d] must not be null");
-		this.photos = unmodifiableList(new ArrayList<>(photos));
+		this.photos = copyOf(photos);
 	}
 
 	public int getNumberOfSizes() {

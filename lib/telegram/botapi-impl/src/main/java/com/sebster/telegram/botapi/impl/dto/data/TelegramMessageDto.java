@@ -122,7 +122,7 @@ public class TelegramMessageDto {
 		return build(TelegramUnknownMessage.builder());
 	}
 
-	private TelegramMessage build(TelegramMessageBuilder builder) {
+	private <T extends TelegramMessage> TelegramMessage build(TelegramMessageBuilder<T, ?> builder) {
 		return builder
 				.messageId(messageId)
 				.from(from != null ? from.toTelegramUser() : null)

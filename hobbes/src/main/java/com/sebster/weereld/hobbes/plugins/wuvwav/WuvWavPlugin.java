@@ -63,7 +63,7 @@ public class WuvWavPlugin extends BasePlugin {
 		TelegramChat chat = message.getChat();
 
 		Optional<BigDecimal> euriborRate = lookUpEuriborRate();
-		if (!euriborRate.isPresent()) {
+		if (euriborRate.isEmpty()) {
 			sendMessage(chat, "Ik weit ivin niet oiveil %s ies.", text.replaceAll("u", "oe").replaceAll("i", "ie"));
 			return;
 		}
