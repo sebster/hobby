@@ -23,7 +23,7 @@ import lombok.NonNull;
 public class KrakenTickerPlugin extends BasePlugin {
 
 	private static final URI TICKER_URI = URI.create("https://api.kraken.com/0/public/Ticker");
-	private static final Pattern PATTERN = compile("(?i)([0-9]+(?:\\.?[0-9]+)?) kraken ([A-Z]{3,4})(?: in ([A-Z]{3,4}))?(:\\b|$)");
+	private static final Pattern PATTERN = compile("(?i)\\B([0-9]*(?:\\.?[0-9]+)?) kraken ([A-Z]{3,4})(?: in ([A-Z]{3,4}))?(:\\b|$)");
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
 
 	private final @NonNull RestTemplate restTemplate;
