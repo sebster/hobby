@@ -1,9 +1,9 @@
 package com.sebster.telegram.botapi.impl.dto.data;
 
 import com.sebster.telegram.botapi.data.TelegramSticker;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class TelegramStickerDto {
 
 	String fileId;
