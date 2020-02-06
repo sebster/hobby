@@ -66,7 +66,7 @@ public class Application implements CommandLineRunner {
 	}
 
 	private void processUpdate(TelegramUpdate update) {
-		if (!update.getMessage().isPresent()) {
+		if (update.getMessage().isEmpty()) {
 			logger.warn("Update without message received: " + update);
 			return;
 		}
@@ -85,15 +85,17 @@ public class Application implements CommandLineRunner {
 	}
 
 	private boolean isWhiteListed(TelegramMessage telegramMessage) {
-		long chat = telegramMessage.getChat().getId();
-		if (Arrays.stream(chatWhiteList).anyMatch(allowedChat -> allowedChat == chat)) {
-			return true;
-		}
+		return isWhiteListedChat(telegramMessage) || isWhiteListedFrom(telegramMessage);
+	}
+
+	private boolean isWhiteListedFrom(TelegramMessage telegramMessage) {
 		int from = telegramMessage.getFrom().map(TelegramUser::getId).orElse(-1);
-		if (Arrays.stream(fromWhiteList).anyMatch(allowedFrom -> allowedFrom == from)) {
-			return true;
-		}
-		return false;
+		return Arrays.stream(fromWhiteList).anyMatch(allowedFrom -> allowedFrom == from);
+	}
+
+	private boolean isWhiteListedChat(TelegramMessage telegramMessage) {
+		long chat = telegramMessage.getChat().getId();
+		return Arrays.stream(chatWhiteList).anyMatch(allowedChat -> allowedChat == chat);
 	}
 
 	public static void main(String[] args) {
