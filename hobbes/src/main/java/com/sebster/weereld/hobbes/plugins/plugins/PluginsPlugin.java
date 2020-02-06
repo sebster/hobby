@@ -43,7 +43,7 @@ public class PluginsPlugin extends BasePlugin {
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().toLowerCase();
 
-		if (text.equals("plugins")) {
+		if (text.equals("plugins") || text.equals("help")) {
 			listPlugins(message.getChat());
 			return;
 		}
