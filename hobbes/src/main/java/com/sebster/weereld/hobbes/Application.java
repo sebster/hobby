@@ -4,16 +4,14 @@ import static com.sebster.weereld.hobbes.utils.TimeUtils.sleep;
 import static org.apache.commons.lang3.ObjectUtils.max;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.sebster.telegram.botapi.TelegramService;
@@ -21,9 +19,12 @@ import com.sebster.telegram.botapi.TelegramUpdate;
 import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.weereld.hobbes.plugins.api.Plugin;
+import lombok.AllArgsConstructor;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableConfigurationProperties(HobbesProperties.class)
+@AllArgsConstructor
 public class Application implements CommandLineRunner {
 
 	private static final Duration POLL_TIMEOUT = Duration.ofSeconds(60);
@@ -32,17 +33,9 @@ public class Application implements CommandLineRunner {
 
 	private final Logger logger = LoggerFactory.getLogger(Application.class);
 
-	@Value("${telegram.from.white-list}")
-	private int[] fromWhiteList;
-
-	@Value("${telegram.chat.white-list}")
-	private int[] chatWhiteList;
-
-	@Autowired
-	private TelegramService telegramService;
-
-	@Autowired
-	private List<Plugin> plugins;
+	private final HobbesProperties hobbesProperties;
+	private final TelegramService telegramService;
+	private final List<Plugin> plugins;
 
 	@Override
 	public void run(String... args) {
@@ -90,12 +83,12 @@ public class Application implements CommandLineRunner {
 
 	private boolean isWhiteListedFrom(TelegramMessage telegramMessage) {
 		int from = telegramMessage.getFrom().map(TelegramUser::getId).orElse(-1);
-		return Arrays.stream(fromWhiteList).anyMatch(allowedFrom -> allowedFrom == from);
+		return hobbesProperties.getTelegramFromWhiteList().stream().anyMatch(allowedFrom -> allowedFrom == from);
 	}
 
 	private boolean isWhiteListedChat(TelegramMessage telegramMessage) {
 		long chat = telegramMessage.getChat().getId();
-		return Arrays.stream(chatWhiteList).anyMatch(allowedChat -> allowedChat == chat);
+		return hobbesProperties.getTelegramChatWhiteList().stream().anyMatch(allowedChat -> allowedChat == chat);
 	}
 
 	public static void main(String[] args) {

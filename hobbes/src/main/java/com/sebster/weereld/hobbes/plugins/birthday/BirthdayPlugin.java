@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -38,8 +39,11 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
+import lombok.AllArgsConstructor;
 
 @Component
+@EnableConfigurationProperties(BirthdayProperties.class)
+@AllArgsConstructor
 public class BirthdayPlugin extends BasePlugin {
 
 	private static final Pattern BDAY_TODAY_PATTERN = compile("(?i)^bday$");
@@ -49,11 +53,8 @@ public class BirthdayPlugin extends BasePlugin {
 	private static final Pattern BDAY_MONTH_PATTERN = compile("(?i)^bday (\\d{1,2})$");
 	private static final Pattern BDAY_YEAR_PATTERN = compile("(?i)^bday (\\d{4})$");
 
-	@Value("${birthday.sing.chat-id}")
-	private long singChatId;
-
-	@Autowired
-	private BirthdayService birthdayService;
+	private final BirthdayProperties properties;
+	private final BirthdayService birthdayService;
 
 	@Override
 	public String getName() {
@@ -81,6 +82,7 @@ public class BirthdayPlugin extends BasePlugin {
 	@Scheduled(cron = "0 0 0 * * *")
 	public void sing() {
 		LocalDate today = date();
+		long singChatId = properties.getSingChatId();
 		Set<Birthday> bdays = birthdayService.birthdays(withBirthdayOn(today));
 		if (!bdays.isEmpty()) {
 			sendMessage(singChatId, "ER IS ER EEN JARIG!");

@@ -12,29 +12,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
+@EnableConfigurationProperties(WuvWavProperties.class)
 public class WuvWavPlugin extends BasePlugin {
 
 	private static final URI EURIBOR_URI = URI.create("https://euribor-rates.eu");
-	private static final Pattern EURIBOR_PATTERN = compile(
-			"(?i)<tr><td><a href=\"/en/current-euribor-rates/1/euribor-rate-1-month/\".*>(-?\\d+\\.\\d+) %</td></tr>"
-	);
+	private static final Pattern EURIBOR_PATTERN =
+			compile("(?i)<tr><td><a href=\"/en/current-euribor-rates/1/euribor-rate-1-month/\".*>(-?\\d+\\.\\d+) %</td></tr>");
 
-	@Value("${wuvwav.wuv.markup:2.0}")
-	private BigDecimal wuvMarkup;
-
-	@Value("${wuvwav.wav.markup:3.0}")
-	private BigDecimal wavMarkup;
-
-	@Value("${wuvwav.mortgage-sebster:100000}")
-	private BigDecimal mortgageSebster;
+	private final WuvWavProperties properties;
 
 	@Override
 	public String getName() {
@@ -73,12 +68,12 @@ public class WuvWavPlugin extends BasePlugin {
 			sendMessage(chat, "1 eoeriebor ies %s procint, wat it dan oiek ies.", euriborRate.get());
 			break;
 		case "1 wuv":
-			BigDecimal wuv = euriborRate.get().add(wuvMarkup);
-			BigDecimal amount = wuv.multiply(mortgageSebster).divide(BigDecimal.valueOf(12 * 100), 2, HALF_UP);
+			BigDecimal wuv = euriborRate.get().add(properties.getWuvMarkup());
+			BigDecimal amount = wuv.multiply(properties.getMortgageSebster()).divide(BigDecimal.valueOf(12 * 100), 2, HALF_UP);
 			sendMessage(chat, "1 woev ies %s procint. Voier Sibstir was dat %s eoero pir maand.", wuv, amount);
 			break;
 		case "1 wav":
-			BigDecimal wav = euriborRate.get().add(wavMarkup);
+			BigDecimal wav = euriborRate.get().add(properties.getWavMarkup());
 			sendMessage(chat, "1 wav ies %s procint.", wav);
 			break;
 		default:

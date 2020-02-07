@@ -13,6 +13,9 @@ resource_jar(
 java_library(
     name = "hobbes",
     srcs = glob(["*.java"]),
+    plugins = [
+        "//3rdparty/org/springframework/boot:spring_boot_configuration_processor_plugin",
+    ],
     resource_jars = ["properties"],
     resources = [
         "db.changelog-master.xml",
