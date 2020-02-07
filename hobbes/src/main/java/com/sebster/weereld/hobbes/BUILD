@@ -52,14 +52,14 @@ java_library(
 
 java_binary(
     name = "bin",
-    main_class = "com.sebster.weereld.hobbes.Application",
+    main_class = "com.sebster.weereld.hobbes.Hobbes",
     visibility = ["//visibility:public"],
     runtime_deps = [":hobbes"],
 )
 
 java_image(
     name = "image",
-    main_class = "com.sebster.weereld.hobbes.Application",
+    main_class = "com.sebster.weereld.hobbes.Hobbes",
     visibility = ["//visibility:public"],
     runtime_deps = [":hobbes"],
 )

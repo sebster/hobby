@@ -25,13 +25,13 @@ import lombok.AllArgsConstructor;
 @EnableScheduling
 @EnableConfigurationProperties(HobbesProperties.class)
 @AllArgsConstructor
-public class Application implements CommandLineRunner {
+public class Hobbes implements CommandLineRunner {
 
 	private static final Duration POLL_TIMEOUT = Duration.ofSeconds(60);
 	private static final Duration INITIAL_ERROR_DELAY = Duration.ofSeconds(1);
 	private static final Duration MAX_ERROR_DELAY = Duration.ofSeconds(30);
 
-	private final Logger logger = LoggerFactory.getLogger(Application.class);
+	private final Logger logger = LoggerFactory.getLogger(Hobbes.class);
 
 	private final HobbesProperties hobbesProperties;
 	private final TelegramService telegramService;
@@ -92,7 +92,7 @@ public class Application implements CommandLineRunner {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(Hobbes.class, args);
 	}
 
 }
