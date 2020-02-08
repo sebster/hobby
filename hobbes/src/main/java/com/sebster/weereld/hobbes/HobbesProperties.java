@@ -1,5 +1,6 @@
 package com.sebster.weereld.hobbes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,7 +11,7 @@ import lombok.Data;
 @Data
 public class HobbesProperties {
 
-	private List<Integer> telegramFromWhiteList;
-	private List<Long> telegramChatWhiteList;
+	private List<Integer> telegramFromWhiteList = new ArrayList<>();
+	private List<Long> telegramChatWhiteList = new ArrayList<>();
 
 }
