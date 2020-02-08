@@ -81,8 +81,11 @@ public class BirthdayPlugin extends BasePlugin {
 
 	@Scheduled(cron = "0 0 0 * * *")
 	public void sing() {
+		Long singChatId = properties.getSingChatId();
+		if (singChatId == null) {
+			return;
+		}
 		LocalDate today = date();
-		long singChatId = properties.getSingChatId();
 		Set<Birthday> bdays = birthdayService.birthdays(withBirthdayOn(today));
 		if (!bdays.isEmpty()) {
 			sendMessage(singChatId, "ER IS ER EEN JARIG!");
