@@ -11,6 +11,7 @@ java_library(
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/utils",
         "//lib/telegram/botapi",
         "@maven//:javax_persistence_javax_persistence_api",
+        "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_data_spring_data_commons",
         "@maven//:org_springframework_data_spring_data_jpa",
         "@maven//:org_springframework_spring_beans",

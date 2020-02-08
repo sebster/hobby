@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.botapi.data.TelegramChat;
@@ -29,6 +30,7 @@ import lombok.NonNull;
 
 @Component
 @AllArgsConstructor
+@EnableConfigurationProperties(EarlyBirdProperties.class)
 public class EarlyBirdPlugin extends BasePlugin {
 
 	private static final DateTimeFormatter SHORT_DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd");
@@ -41,6 +43,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private static final LocalTime VROEGE_VOGEL_CUTOFF_TIME = LocalTime.parse("03:30:00");
 
 	private final @NonNull EarlyBirdRepository earlyBirdRepository;
+	private final @NonNull EarlyBirdProperties properties;
 
 	@Override
 	public String getName() {
@@ -91,8 +94,15 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	@Override
 	public void visitMessage(TelegramMessage message) {
+		if (!isEarlyBirdChat(message)) {
+			return;
+		}
 		updateEarlyBirdForMessage(message);
 		checkForWinner(message.getChat());
+	}
+
+	private boolean isEarlyBirdChat(TelegramMessage message) {
+		return properties.getChatIds().stream().anyMatch(chatId -> chatId == message.getChat().getId());
 	}
 
 	private void showLocalTime(TelegramMessage message, String nick) {
