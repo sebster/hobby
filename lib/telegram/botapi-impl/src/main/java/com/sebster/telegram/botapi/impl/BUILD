@@ -9,6 +9,9 @@ java_library(
     ],
     resource_jars = [":spring_autoconfig"],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "@maven//:org_springframework_boot_spring_boot_starter_validation",
+    ],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
         "//lib/telegram/botapi",

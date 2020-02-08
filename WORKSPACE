@@ -74,6 +74,7 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-test:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-tomcat:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE",
+        "org.springframework.boot:spring-boot-starter-validation:jar:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-configuration-processor:2.2.4.RELEASE",
         "org.springframework.data:spring-data-commons:2.2.4.RELEASE",
         "org.apache.httpcomponents:httpclient:4.5.10",
