@@ -25,6 +25,7 @@ import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.people.Person;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @Component
 @AllArgsConstructor
@@ -39,7 +40,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private static final LocalTime VROEGE_VOGEL_CUTOFF_TIME = LocalTime.parse("03:30:00");
 
-	private EarlyBirdRepository earlyBirdRepository;
+	private final @NonNull EarlyBirdRepository earlyBirdRepository;
 
 	@Override
 	public String getName() {

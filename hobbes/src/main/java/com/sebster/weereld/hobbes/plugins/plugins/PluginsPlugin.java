@@ -12,13 +12,14 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import com.sebster.weereld.hobbes.plugins.api.Plugin;
+import lombok.NonNull;
 
 @Component
 public class PluginsPlugin extends BasePlugin {
 
-	private final List<Plugin> plugins;
+	private final @NonNull List<Plugin> plugins;
 
-	public PluginsPlugin(List<Plugin> plugins) {
+	public PluginsPlugin(@NonNull List<Plugin> plugins) {
 		this.plugins = new ArrayList<>(plugins);
 		this.plugins.add(this);
 	}

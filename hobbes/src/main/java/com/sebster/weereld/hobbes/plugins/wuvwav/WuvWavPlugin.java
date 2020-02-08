@@ -19,6 +19,7 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @Component
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class WuvWavPlugin extends BasePlugin {
 	private static final Pattern EURIBOR_PATTERN =
 			compile("(?i)<tr><td><a href=\"/en/current-euribor-rates/1/euribor-rate-1-month/\".*>(-?\\d+\\.\\d+) %</td></tr>");
 
-	private final WuvWavProperties properties;
+	private final @NonNull WuvWavProperties properties;
 
 	@Override
 	public String getName() {

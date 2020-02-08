@@ -20,6 +20,7 @@ import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.weereld.hobbes.plugins.api.Plugin;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @SpringBootApplication
 @EnableScheduling
@@ -33,9 +34,9 @@ public class Hobbes implements CommandLineRunner {
 
 	private final Logger logger = LoggerFactory.getLogger(Hobbes.class);
 
-	private final HobbesProperties hobbesProperties;
-	private final TelegramService telegramService;
-	private final List<Plugin> plugins;
+	private final @NonNull HobbesProperties hobbesProperties;
+	private final @NonNull TelegramService telegramService;
+	private final @NonNull List<Plugin> plugins;
 
 	@Override
 	public void run(String... args) {

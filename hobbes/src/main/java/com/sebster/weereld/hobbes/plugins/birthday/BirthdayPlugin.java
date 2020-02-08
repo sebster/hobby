@@ -40,6 +40,7 @@ import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @Component
 @EnableConfigurationProperties(BirthdayProperties.class)
@@ -53,8 +54,8 @@ public class BirthdayPlugin extends BasePlugin {
 	private static final Pattern BDAY_MONTH_PATTERN = compile("(?i)^bday (\\d{1,2})$");
 	private static final Pattern BDAY_YEAR_PATTERN = compile("(?i)^bday (\\d{4})$");
 
-	private final BirthdayProperties properties;
-	private final BirthdayService birthdayService;
+	private final @NonNull BirthdayProperties properties;
+	private final @NonNull BirthdayService birthdayService;
 
 	@Override
 	public String getName() {
