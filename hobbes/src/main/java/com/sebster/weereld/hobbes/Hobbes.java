@@ -1,6 +1,7 @@
 package com.sebster.weereld.hobbes;
 
 import static com.sebster.weereld.hobbes.utils.TimeUtils.sleep;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.max;
 
 import java.time.Duration;
@@ -40,6 +41,9 @@ public class Hobbes implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
+		logEnabledPlugins();
+		logWhiteLists();
+
 		int lastUpdateId = -1;
 		Duration duration = INITIAL_ERROR_DELAY;
 		while (true) {
@@ -90,6 +94,16 @@ public class Hobbes implements CommandLineRunner {
 	private boolean isWhiteListedChat(TelegramMessage telegramMessage) {
 		long chat = telegramMessage.getChat().getId();
 		return hobbesProperties.getTelegramChatWhiteList().stream().anyMatch(allowedChat -> allowedChat == chat);
+	}
+
+	private void logEnabledPlugins() {
+		List<String> pluginNames = plugins.stream().map(Plugin::getName).collect(toList());
+		logger.info("Running with the following plugins enabled: {}", pluginNames);
+	}
+
+	private void logWhiteLists() {
+		logger.info("From white list: {}", hobbesProperties.getTelegramFromWhiteList());
+		logger.info("Chat white list: {}", hobbesProperties.getTelegramChatWhiteList());
 	}
 
 	public static void main(String[] args) {
