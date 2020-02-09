@@ -40,7 +40,7 @@ public class BirthdayService {
 		if (birthdays.size() > 1) {
 			throw new IllegalStateException("Incorrect result set size; " + birthdays.size());
 		}
-		return Optional.ofNullable(birthdays.first());
+		return Optional.ofNullable(birthdays.pollFirst());
 	}
 
 }
