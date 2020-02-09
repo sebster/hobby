@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sebster.repository.jpa.properties.JpaPropertyAutoConfiguration

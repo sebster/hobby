@@ -52,6 +52,7 @@ maven_install(
         "org.hamcrest:hamcrest:2.1",
         "org.hibernate:hibernate-jpamodelgen:5.4.10.Final",
         "javax.persistence:javax.persistence-api:2.2",
+        "javax.annotation:javax.annotation-api:jar:1.3.2",
         "org.liquibase:liquibase-core:3.8.5",
         "org.postgresql:postgresql:42.2.9",
         "org.projectlombok:lombok:1.18.10",
