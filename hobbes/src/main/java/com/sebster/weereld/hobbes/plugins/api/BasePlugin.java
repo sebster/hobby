@@ -1,5 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.api;
 
+import static com.sebster.weereld.hobbes.people.PersonSpecification.withNick;
+import static com.sebster.weereld.hobbes.people.PersonSpecification.withTelegramUserId;
 import static java.lang.String.format;
 
 import java.time.Clock;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sebster.repository.api.Repository;
 import com.sebster.telegram.botapi.TelegramEmoji;
 import com.sebster.telegram.botapi.TelegramSendMessageOptions;
 import com.sebster.telegram.botapi.TelegramService;
@@ -23,7 +26,6 @@ import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.telegram.botapi.messages.TelegramMessageVisitorAdapter;
 import com.sebster.weereld.hobbes.people.Person;
-import com.sebster.weereld.hobbes.people.PersonRepository;
 import lombok.NonNull;
 
 public abstract class BasePlugin extends TelegramMessageVisitorAdapter implements Plugin {
@@ -37,7 +39,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	protected TelegramService telegramService;
 
 	@Autowired
-	protected PersonRepository personRepository;
+	protected Repository<Person> personRepository;
 
 	@Override
 	@Transactional
@@ -71,7 +73,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	}
 
 	protected Optional<Person> getFrom(TelegramMessage message) {
-		return getFromUserId(message).flatMap(personRepository::findByTelegramUserId);
+		return getFromUserId(message).flatMap(userId -> personRepository.findOne(withTelegramUserId(userId)));
 	}
 
 	protected boolean isMe(@NonNull String nick) {
@@ -79,7 +81,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	}
 
 	protected Optional<Person> meOrPersonByNick(@NonNull TelegramMessage message, @NonNull String nick) {
-		return isMe(nick) ? getFrom(message) : personRepository.findByNickIgnoreCase(nick);
+		return isMe(nick) ? getFrom(message) : personRepository.findOne(withNick(nick));
 	}
 
 	protected LocalDate date() {

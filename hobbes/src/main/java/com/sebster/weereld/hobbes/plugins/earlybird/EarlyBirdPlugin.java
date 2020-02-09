@@ -1,6 +1,14 @@
 package com.sebster.weereld.hobbes.plugins.earlybird;
 
+import static com.sebster.repository.api.PageRequest.page;
+import static com.sebster.repository.api.properties.orders.PropertyOrder.orderBy;
 import static com.sebster.telegram.botapi.TelegramSendMessageOptions.html;
+import static com.sebster.weereld.hobbes.people.PersonSpecification.hasTelegramUserId;
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.DATE;
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.WAKE_UP_TIME;
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBirdSpecification.isWinner;
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBirdSpecification.withDate;
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBirdSpecification.withNick;
 import static com.sebster.weereld.hobbes.utils.StringUtils.formatIfPresent;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
@@ -15,10 +23,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import com.sebster.repository.api.Repository;
 import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramMessage;
@@ -42,7 +52,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private static final LocalTime VROEGE_VOGEL_CUTOFF_TIME = LocalTime.parse("03:30:00");
 
-	private final @NonNull EarlyBirdRepository earlyBirdRepository;
+	private final @NonNull Repository<EarlyBird> earlyBirdRepository;
 	private final @NonNull EarlyBirdProperties properties;
 
 	@Override
@@ -118,7 +128,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private void showCurrentEarlyBird(TelegramTextMessage message) {
-		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirstByDateOrderByWakeUpTime(earlyBirdDate());
+		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirst(withDate(earlyBirdDate()), orderBy(WAKE_UP_TIME));
 		if (ebOpt.isPresent()) {
 			EarlyBird eb = ebOpt.get();
 			sendMessage(message.getChat(), "De %svroige voegil van vandaag ies %s oem %s.",
@@ -130,7 +140,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		StringBuilder message = new StringBuilder();
 		message.append("In dan noe di vroige voegils van di afgiloepin weik:");
 		message.append("\n<pre>");
-		List<EarlyBird> ebs = earlyBirdRepository.findFirst7ByWinnerTrueOrderByDateDesc();
+		List<EarlyBird> ebs = earlyBirdRepository.findAll(isWinner(), orderBy(DATE).reversed(), page(0).pageSize(7)).getItems();
 		Collections.reverse(ebs);
 		for (EarlyBird eb : ebs) {
 			message.append(format("%-10s %s %s %s\n", dayName(eb.getDate()), SHORT_DATE_FORMAT.format(eb.getDate()),
@@ -148,7 +158,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		}
 		int fromId = fromIdOpt.get();
 
-		Optional<Person> personOpt = personRepository.findByTelegramUserId(fromId);
+		Optional<Person> personOpt = getFrom(message);
 		if (personOpt.isEmpty()) {
 			// This message is from a telegram user we don't know about.
 			return;
@@ -164,20 +174,20 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 		LocalDateTime ebDateTime = LocalDateTime.ofInstant(message.getDate().toInstant(), zone);
 		LocalDate ebDate = earlyBirdDate(ebDateTime);
-		Optional<EarlyBird> ebOpt = earlyBirdRepository.findByUserIdAndDate(fromId, ebDate);
+		Optional<EarlyBird> ebOpt = earlyBirdRepository.findOne(withNick(person.getNick()).and(withDate(ebDate)));
 		if (ebOpt.isPresent()) {
 			// This person's wake-up time is already registered for today.
 			return;
 		}
 
 		// Get the current early bird before we save the new one.
-		Optional<EarlyBird> oldEb = earlyBirdRepository.findFirstByDateOrderByWakeUpTime(ebDate);
+		Optional<EarlyBird> oldEb = earlyBirdRepository.findFirst(withDate(ebDate), orderBy(WAKE_UP_TIME));
 
 		EarlyBird eb = new EarlyBird(person.getNick(), ebDate, ebDateTime.toLocalTime());
-		if (isWinner(eb)) {
+		if (hasWon(eb)) {
 			eb.markWinner();
 		}
-		eb = earlyBirdRepository.save(eb);
+		earlyBirdRepository.add(eb);
 
 		TelegramChat chat = message.getChat();
 		if (oldEb.isEmpty() && eb.isWinner()) {
@@ -190,21 +200,21 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private void checkForWinner(TelegramChat chat) {
-		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirstByDateOrderByWakeUpTime(earlyBirdDate());
+		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirst(withDate(earlyBirdDate()), orderBy(WAKE_UP_TIME));
 		if (ebOpt.isEmpty() || ebOpt.get().isWinner()) {
 			// We already have a winner.
 			return;
 		}
 		EarlyBird eb = ebOpt.get();
-		if (isWinner(eb)) {
+		if (hasWon(eb)) {
 			eb.markWinner();
 			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
 		}
 	}
 
-	private boolean isWinner(EarlyBird eb) {
-		List<Person> telegramUsers = personRepository.findByTelegramUserIdIsNotNull();
-		return telegramUsers.stream().noneMatch(person -> canStillBecomeEarlyBird(person, eb));
+	private boolean hasWon(EarlyBird eb) {
+		Stream<Person> telegramUsers = personRepository.findAll(hasTelegramUserId());
+		return telegramUsers.noneMatch(person -> canStillBecomeEarlyBird(person, eb));
 	}
 
 	private boolean canStillBecomeEarlyBird(Person person, EarlyBird eb) {
