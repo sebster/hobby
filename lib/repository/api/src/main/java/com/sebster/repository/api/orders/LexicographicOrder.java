@@ -1,12 +1,11 @@
 package com.sebster.repository.api.orders;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static lombok.AccessLevel.PRIVATE;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -34,19 +33,17 @@ public class LexicographicOrder<T> implements Order<T> {
 		return new LexicographicOrder<>(orders.stream().map(Order::reversed).collect(toList()));
 	}
 
-	@Override
-	public LexicographicOrder<T> thenBy(@NonNull Order<? super T> order) {
-		List<Order<? super T>> orders = new ArrayList<>(this.orders);
-		orders.add(order);
-		return new LexicographicOrder<T>(unmodifiableList(orders));
+	static <T> LexicographicOrder<T> of(@NonNull Collection<? extends Order<? super T>> orders) {
+		return new LexicographicOrder<T>(orders.stream().flatMap(LexicographicOrder::unwrap).collect(toList()));
 	}
 
-	public static <T> LexicographicOrder<T> of(@NonNull Order<? super T> order1, @NonNull Order<? super T> order2) {
-		return new LexicographicOrder<>(List.of(order1, order2));
-	}
-
-	public static <T> LexicographicOrder<T> of(@NonNull Collection<? extends Order<? super T>> orders) {
-		return new LexicographicOrder<>(List.copyOf(orders));
+	private static <T> Stream<Order<? super T>> unwrap(Order<T> order) {
+		if (order instanceof LexicographicOrder) {
+			LexicographicOrder<T> lexicographicOrder = (LexicographicOrder<T>) order;
+			return lexicographicOrder.getOrders().stream();
+		} else {
+			return Stream.of(order);
+		}
 	}
 
 }
