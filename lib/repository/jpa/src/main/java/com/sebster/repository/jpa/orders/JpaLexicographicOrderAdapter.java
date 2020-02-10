@@ -13,7 +13,7 @@ import com.sebster.repository.api.orders.LexicographicOrder;
 import com.sebster.repository.api.orders.Order;
 
 @Component
-public class LexicographicJpaOrderAdapter<T> extends AbstractJpaOrderAdapter<T> {
+public class JpaLexicographicOrderAdapter<T> extends AbstractJpaOrderAdapter<T> {
 
 	@Override
 	public boolean canAdapt(Order<?> order) {

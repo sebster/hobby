@@ -13,7 +13,7 @@ import com.sebster.repository.api.orders.Order;
 import com.sebster.repository.api.orders.ReverseOrder;
 
 @Component
-public class ReverseJpaOrderAdapter<T> extends AbstractJpaOrderAdapter<T> {
+public class JpaReverseOrderAdapter<T> extends AbstractJpaOrderAdapter<T> {
 
 	@Override
 	public boolean canAdapt(Order<?> order) {

@@ -11,7 +11,7 @@ import com.sebster.repository.api.specifications.Not;
 import com.sebster.repository.api.specifications.Specification;
 
 @Component
-public class NotJpaSpecificationAdapter<T> extends AbstractJpaSpecificationAdapter<T> {
+public class JpaNotSpecificationAdapter<T> extends AbstractJpaSpecificationAdapter<T> {
 
 	@Override
 	public boolean canAdapt(Specification<?> spec) {

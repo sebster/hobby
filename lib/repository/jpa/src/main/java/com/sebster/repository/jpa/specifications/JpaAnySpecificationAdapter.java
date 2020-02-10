@@ -11,7 +11,7 @@ import com.sebster.repository.api.specifications.Any;
 import com.sebster.repository.api.specifications.Specification;
 
 @Component
-public class AnyJpaSpecificationAdapter<T> extends AbstractJpaSpecificationAdapter<T> {
+public class JpaAnySpecificationAdapter<T> extends AbstractJpaSpecificationAdapter<T> {
 
 	@Override
 	public boolean canAdapt(Specification<?> spec) {

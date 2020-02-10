@@ -13,7 +13,7 @@ import com.sebster.repository.api.orders.Order;
 import com.sebster.repository.api.properties.orders.PropertyOrder;
 
 @Component
-public class PropertyJpaOrderAdapter<T> extends AbstractJpaPropertyOrderAdapter<T> {
+public class JpaPropertyOrderAdapter<T> extends AbstractJpaPropertyOrderAdapter<T> {
 
 	@Override
 	public boolean canAdapt(Order<?> order) {
