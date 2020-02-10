@@ -34,11 +34,9 @@ public interface Specification<T> extends Predicate<T> {
 	}
 
 	default <S extends T> Specification<S> restrict() {
-		return this::isSatisfiedBy;
-	}
-
-	default <S extends T> Specification<S> restrictTo(Class<S> clazz) {
-		return restrict();
+		@SuppressWarnings("unchecked")
+		Specification<S> restricted = (Specification<S>) this;
+		return restricted;
 	}
 
 	static <S> Specification<S> any() {
