@@ -1,6 +1,7 @@
 package com.sebster.repository.api;
 
 import static com.sebster.repository.api.PageRequest.page;
+import static com.sebster.repository.api.specifications.Specification.any;
 
 import java.util.Collection;
 import java.util.List;
@@ -102,6 +103,13 @@ public interface Repository<T> {
 	default T getLast(@NonNull Specification<? super T> specification, @NonNull Order<? super T> order) {
 		return findLast(specification, order)
 				.orElseThrow(() -> new IllegalStateException("No object matched by specification " + specification));
+	}
+
+	/**
+	 * Find all domain objects.
+	 */
+	default Stream<T> findAll() {
+		return findAll(any());
 	}
 
 	/**
