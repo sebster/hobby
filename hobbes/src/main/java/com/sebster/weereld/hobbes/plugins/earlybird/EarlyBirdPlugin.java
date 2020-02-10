@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -140,7 +141,11 @@ public class EarlyBirdPlugin extends BasePlugin {
 		StringBuilder message = new StringBuilder();
 		message.append("In dan noe di vroige voegils van di afgiloepin weik:");
 		message.append("\n<pre>");
-		List<EarlyBird> ebs = earlyBirdRepository.findAll(isWinner(), orderBy(DATE).reversed(), page(0).pageSize(7)).getItems();
+		List<EarlyBird> ebs = new ArrayList<>(
+				earlyBirdRepository
+						.findAll(isWinner(), orderBy(DATE).reversed(), page(0).pageSize(7))
+						.getItems()
+		);
 		Collections.reverse(ebs);
 		for (EarlyBird eb : ebs) {
 			message.append(format("%-10s %s %s %s\n", dayName(eb.getDate()), SHORT_DATE_FORMAT.format(eb.getDate()),
