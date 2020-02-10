@@ -12,12 +12,12 @@ import lombok.Value;
 public class PropertyContainsStringIgnoreCase<T> implements PropertySpecification<T, String> {
 
 	@NonNull Property<T, String> property;
-	@NonNull String value;
+	@NonNull String substring;
 
 	@Override
 	public boolean isSatisfiedBy(@NonNull T object) {
 		String propertyValue = property.getValue(object);
-		return propertyValue != null && propertyValue.toLowerCase().contains(value.toLowerCase());
+		return propertyValue != null && propertyValue.toLowerCase().contains(substring.toLowerCase());
 	}
 
 }

@@ -10,6 +10,7 @@ java_library(
         "//3rdparty/org/projectlombok/lombok",
         "//lib/repository/api",
         "@maven//:javax_persistence_javax_persistence_api",
+        "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_spring_beans",
         "@maven//:org_springframework_spring_context",
     ],

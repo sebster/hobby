@@ -12,12 +12,12 @@ import lombok.Value;
 public class PropertyContainsString<T> implements PropertySpecification<T, String> {
 
 	@NonNull Property<T, String> property;
-	@NonNull String value;
+	@NonNull String substring;
 
 	@Override
 	public boolean isSatisfiedBy(@NonNull T object) {
 		String propertyValue = property.apply(object);
-		return propertyValue != null && propertyValue.contains(value);
+		return propertyValue != null && propertyValue.contains(substring);
 	}
 
 }

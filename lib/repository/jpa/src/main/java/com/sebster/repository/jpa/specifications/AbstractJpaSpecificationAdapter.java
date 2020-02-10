@@ -15,6 +15,7 @@ import lombok.NonNull;
 public abstract class AbstractJpaSpecificationAdapter<T> implements JpaSpecificationAdapter<T> {
 
 	private @NonNull JpaSpecificationAdapterRegistry specificationAdapterRegistry;
+	private @NonNull JpaPredicateFactory predicateFactory;
 
 	protected final <S> Predicate toJpaPredicate(
 			@NonNull Specification<? super S> spec,
@@ -31,9 +32,18 @@ public abstract class AbstractJpaSpecificationAdapter<T> implements JpaSpecifica
 		return castSpecification;
 	}
 
+	protected JpaPredicateFactory predicates() {
+		return predicateFactory;
+	}
+
 	@Autowired
 	void setSpecificationAdapterRegistry(@NonNull JpaSpecificationAdapterRegistry specificationAdapterRegistry) {
 		this.specificationAdapterRegistry = specificationAdapterRegistry;
+	}
+
+	@Autowired
+	public void setPredicateFactory(JpaPredicateFactory predicateFactory) {
+		this.predicateFactory = predicateFactory;
 	}
 
 }
