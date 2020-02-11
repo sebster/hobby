@@ -156,16 +156,9 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private void updateEarlyBirdForMessage(TelegramMessage message) {
-		Optional<Integer> fromIdOpt = getFromUserId(message);
-		if (fromIdOpt.isEmpty()) {
-			// This message is not from a user.
-			return;
-		}
-		int fromId = fromIdOpt.get();
-
 		Optional<Person> personOpt = getFrom(message);
 		if (personOpt.isEmpty()) {
-			// This message is from a telegram user we don't know about.
+			// This message is not from a known telegram user.
 			return;
 		}
 		Person person = personOpt.get();
