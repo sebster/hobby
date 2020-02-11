@@ -12,8 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.springframework.stereotype.Component;
-
 import com.sebster.repository.api.properties.Property;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

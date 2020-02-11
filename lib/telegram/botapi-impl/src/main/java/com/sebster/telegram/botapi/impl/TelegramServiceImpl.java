@@ -32,7 +32,6 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.data.TelegramFile;
 import com.sebster.telegram.botapi.data.TelegramFileLink;
 import com.sebster.telegram.botapi.data.TelegramUser;
-import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramFileDto;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramMessageDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramResponseDto;
@@ -42,6 +41,7 @@ import com.sebster.telegram.botapi.impl.dto.methods.getupdates.TelegramGetUpdate
 import com.sebster.telegram.botapi.impl.dto.methods.getupdates.TelegramUpdateDto;
 import com.sebster.telegram.botapi.impl.dto.methods.sendmessage.TelegramSendMessageRequestDto;
 import com.sebster.telegram.botapi.impl.dto.methods.sendmessage.TelegramSendMessageResponseDto;
+import com.sebster.telegram.botapi.messages.TelegramMessage;
 import lombok.NonNull;
 
 public class TelegramServiceImpl implements TelegramService {
