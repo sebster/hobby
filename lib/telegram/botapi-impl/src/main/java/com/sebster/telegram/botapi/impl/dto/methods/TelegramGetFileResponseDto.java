@@ -1,4 +1,4 @@
-package com.sebster.telegram.botapi.impl.dto.methods.getfile;
+package com.sebster.telegram.botapi.impl.dto.methods;
 
 import com.sebster.telegram.botapi.impl.dto.data.TelegramFileDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramResponseDto;

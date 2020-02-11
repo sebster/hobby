@@ -1,4 +1,4 @@
-package com.sebster.telegram.botapi.impl.dto.methods.getupdates;
+package com.sebster.telegram.botapi.impl.dto.methods;
 
 import com.sebster.telegram.botapi.TelegramUpdate;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramMessageDto;

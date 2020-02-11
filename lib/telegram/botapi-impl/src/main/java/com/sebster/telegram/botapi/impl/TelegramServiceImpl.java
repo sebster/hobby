@@ -35,12 +35,12 @@ import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramFileDto;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramMessageDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramResponseDto;
-import com.sebster.telegram.botapi.impl.dto.methods.getfile.TelegramGetFileResponseDto;
-import com.sebster.telegram.botapi.impl.dto.methods.getme.TelegramGetMeResponseDto;
-import com.sebster.telegram.botapi.impl.dto.methods.getupdates.TelegramGetUpdatesResponseDto;
-import com.sebster.telegram.botapi.impl.dto.methods.getupdates.TelegramUpdateDto;
-import com.sebster.telegram.botapi.impl.dto.methods.sendmessage.TelegramSendMessageRequestDto;
-import com.sebster.telegram.botapi.impl.dto.methods.sendmessage.TelegramSendMessageResponseDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramGetFileResponseDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramGetMeResponseDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramGetUpdatesResponseDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramUpdateDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramSendMessageRequestDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramSendMessageResponseDto;
 import com.sebster.telegram.botapi.messages.TelegramMessage;
 import lombok.NonNull;
 

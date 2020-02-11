@@ -1,4 +1,4 @@
-package com.sebster.telegram.botapi.impl.dto.methods.sendmessage;
+package com.sebster.telegram.botapi.impl.dto.methods;
 
 import com.sebster.telegram.botapi.TelegramParseMode;
 import com.sebster.telegram.botapi.TelegramSendMessageOptions;
