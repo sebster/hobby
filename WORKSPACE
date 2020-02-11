@@ -152,9 +152,6 @@ load("@io_bazel_rules_docker//java:image.bzl", java_image_repositories = "reposi
 
 java_image_repositories()
 
-container_pull(
-    name = "distroless-java",
-    digest = "sha256:0ce06c40e99e0dce26bdbcec30afe7a890a57bbd250777bd31ff2d1b798c7809",
-    registry = "gcr.io",
-    repository = "distroless/java",
-)
+load("//tools/rules_images:distroless.bzl", "pull_distroless_java_base_images")
+
+pull_distroless_java_base_images()

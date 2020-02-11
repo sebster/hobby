@@ -1,5 +1,5 @@
 load("@io_bazel_rules_docker//container:image.bzl", "container_image")
-load("@io_bazel_rules_docker//java:image.bzl", "DEFAULT_JAVA_BASE", _java_image = "java_image")
+load("@io_bazel_rules_docker//java:image.bzl", _java_image = "java_image")
 
 BASE_IMAGE = "//tools/rules_images:java_base_image"
 

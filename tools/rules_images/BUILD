@@ -1,6 +1,7 @@
 load("@io_bazel_rules_docker//contrib:passwd.bzl", "passwd_entry", "passwd_tar")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:image.bzl", "container_image")
+load("//tools/rules_images:distroless.bzl", "DEFAULT_JAVA_BASE")
 
 passwd_entry(
     name = "root_user",
@@ -28,7 +29,7 @@ passwd_tar(
 
 container_image(
     name = "java_base_image",
-    base = "@distroless-java//image",
+    base = DEFAULT_JAVA_BASE,
     tars = ["//tools/rules_images:passwd"],
     user = "leeroy",
     visibility = ["//visibility:public"],
