@@ -85,9 +85,6 @@ public abstract class JpaRepository<T> implements Repository<T> {
 
 	@Override
 	public void add(@NonNull T object) {
-		if (!entityInformation.isNew(object)) {
-			throw new IllegalStateException("Object already present in repository: " + object);
-		}
 		entityManager.persist(object);
 	}
 
