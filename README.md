@@ -4,6 +4,7 @@ This repository contains some of my hobby projects.
 
 Currently this includes:
 
+- A repository API for querying and persisting domain objects.
 - Telegram client for the Bot API (https://core.telegram.org/bots/api).
 - A silly telegram bot with plugins to do all kinds of silly stuff.
 
@@ -12,7 +13,7 @@ Currently this includes:
 - /lib - useful generic libraries
   - /repository - repository API
     - /repository/api - repository API for use in domain classes
-    - /repository/mem - in memory repository API implementation, for use in domain tests
+    - /repository/mem - in memory repository API implementation, for use in domain logic tests
     - /repository/jpa - JPA based repository API implementation
   - /telegram - telegram Bot API
     - /telegram/botapi - telegram Bot API client
