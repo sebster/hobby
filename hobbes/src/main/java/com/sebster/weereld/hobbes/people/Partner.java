@@ -1,5 +1,7 @@
 package com.sebster.weereld.hobbes.people;
 
+import static com.sebster.repository.api.properties.Property.optionalProperty;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -10,6 +12,7 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.sebster.repository.api.properties.Property;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -35,8 +38,7 @@ public class Partner {
 		return Optional.ofNullable(date);
 	}
 
-	public boolean hasDate() {
-		return date != null;
-	}
+	public static final Property<Partner, LocalDate> DATE =
+			optionalProperty(Partner.class, "date", Partner::getDate);
 
 }

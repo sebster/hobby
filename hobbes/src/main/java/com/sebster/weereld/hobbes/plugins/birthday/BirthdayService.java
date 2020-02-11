@@ -1,5 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.birthday;
 
+import static com.sebster.weereld.hobbes.people.PartnerSpecification.hasDate;
+import static com.sebster.weereld.hobbes.people.PersonSpecification.hasBirthDate;
 import static java.util.stream.Collectors.toCollection;
 
 import java.util.NavigableSet;
@@ -10,10 +12,9 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
+import com.sebster.repository.api.Repository;
 import com.sebster.weereld.hobbes.people.Partner;
-import com.sebster.weereld.hobbes.people.PartnerRepository;
 import com.sebster.weereld.hobbes.people.Person;
-import com.sebster.weereld.hobbes.people.PersonRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -21,13 +22,13 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class BirthdayService {
 
-	private final @NonNull PersonRepository personRepository;
-	private final @NonNull PartnerRepository partnerRepository;
+	private final @NonNull Repository<Person> personRepository;
+	private final @NonNull Repository<Partner> partnerRepository;
 
 	public Stream<Birthday> findAll(Predicate<Birthday> specification) {
 		return Stream.concat(
-				personRepository.findAll().stream().filter(Person::hasBirthDate).map(Birthday::of),
-				partnerRepository.findAll().stream().filter(Partner::hasDate).map(Birthday::of)
+				personRepository.findAll(hasBirthDate()).map(Birthday::of),
+				partnerRepository.findAll(hasDate()).map(Birthday::of)
 		).filter(specification);
 	}
 
