@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.sebster.repository.api.properties.specifications.PropertyContainsStringIgnoreCase;
 import com.sebster.repository.api.specifications.Specification;
-import lombok.NonNull;
 
 @Component
 public class JpaPropertyContainsStringIgnoreCaseSpecificationAdapter<T> extends AbstractJpaPropertySpecificationAdapter<T> {

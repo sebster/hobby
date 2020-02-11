@@ -5,7 +5,6 @@ import static lombok.AccessLevel.PACKAGE;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
