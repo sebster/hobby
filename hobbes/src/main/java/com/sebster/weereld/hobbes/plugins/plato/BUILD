@@ -11,6 +11,7 @@ java_library(
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:commons_io_commons_io",
         "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_spring_context",
         "@maven//:org_springframework_spring_web",
