@@ -32,10 +32,10 @@ public class PlatoService {
 
 		if (randomEntry.isPresent()) {
 			Optional<String> citation = citation(randomEntry.get());
-			Optional<String> name = entryLink(randomEntry.get());
+			Optional<String> link = entryLink(randomEntry.get());
 
-			if (name.isPresent() || citation.isPresent()) {
-				return String.join("\n", citation.orElse(""), name.orElse(""));
+			if (link.isPresent() || citation.isPresent()) {
+				return String.join("\n", citation.orElse(""), link.orElse(""));
 			}
 		}
 
