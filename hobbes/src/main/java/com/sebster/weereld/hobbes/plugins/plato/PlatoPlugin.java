@@ -2,6 +2,7 @@ package com.sebster.weereld.hobbes.plugins.plato;
 
 import java.util.Objects;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import com.sebster.telegram.botapi.data.TelegramChat;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
+@EnableConfigurationProperties(PlatoProperties.class)
 public class PlatoPlugin extends BasePlugin {
 
 	private final PlatoService platoService;
