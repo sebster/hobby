@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.wuvwav;
+package com.sebster.weereld.hobbes.plugins.tickers.rates.wuvwav;
 
 import java.math.BigDecimal;
 

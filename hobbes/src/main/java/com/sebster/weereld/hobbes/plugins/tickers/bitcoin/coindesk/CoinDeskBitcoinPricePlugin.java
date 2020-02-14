@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
+package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.coindesk;
 
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.Collections.singletonList;
@@ -77,8 +77,9 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 
 	private Optional<BigDecimal> getCoinDeskPrice(String code, BigDecimal amount) {
 		try {
-			CoinDeskBitcoinPriceIndex bpi = restTemplate.getForObject(COINDESK_BPI_URI, CoinDeskBitcoinPriceIndex.class);
-			return bpi.getPrice(code).map(price -> price.getRate().multiply(amount));
+			return Optional.ofNullable(restTemplate.getForObject(COINDESK_BPI_URI, CoinDeskBitcoinPriceIndex.class))
+					.flatMap(bpi -> bpi.getPrice(code))
+					.map(price -> price.getRate().multiply(amount));
 		} catch (RuntimeException e) {
 			logger.warn("Error fetching bitcoin price", e);
 			return Optional.empty();

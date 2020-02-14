@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.wuvwav;
+package com.sebster.weereld.hobbes.plugins.tickers.rates.wuvwav;
 
 import static java.math.RoundingMode.HALF_UP;
 import static java.nio.charset.StandardCharsets.UTF_8;

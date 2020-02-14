@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.bitcoin.coindesk;
+package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.coindesk;
 
 import java.math.BigDecimal;
 

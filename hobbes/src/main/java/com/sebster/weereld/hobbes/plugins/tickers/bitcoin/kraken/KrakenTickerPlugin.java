@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.bitcoin.kraken;
+package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.kraken;
 
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;

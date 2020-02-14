@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.bitcoin.kraken;
+package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.kraken;
 
 import java.util.List;
 import java.util.Map;
