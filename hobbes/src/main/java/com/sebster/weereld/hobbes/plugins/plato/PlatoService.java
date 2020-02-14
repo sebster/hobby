@@ -1,10 +1,14 @@
 package com.sebster.weereld.hobbes.plugins.plato;
 
+import static com.sebster.weereld.hobbes.plugins.plato.PlatoSchedule.platoSchedule;
+import static com.sebster.weereld.hobbes.plugins.plato.PlatoSubscription.platoSubscription;
+import static com.sebster.weereld.hobbes.plugins.plato.PlatoSubscriptionSpecification.withChatId;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.regex.Pattern.compile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.sebster.repository.api.Repository;
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class PlatoService {
 
 	private static final String PLATO_ENTRY_BASE_URL_STRING = "https://plato.stanford.edu/entries/";
@@ -25,9 +33,13 @@ public class PlatoService {
 	private static final Pattern ENTRY_PATTERN = compile(
 			"(?i) {12}<li><a href=\"https://plato.stanford.edu/cgi-bin/encyclopedia/archinfo\\.cgi\\?entry=([\\-\\w]*)");
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	String quoteFromRandomEntry() {
+	private final Repository<PlatoSubscription> repository;
+	private final PlatoProperties properties;
+	private final PlatoScheduler scheduler;
+
+	String getQuoteFromRandomEntry() {
 		Optional<String> randomEntry = getRandomEntry();
 
 		if (randomEntry.isPresent()) {
@@ -40,6 +52,34 @@ public class PlatoService {
 		}
 
 		return "Ik sta met m'n mond vol tanden...";
+	}
+
+	void subscribe(long chatId) {
+		subscribe(chatId, properties.getUnsolicitedQuotesIntervalLowerBound(), properties.getUnsolicitedQuotesIntervalUpperBound());
+	}
+
+	private void subscribe(long chatId, Duration intervalLowerBound, Duration intervalUpperBound) {
+		Optional<PlatoSubscription> subscription = repository.findOne(withChatId(chatId));
+
+		if (subscription.isPresent()) {
+			subscription.get()
+					.setSchedule(platoSchedule(intervalLowerBound.toMillis(), intervalLowerBound.toMillis()));
+
+			scheduler.updateScheduleFor(subscription.get());
+			logger.debug("Updated subscription for {}", chatId);
+		} else {
+			PlatoSubscription newSubscription = platoSubscription(chatId,
+					platoSchedule(intervalLowerBound.toMillis(), intervalUpperBound.toMillis()));
+			repository.add(newSubscription);
+			scheduler.addScheduleFor(newSubscription);
+			logger.debug("Added subscription for {}", chatId);
+		}
+	}
+
+	void unsubscribe(long chatId) {
+		repository.removeAll(withChatId(chatId));
+		scheduler.cancelScheduleFor(chatId);
+		logger.debug("Cancelled subscription for {}", chatId);
 	}
 
 	private Optional<String> getRandomEntry() {
