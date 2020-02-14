@@ -75,21 +75,21 @@ public class BullionVaultPricePlugin extends BasePlugin {
 
 	private void showMetalPrice(TelegramChat chat, String metal, String weightUnit, String currencyCode, BigDecimal amount) {
 		BigDecimal weightKg = getWeightInKilograms(weightUnit);
-		Optional<BigDecimal> priceKg = getKgMetalPrice(getMetalName(metal), currencyCode);
-		if (priceKg.isPresent()) {
-			BigDecimal price = priceKg.get().multiply(weightKg).multiply(amount);
+		Optional<BigDecimal> pricePerKg = getMetalPricePerKg(getMetalName(metal), currencyCode);
+		if (pricePerKg.isPresent()) {
+			BigDecimal price = pricePerKg.get().multiply(weightKg).multiply(amount);
 			sendMessage(chat, "%s %s %s is %s %s.", amount, weightUnit, metal, price.setScale(2, HALF_UP), currencyCode);
 		} else {
 			sendMessage(chat, "Ik weet even niet hoeveel %s %s %s is in %s.", amount, weightUnit, metal, currencyCode);
 		}
 	}
 
-	private Optional<BigDecimal> getKgMetalPrice(String metal, String currencyCode) {
+	private Optional<BigDecimal> getMetalPricePerKg(String metal, String currencyCode) {
 		try {
 			return Optional.ofNullable(restTemplate.getForObject(BULLIONVAULT_MARKETS_URI, MarketResponse.class))
 					.flatMap(response -> response.getSellPrice(metal, currencyCode));
 		} catch (RuntimeException e) {
-			logger.warn("Error fetching bitcoin price", e);
+			logger.warn("Error fetching BullionVault price", e);
 			return Optional.empty();
 		}
 	}
