@@ -25,7 +25,7 @@ public class BullionVaultPricePlugin extends BasePlugin {
 	private static final URI BULLIONVAULT_MARKETS_URI =
 			URI.create("https://www.bullionvault.com/view_market_json.do?marketWidth=1");
 	private static final Pattern BULLIONVAULT_PRICE_PATTERN = compile(
-			"(?i)(?:^|\\B)([0-9]*(?:\\.?[0-9]+)?) (gram|kg|staaf|staven) (goud|zilver|platina)(?: in ([a-z]+))?");
+			"(?i)(?:^|\\B)([0-9]*(?:\\.?[0-9]+)?) (kilogram|kg|gram|g|t/oz|troy ounces?|baar|baren) (goud|zilver|platina)(?: in ([a-z]+))?");
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
 
 	private static final BigDecimal GRAM_IN_KILOGRAMS = new BigDecimal("1e-3");
@@ -50,7 +50,10 @@ public class BullionVaultPricePlugin extends BasePlugin {
 
 	@Override
 	public void showHelp(TelegramChat chat) {
-		sendMessage(chat, "<aantal> (kg|gram|staaf|staven) (goud|zilver|platina) [in <munt>] - haal de BullionVault prijs goud op");
+		sendMessage(chat,
+				"<aantal> (kilgram|kg|gram|g|t/oz|troy ounce|troy ounces|baar|baren) (goud|zilver|platina) [in <munt>]"
+						+ " - haal de BullionVault prijs goud op"
+		);
 		sendMessage(chat, "voorbeeld: 2 staven goud in usd");
 	}
 
@@ -105,12 +108,18 @@ public class BullionVaultPricePlugin extends BasePlugin {
 
 	private BigDecimal getWeightInKilograms(String weightUnit) {
 		switch (weightUnit.toLowerCase()) {
+		case "kilogram":
 		case "kg":
 			return ONE;
 		case "gram":
+		case "g":
 			return GRAM_IN_KILOGRAMS;
-		case "staaf":
-		case "staven":
+		case "t/oz":
+		case "troy ounce":
+		case "troy ounces":
+			return TROY_OUNCE_IN_GRAMS.multiply(GRAM_IN_KILOGRAMS);
+		case "baar":
+		case "baren":
 			return BAR_IN_TROY_OUNCES.multiply(TROY_OUNCE_IN_GRAMS).multiply(GRAM_IN_KILOGRAMS);
 		}
 		throw new IllegalArgumentException("Invalid weight unit: " + weightUnit);
