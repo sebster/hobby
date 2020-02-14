@@ -52,7 +52,7 @@ public class BullionVaultPricePlugin extends BasePlugin {
 	public void showHelp(TelegramChat chat) {
 		sendMessage(chat,
 				"<aantal> (kilgram|kg|gram|g|t/oz|troy ounce|troy ounces|baar|baren) (goud|zilver|platina) [in <munt>]"
-						+ " - haal de BullionVault prijs goud op"
+						+ " - haal de BullionVault prijs op"
 		);
 		sendMessage(chat, "voorbeeld: 2 staven goud in usd");
 	}
