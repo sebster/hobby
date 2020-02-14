@@ -6,14 +6,15 @@ import java.time.Duration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoDefaultSchedulingIntervalProvider;
 import lombok.Data;
 
 @ConfigurationProperties(prefix = "plato")
 @Data
-public class PlatoProperties {
+public class PlatoProperties implements PlatoDefaultSchedulingIntervalProvider {
 
-	Duration unsolicitedQuotesIntervalLowerBound = ofDays(3);
-	Duration unsolicitedQuotesIntervalUpperBound = ofDays(7);
+	Duration intervalLowerBound = ofDays(3);
+	Duration intervalUpperBound = ofDays(7);
 	long unsolicitedQuotesChatId;
 
 }

@@ -1,6 +1,6 @@
-package com.sebster.weereld.hobbes.plugins.plato;
+package com.sebster.weereld.hobbes.plugins.plato.subscription;
 
-import static com.sebster.weereld.hobbes.plugins.plato.PlatoSubscription.CHAT_ID;
+import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSubscription.CHAT_ID;
 
 import com.sebster.repository.api.properties.specifications.PropertySpecification;
 import com.sebster.repository.api.specifications.Specification;

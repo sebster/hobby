@@ -1,11 +1,12 @@
-package com.sebster.weereld.hobbes.plugins.plato;
+package com.sebster.weereld.hobbes.plugins.plato.subscription;
 
-import static com.sebster.weereld.hobbes.plugins.plato.PlatoSubscription.CHAT_ID;
-import static com.sebster.weereld.hobbes.plugins.plato.PlatoSubscription_.chatId;
+import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSubscription_.chatId;
+import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSubscription.CHAT_ID;
 
 import org.springframework.stereotype.Component;
 
 import com.sebster.repository.jpa.properties.AbstractJpaPropertyAdapter;
+
 
 @Component
 public class PlatoSubscriptionJpaPropertyAdapter extends AbstractJpaPropertyAdapter<PlatoSubscription> {

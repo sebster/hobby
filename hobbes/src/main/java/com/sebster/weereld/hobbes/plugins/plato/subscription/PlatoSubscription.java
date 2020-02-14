@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.plato;
+package com.sebster.weereld.hobbes.plugins.plato.subscription;
 
 import static com.sebster.repository.api.properties.Property.property;
 import static lombok.AccessLevel.PRIVATE;
@@ -13,12 +13,14 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 @EqualsAndHashCode(of = { "chatId" })
 @AllArgsConstructor(access = PRIVATE)
+@ToString(doNotUseGetters = true)
 public class PlatoSubscription {
 
 	@Id
@@ -31,7 +33,7 @@ public class PlatoSubscription {
 		this.schedule = schedule;
 	}
 
-	static PlatoSubscription platoSubscription(long chatId, PlatoSchedule schedule) {
+	public static PlatoSubscription platoSubscription(long chatId, PlatoSchedule schedule) {
 		return new PlatoSubscription(chatId, schedule);
 	}
 

@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.plato;
+package com.sebster.weereld.hobbes.plugins.plato.subscription;
 
 import org.springframework.stereotype.Component;
 
