@@ -1,5 +1,7 @@
 package com.sebster.weereld.hobbes.plugins.tickers.metals.bullionvault;
 
+import static java.util.Collections.emptyList;
+import static java.util.Comparator.naturalOrder;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.math.BigDecimal;
@@ -14,16 +16,21 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-public class Market {
+class Market {
 
-	@NonNull List<Pitch> pitches;
+	List<Pitch> pitches;
 
-	public Optional<BigDecimal> getSellPrice(String metal, String currencyCode) {
-		return pitches.stream()
+	List<Pitch> getPitches() {
+		return Optional.ofNullable(pitches).orElse(emptyList());
+	}
+
+	Optional<BigDecimal> getBestSellPrice(@NonNull String metal, @NonNull String currencyCode) {
+		return getPitches().stream()
 				.filter(pitch -> pitch.isForMetal(metal))
 				.filter(pitch -> pitch.isForCurrencyCode(currencyCode))
-				.findFirst()
-				.flatMap(Pitch::getSellPrice);
+				.map(Pitch::getBestSellPrice)
+				.flatMap(Optional::stream)
+				.min(naturalOrder());
 	}
 
 }

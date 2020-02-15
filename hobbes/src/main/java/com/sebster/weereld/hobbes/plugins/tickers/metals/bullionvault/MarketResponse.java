@@ -13,12 +13,16 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-public class MarketResponse {
+class MarketResponse {
 
-	@NonNull Market market;
+	Market market;
 
-	public Optional<BigDecimal> getSellPrice(@NonNull String metal, @NonNull String currencyCode) {
-		return market != null ? market.getSellPrice(metal, currencyCode) : Optional.empty();
+	Optional<Market> getMarket() {
+		return Optional.ofNullable(market);
+	}
+
+	Optional<BigDecimal> getBestSellPrice(@NonNull String metal, @NonNull String currencyCode) {
+		return getMarket().flatMap(market -> market.getBestSellPrice(metal, currencyCode));
 	}
 
 }

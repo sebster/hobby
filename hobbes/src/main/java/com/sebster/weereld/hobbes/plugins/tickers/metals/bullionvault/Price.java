@@ -12,11 +12,11 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-public class Price {
+class Price {
 
 	BigDecimal limit;
 
-	public Optional<BigDecimal> getLimit() {
+	Optional<BigDecimal> getLimit() {
 		return Optional.ofNullable(limit);
 	}
 
