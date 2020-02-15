@@ -1,4 +1,4 @@
-package com.sebster.weereld.hobbes.plugins.plugins;
+package com.sebster.weereld.hobbes.plugins.plugininfo;
 
 import static com.sebster.telegram.botapi.TelegramSendMessageOptions.html;
 
@@ -15,11 +15,11 @@ import com.sebster.weereld.hobbes.plugins.api.Plugin;
 import lombok.NonNull;
 
 @Component
-public class PluginsPlugin extends BasePlugin {
+public class PluginInfoPlugin extends BasePlugin {
 
 	private final @NonNull List<Plugin> plugins;
 
-	public PluginsPlugin(@NonNull List<Plugin> plugins) {
+	public PluginInfoPlugin(@NonNull List<Plugin> plugins) {
 		this.plugins = new ArrayList<>(plugins);
 		this.plugins.add(this);
 	}

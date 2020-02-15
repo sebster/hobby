@@ -1,7 +1,7 @@
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
-    name = "plugins",
+    name = "plugininfo",
     srcs = glob(["*.java"]),
     visibility = ["//hobbes/src/main/java/com/sebster/weereld/hobbes:__pkg__"],
     deps = [

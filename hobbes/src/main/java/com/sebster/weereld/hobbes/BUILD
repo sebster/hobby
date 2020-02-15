@@ -23,7 +23,7 @@ java_library(
     runtime_deps = [
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/birthday",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/earlybird",
-        "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/plugins",
+        "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/plugininfo",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/tickers/bitcoin/coindesk",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/tickers/bitcoin/kraken",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/tickers/metals/bullionvault",
