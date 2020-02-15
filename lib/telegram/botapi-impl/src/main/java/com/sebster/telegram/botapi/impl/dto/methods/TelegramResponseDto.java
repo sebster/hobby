@@ -3,7 +3,7 @@ package com.sebster.telegram.botapi.impl.dto.methods;
 import lombok.Data;
 
 @Data
-public class TelegramResponseDto<RESULT> {
+public abstract class TelegramResponseDto<RESULT> {
 
 	boolean ok;
 	RESULT result;
