@@ -16,11 +16,11 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-class Market {
+class BullionVaultMarket {
 
-	List<Pitch> pitches;
+	List<BullionVaultPitch> pitches;
 
-	List<Pitch> getPitches() {
+	List<BullionVaultPitch> getPitches() {
 		return Optional.ofNullable(pitches).orElse(emptyList());
 	}
 
@@ -28,7 +28,7 @@ class Market {
 		return getPitches().stream()
 				.filter(pitch -> pitch.isForMetal(metal))
 				.filter(pitch -> pitch.isForCurrencyCode(currencyCode))
-				.map(Pitch::getBestSellPrice)
+				.map(BullionVaultPitch::getBestSellPrice)
 				.flatMap(Optional::stream)
 				.min(naturalOrder());
 	}

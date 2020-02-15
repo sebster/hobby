@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-class Price {
+class BullionVaultPrice {
 
 	BigDecimal limit;
 

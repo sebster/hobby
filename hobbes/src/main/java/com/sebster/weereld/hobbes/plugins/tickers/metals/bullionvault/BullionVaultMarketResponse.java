@@ -13,11 +13,11 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-class MarketResponse {
+class BullionVaultMarketResponse {
 
-	Market market;
+	BullionVaultMarket market;
 
-	Optional<Market> getMarket() {
+	Optional<BullionVaultMarket> getMarket() {
 		return Optional.ofNullable(market);
 	}
 

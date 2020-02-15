@@ -17,13 +17,13 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-class Pitch {
+class BullionVaultPitch {
 
 	String securityClassNarrative;
 	String considerationCurrency;
-	List<Price> sellPrices;
+	List<BullionVaultPrice> sellPrices;
 
-	List<Price> getSellPrices() {
+	List<BullionVaultPrice> getSellPrices() {
 		return Optional.ofNullable(sellPrices).orElse(emptyList());
 	}
 
@@ -36,7 +36,7 @@ class Pitch {
 	}
 
 	Optional<BigDecimal> getBestSellPrice() {
-		return getSellPrices().stream().map(Price::getLimit).flatMap(Optional::stream).min(naturalOrder());
+		return getSellPrices().stream().map(BullionVaultPrice::getLimit).flatMap(Optional::stream).min(naturalOrder());
 	}
 
 }

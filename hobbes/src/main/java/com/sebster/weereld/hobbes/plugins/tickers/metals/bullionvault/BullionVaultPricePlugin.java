@@ -86,7 +86,7 @@ public class BullionVaultPricePlugin extends BasePlugin {
 
 	private Optional<BigDecimal> getMetalPricePerKg(String metal, String currencyCode) {
 		try {
-			return Optional.ofNullable(restTemplate.getForObject(BULLIONVAULT_MARKETS_URI, MarketResponse.class))
+			return Optional.ofNullable(restTemplate.getForObject(BULLIONVAULT_MARKETS_URI, BullionVaultMarketResponse.class))
 					.flatMap(response -> response.getBestSellPrice(metal, currencyCode));
 		} catch (RuntimeException e) {
 			logger.warn("Error fetching BullionVault price", e);
