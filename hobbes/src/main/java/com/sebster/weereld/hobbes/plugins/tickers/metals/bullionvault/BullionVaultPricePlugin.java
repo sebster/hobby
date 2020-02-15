@@ -54,7 +54,7 @@ public class BullionVaultPricePlugin extends BasePlugin {
 				"<aantal> (kilgram|kg|gram|g|t/oz|troy ounce|troy ounces|baar|baren) (goud|zilver|platina) [in <munt>]"
 						+ " - haal de BullionVault prijs op"
 		);
-		sendMessage(chat, "voorbeeld: 2 staven goud in usd");
+		sendMessage(chat, "voorbeeld: 2 baren goud in usd");
 	}
 
 	@Override
