@@ -19,7 +19,7 @@ public class KrakenTicker {
 			@JsonProperty("a") BigDecimal[] ask, @JsonProperty("b") BigDecimal[] bid, @JsonProperty("c") BigDecimal[] last,
 			@JsonProperty("v") BigDecimal[] volume, @JsonProperty("p") BigDecimal[] vwap,
 			@JsonProperty("t") Long[] trades,
-			@JsonProperty("l") BigDecimal[] low, @JsonProperty("h") BigDecimal[] high, @JsonProperty("o") BigDecimal openToday
+			@JsonProperty("l") BigDecimal[] low, @JsonProperty("h") BigDecimal[] high, @JsonProperty("o") BigDecimal open
 	) {
 		askPrice = ask[0];
 		askLotVolume = ask[2];
@@ -40,7 +40,7 @@ public class KrakenTicker {
 		low24Hours = low[1];
 		highToday = high[0];
 		high24Hours = high[1];
-		this.openToday = openToday;
+		openToday = open;
 	}
 
 }
