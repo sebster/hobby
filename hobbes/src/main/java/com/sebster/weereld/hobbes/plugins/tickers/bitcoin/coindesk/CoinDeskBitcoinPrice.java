@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-public class CoinDeskBitcoinPrice {
+class CoinDeskBitcoinPrice {
 
 	String code;
 	BigDecimal rateFloat;

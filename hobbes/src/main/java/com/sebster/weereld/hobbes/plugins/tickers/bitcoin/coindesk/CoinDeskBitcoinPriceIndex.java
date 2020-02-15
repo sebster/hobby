@@ -1,8 +1,8 @@
 package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.coindesk;
 
+import static java.util.Collections.emptyMap;
 import static lombok.AccessLevel.PRIVATE;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,12 +14,16 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
-public class CoinDeskBitcoinPriceIndex {
+class CoinDeskBitcoinPriceIndex {
 
-	Map<String, CoinDeskBitcoinPrice> bpi = new HashMap<>();
+	Map<String, CoinDeskBitcoinPrice> bpi;
 
-	public Optional<CoinDeskBitcoinPrice> getPrice(@NonNull String code) {
-		return Optional.ofNullable(bpi.get(code));
+	Optional<CoinDeskBitcoinPrice> getPrice(@NonNull String code) {
+		return Optional.ofNullable(getBpi().get(code));
+	}
+
+	Map<String, CoinDeskBitcoinPrice> getBpi() {
+		return Optional.ofNullable(bpi).orElse(emptyMap());
 	}
 
 }
