@@ -1,24 +1,19 @@
 package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.coindesk;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
-@Value
+@Data
+@NoArgsConstructor
+@FieldDefaults(level = PRIVATE)
 public class CoinDeskBitcoinPrice {
 
-	@NonNull String code;
-
-	@JsonProperty("rate_float")
-	@NonNull BigDecimal rate;
-
-	@JsonCreator
-	public CoinDeskBitcoinPrice(@JsonProperty("code") String code, @JsonProperty("rate_float") BigDecimal rate) {
-		this.code = code;
-		this.rate = rate;
-	}
+	String code;
+	BigDecimal rateFloat;
 
 }

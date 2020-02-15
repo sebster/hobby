@@ -48,6 +48,7 @@ java_library(
         "@maven//:org_springframework_boot_spring_boot_autoconfigure",
         "@maven//:org_springframework_spring_beans",
         "@maven//:org_springframework_spring_context",
+        "@maven//:org_springframework_spring_web",
     ],
 )
 

@@ -1,32 +1,25 @@
 package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.coindesk;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
-import static java.util.Collections.unmodifiableMap;
+import static lombok.AccessLevel.PRIVATE;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Value;
+import lombok.experimental.FieldDefaults;
 
-@Value
+@Data
+@NoArgsConstructor
+@FieldDefaults(level = PRIVATE)
 public class CoinDeskBitcoinPriceIndex {
 
-	@JsonProperty("bpi")
-	@NonNull Map<String, CoinDeskBitcoinPrice> priceMap;
-
-	@JsonCreator
-	public CoinDeskBitcoinPriceIndex(@JsonProperty("bpi") Map<String, CoinDeskBitcoinPrice> priceMap) {
-		Map<String, CoinDeskBitcoinPrice> copy = new TreeMap<>(CASE_INSENSITIVE_ORDER);
-		copy.putAll(priceMap);
-		this.priceMap = unmodifiableMap(copy);
-	}
+	Map<String, CoinDeskBitcoinPrice> bpi = new HashMap<>();
 
 	public Optional<CoinDeskBitcoinPrice> getPrice(@NonNull String code) {
-		return Optional.ofNullable(priceMap.get(code));
+		return Optional.ofNullable(bpi.get(code));
 	}
 
 }

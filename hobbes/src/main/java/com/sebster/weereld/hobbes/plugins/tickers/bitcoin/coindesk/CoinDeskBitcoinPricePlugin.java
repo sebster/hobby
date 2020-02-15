@@ -1,5 +1,6 @@
 package com.sebster.weereld.hobbes.plugins.tickers.bitcoin.coindesk;
 
+import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SNAKE_CASE;
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.Collections.singletonList;
 import static java.util.regex.Pattern.compile;
@@ -12,10 +13,12 @@ import java.util.regex.Pattern;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
@@ -30,8 +33,12 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 
 	private final @NonNull RestTemplate restTemplate;
 
-	public CoinDeskBitcoinPricePlugin(@NonNull RestTemplateBuilder restTemplateBuilder) {
-		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
+	public CoinDeskBitcoinPricePlugin(
+			@NonNull RestTemplateBuilder restTemplateBuilder,
+			@NonNull Jackson2ObjectMapperBuilder objectMapperBuilder
+	) {
+		ObjectMapper objectMapper = objectMapperBuilder.propertyNamingStrategy(SNAKE_CASE).build();
+		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
 		messageConverter.setSupportedMediaTypes(singletonList(new MediaType("application", "javascript")));
 		restTemplate = restTemplateBuilder.messageConverters(messageConverter).build();
 	}
@@ -79,7 +86,7 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 		try {
 			return Optional.ofNullable(restTemplate.getForObject(COINDESK_BPI_URI, CoinDeskBitcoinPriceIndex.class))
 					.flatMap(bpi -> bpi.getPrice(code))
-					.map(price -> price.getRate().multiply(amount));
+					.map(price -> price.getRateFloat().multiply(amount));
 		} catch (RuntimeException e) {
 			logger.warn("Error fetching bitcoin price", e);
 			return Optional.empty();
