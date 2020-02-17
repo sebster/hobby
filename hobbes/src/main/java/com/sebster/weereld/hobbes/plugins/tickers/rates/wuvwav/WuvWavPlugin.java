@@ -29,6 +29,7 @@ public class WuvWavPlugin extends BasePlugin {
 	private static final URI EURIBOR_URI = URI.create("https://euribor-rates.eu");
 	private static final Pattern EURIBOR_PATTERN =
 			compile("(?i)<tr><td><a href=\"/en/current-euribor-rates/1/euribor-rate-1-month/\".*>(-?\\d+\\.\\d+) %</td></tr>");
+	private static final Pattern WUV_WAV_EURIBOR_PATTERN = compile("(?i)(?:^|\\b)1 (wuv|wav|euribor)(?:\\b|$)");
 
 	private final @NonNull WuvWavProperties properties;
 
@@ -52,33 +53,37 @@ public class WuvWavPlugin extends BasePlugin {
 	public void visitTextMessage(TelegramTextMessage message) {
 		String text = message.getText().trim();
 
-		if (!text.matches("1 euribor|1 wuv|1 wav")) {
-			return;
+		Matcher matcher = WUV_WAV_EURIBOR_PATTERN.matcher(text);
+		int start = 0;
+		while (matcher.find(start)) {
+			String rate = matcher.group(1);
+			showRate(message.getChat(), rate);
+			start = matcher.end();
 		}
+	}
 
-		TelegramChat chat = message.getChat();
-
+	public void showRate(TelegramChat chat, String rate) {
 		Optional<BigDecimal> euriborRate = lookUpEuriborRate();
 		if (euriborRate.isEmpty()) {
-			sendMessage(chat, "Ik weit ivin niet oiveil %s ies.", text.replaceAll("u", "oe").replaceAll("i", "ie"));
+			sendMessage(chat, "Ik weit ivin niet oiveil %s ies.", rate.replaceAll("u", "oe").replaceAll("i", "ie"));
 			return;
 		}
 
-		switch (text) {
-		case "1 euribor":
+		switch (rate) {
+		case "euribor":
 			sendMessage(chat, "1 eoeriebor ies %s procint, wat it dan oiek ies.", euriborRate.get());
 			break;
-		case "1 wuv":
+		case "wuv":
 			BigDecimal wuv = euriborRate.get().add(properties.getWuvMarkup());
 			BigDecimal amount = wuv.multiply(properties.getMortgageSebster()).divide(BigDecimal.valueOf(12 * 100), 2, HALF_UP);
 			sendMessage(chat, "1 woev ies %s procint. Voier Sibstir was dat %s eoero pir maand.", wuv, amount);
 			break;
-		case "1 wav":
+		case "wav":
 			BigDecimal wav = euriborRate.get().add(properties.getWavMarkup());
 			sendMessage(chat, "1 wav ies %s procint.", wav);
 			break;
 		default:
-			throw new IllegalStateException("Unmatched text: " + text);
+			throw new IllegalArgumentException("Unknown rate: " + rate);
 		}
 	}
 
