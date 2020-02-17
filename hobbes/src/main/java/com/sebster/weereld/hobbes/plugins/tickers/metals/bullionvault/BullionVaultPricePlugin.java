@@ -25,7 +25,7 @@ public class BullionVaultPricePlugin extends BasePlugin {
 	private static final URI BULLIONVAULT_MARKETS_URI =
 			URI.create("https://www.bullionvault.com/view_market_json.do?marketWidth=1");
 	private static final Pattern BULLIONVAULT_PRICE_PATTERN = compile(
-			"(?i)(?:^|\\B)([0-9]*(?:\\.?[0-9]+)?) (kilogram|kg|gram|g|t/oz|troy ounces?|baar|baren) (goud|zilver|platina)(?: in ([a-z]+))?");
+			"(?i)(?:^|\\b)([0-9]*(?:\\.?[0-9]+)?) (kilogram|kg|gram|g|t/oz|troy ounces?|baar|baren) (goud|zilver|platina)(?: in ([a-z]+))?(?:\\b|$)");
 	private static final String DEFAULT_CURRENCY_CODE = "EUR";
 
 	private static final BigDecimal GRAM_IN_KILOGRAMS = new BigDecimal("1e-3");
