@@ -10,7 +10,7 @@ java_library(
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/plato/subscription",
         "//lib/telegram/botapi/src/main/java/com/sebster/telegram/botapi",
         "@maven//:commons_io_commons_io",
-        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_apache_commons_commons_text",
         "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_spring_beans",
