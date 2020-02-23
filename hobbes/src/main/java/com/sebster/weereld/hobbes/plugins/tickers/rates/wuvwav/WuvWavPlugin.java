@@ -20,10 +20,12 @@ import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor
 @EnableConfigurationProperties(WuvWavProperties.class)
+@Slf4j
 public class WuvWavPlugin extends BasePlugin {
 
 	private static final URI EURIBOR_URI = URI.create("https://euribor-rates.eu");
@@ -92,7 +94,7 @@ public class WuvWavPlugin extends BasePlugin {
 			Matcher matcher = EURIBOR_PATTERN.matcher(IOUtils.toString(EURIBOR_URI, UTF_8));
 			return matcher.find() ? Optional.of(new BigDecimal(matcher.group(1))) : Optional.empty();
 		} catch (IOException e) {
-			logger.warn("Error fetching euribor rate", e);
+			log.warn("Error fetching euribor rate", e);
 			return Optional.empty();
 		}
 	}

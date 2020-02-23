@@ -7,18 +7,16 @@ import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSubscri
 import java.time.Duration;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.sebster.repository.api.Repository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class PlatoSubscriptionService {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final PlatoDefaultSchedulingIntervalProvider properties;
 	private final Repository<PlatoSubscription> repository;
@@ -46,20 +44,20 @@ public class PlatoSubscriptionService {
 	private void updateSubscription(PlatoSubscription subscription, PlatoSchedule schedule) {
 		subscription.setSchedule(schedule);
 		scheduler.updateScheduledTaskFor(subscription);
-		logger.debug("Updated subscription: {}", subscription);
+		log.debug("Updated subscription: {}", subscription);
 	}
 
 	private void newSubscription(long chatId, PlatoSchedule schedule) {
 		PlatoSubscription newSubscription = platoSubscription(chatId, schedule);
 		repository.add(newSubscription);
 		scheduler.addScheduledTaskFor(newSubscription);
-		logger.debug("Added subscription: {}", newSubscription);
+		log.debug("Added subscription: {}", newSubscription);
 	}
 
 	public void unsubscribe(long chatId) {
 		repository.removeAll(withChatId(chatId));
 		scheduler.cancelScheduledTaskFor(chatId);
-		logger.debug("Cancelled subscription for {}", chatId);
+		log.debug("Cancelled subscription for {}", chatId);
 	}
 
 }

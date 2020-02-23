@@ -10,6 +10,7 @@ java_library(
         "//lib/telegram/botapi",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_spring_context",
         "@maven//:org_springframework_spring_web",

@@ -7,8 +7,6 @@ import static org.apache.commons.lang3.ObjectUtils.max;
 import java.time.Duration;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,18 +20,18 @@ import com.sebster.telegram.botapi.messages.TelegramMessage;
 import com.sebster.weereld.hobbes.plugins.api.Plugin;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @EnableScheduling
 @EnableConfigurationProperties(HobbesProperties.class)
 @AllArgsConstructor
+@Slf4j
 public class Hobbes implements CommandLineRunner {
 
 	private static final Duration POLL_TIMEOUT = Duration.ofSeconds(60);
 	private static final Duration INITIAL_ERROR_DELAY = Duration.ofSeconds(1);
 	private static final Duration MAX_ERROR_DELAY = Duration.ofSeconds(30);
-
-	private final Logger logger = LoggerFactory.getLogger(Hobbes.class);
 
 	private final @NonNull HobbesProperties hobbesProperties;
 	private final @NonNull TelegramService telegramService;
@@ -50,13 +48,13 @@ public class Hobbes implements CommandLineRunner {
 			try {
 				List<TelegramUpdate> updates = telegramService.getUpdates(lastUpdateId + 1, POLL_TIMEOUT);
 				for (TelegramUpdate update : updates) {
-					logger.debug("Received update: " + update);
+					log.debug("Received update: " + update);
 					processUpdate(update);
 					lastUpdateId = update.getUpdateId();
 				}
 				duration = INITIAL_ERROR_DELAY;
 			} catch (RuntimeException e) {
-				logger.error("Error reading updates from telegram; sleeping " + duration + "...", e);
+				log.error("Error reading updates from telegram; sleeping " + duration + "...", e);
 				sleep(duration);
 				duration = max(duration.multipliedBy(2), MAX_ERROR_DELAY);
 			}
@@ -65,19 +63,19 @@ public class Hobbes implements CommandLineRunner {
 
 	private void processUpdate(TelegramUpdate update) {
 		if (update.getMessage().isEmpty()) {
-			logger.warn("Update without message received: " + update);
+			log.warn("Update without message received: " + update);
 			return;
 		}
 		TelegramMessage message = update.getMessage().get();
 		if (!isWhiteListed(message)) {
-			logger.warn("Non-whitelisted update received: " + update);
+			log.warn("Non-whitelisted update received: " + update);
 			return;
 		}
 		for (Plugin plugin : plugins) {
 			try {
 				plugin.receiveMessage(message);
 			} catch (RuntimeException e) {
-				logger.error("Plugin failed: plugin=" + plugin.getClass() + ", update=" + update, e);
+				log.error("Plugin failed: plugin=" + plugin.getClass() + ", update=" + update, e);
 			}
 		}
 	}
@@ -98,12 +96,12 @@ public class Hobbes implements CommandLineRunner {
 
 	private void logEnabledPlugins() {
 		List<String> pluginNames = plugins.stream().map(Plugin::getName).collect(toList());
-		logger.info("Running with the following plugins enabled: {}", pluginNames);
+		log.info("Running with the following plugins enabled: {}", pluginNames);
 	}
 
 	private void logWhiteLists() {
-		logger.info("From white list: {}", hobbesProperties.getTelegramFromWhiteList());
-		logger.info("Chat white list: {}", hobbesProperties.getTelegramChatWhiteList());
+		log.info("From white list: {}", hobbesProperties.getTelegramFromWhiteList());
+		log.info("Chat white list: {}", hobbesProperties.getTelegramChatWhiteList());
 	}
 
 	public static void main(String[] args) {

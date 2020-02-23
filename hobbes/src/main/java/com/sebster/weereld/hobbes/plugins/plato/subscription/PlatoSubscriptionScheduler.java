@@ -5,15 +5,12 @@ import static java.util.Objects.requireNonNullElseGet;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
@@ -25,6 +22,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.sebster.repository.api.Repository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor
@@ -72,9 +70,8 @@ public class PlatoSubscriptionScheduler {
 	}
 
 	@AllArgsConstructor
+	@Slf4j
 	private static class PlatoTrigger implements Trigger {
-
-		protected static final Logger logger = LoggerFactory.getLogger(PlatoTrigger.class);
 
 		private final PlatoSchedule schedule;
 		private final Random random = new Random();
@@ -82,7 +79,7 @@ public class PlatoSubscriptionScheduler {
 		@Override
 		public Date nextExecutionTime(TriggerContext triggerContext) {
 			Date nextTime = determineNextTime(requireNonNullElseGet(triggerContext.lastActualExecutionTime(), Date::new));
-			logger.debug("Next execution time for {}: {}", schedule, nextTime);
+			log.debug("Next execution time for {}: {}", schedule, nextTime);
 			return nextTime;
 		}
 

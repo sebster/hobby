@@ -11,9 +11,10 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PlatoEntryService {
 
 	private static final String PLATO_ENTRY_BASE_URL_STRING = "https://plato.stanford.edu/entries/";
@@ -22,8 +23,6 @@ public class PlatoEntryService {
 	private static final Pattern CITATION_PATTERN = compile("(?i)<div id=\"preamble\">\\n\\n<p>.*\\n([^.]*.[^.]*.)");
 	private static final Pattern ENTRY_PATTERN = compile(
 			"(?i) {12}<li><a href=\"https://plato.stanford.edu/cgi-bin/encyclopedia/archinfo\\.cgi\\?entry=([\\-\\w]*)");
-
-	private static final Logger logger = LoggerFactory.getLogger(PlatoEntryService.class);
 
 	static String getQuoteFromRandomEntry() {
 		Optional<String> randomEntry = getRandomEntry();
@@ -44,7 +43,7 @@ public class PlatoEntryService {
 		try {
 			return Optional.of(StringEscapeUtils.unescapeHtml4(IOUtils.toString(PLATO_RANDOM_ENTRY_URL, UTF_8)));
 		} catch (IOException e) {
-			logger.warn("Error fetching random entry from plato", e);
+			log.warn("Error fetching random entry from plato", e);
 			return Optional.empty();
 		}
 	}

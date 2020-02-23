@@ -6,21 +6,18 @@ import static lombok.AccessLevel.PRIVATE;
 
 import java.time.Duration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor(access = PRIVATE)
+@Slf4j
 public final class TimeUtils {
-
-	private static final Logger logger = LoggerFactory.getLogger(TimeUtils.class);
 
 	public static void sleep(Duration duration) {
 		try {
 			MILLISECONDS.sleep(duration.toMillis());
 		} catch (InterruptedException e) {
-			logger.warn("Sleep interrupted", e);
+			log.warn("Sleep interrupted", e);
 			currentThread().interrupt();
 		}
 	}

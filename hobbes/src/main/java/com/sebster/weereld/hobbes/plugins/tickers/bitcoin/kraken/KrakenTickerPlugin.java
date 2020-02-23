@@ -18,8 +18,10 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class KrakenTickerPlugin extends BasePlugin {
 
 	private static final URI TICKER_URI = URI.create("https://api.kraken.com/0/public/Ticker");
@@ -84,7 +86,7 @@ public class KrakenTickerPlugin extends BasePlugin {
 			BigDecimal value = response.getResult().values().iterator().next().getLastPrice().multiply(amount);
 			return Optional.of(value);
 		} catch (RuntimeException e) {
-			logger.warn("Error fetching bitcoin price", e);
+			log.warn("Error fetching bitcoin price", e);
 			return Optional.empty();
 		}
 	}

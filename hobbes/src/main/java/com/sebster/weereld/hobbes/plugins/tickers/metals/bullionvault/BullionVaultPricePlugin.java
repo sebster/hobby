@@ -18,8 +18,10 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class BullionVaultPricePlugin extends BasePlugin {
 
 	private static final URI BULLIONVAULT_MARKETS_URI =
@@ -89,7 +91,7 @@ public class BullionVaultPricePlugin extends BasePlugin {
 			return Optional.ofNullable(restTemplate.getForObject(BULLIONVAULT_MARKETS_URI, BullionVaultMarketResponse.class))
 					.flatMap(response -> response.getBestSellPrice(metal, currencyCode));
 		} catch (RuntimeException e) {
-			logger.warn("Error fetching BullionVault price", e);
+			log.warn("Error fetching BullionVault price", e);
 			return Optional.empty();
 		}
 	}

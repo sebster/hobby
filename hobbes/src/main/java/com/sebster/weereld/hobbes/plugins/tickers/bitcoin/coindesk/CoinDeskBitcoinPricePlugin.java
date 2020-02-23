@@ -23,8 +23,10 @@ import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
 import com.sebster.weereld.hobbes.plugins.api.BasePlugin;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 
 	private static final URI COINDESK_BPI_URI = URI.create("http://api.coindesk.com/v1/bpi/currentprice.json");
@@ -89,7 +91,7 @@ public class CoinDeskBitcoinPricePlugin extends BasePlugin {
 					.flatMap(bpi -> bpi.getPrice(code))
 					.map(price -> price.getRateFloat().multiply(amount));
 		} catch (RuntimeException e) {
-			logger.warn("Error fetching bitcoin price", e);
+			log.warn("Error fetching bitcoin price", e);
 			return Optional.empty();
 		}
 	}

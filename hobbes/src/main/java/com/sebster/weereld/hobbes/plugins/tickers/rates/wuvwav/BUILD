@@ -12,6 +12,7 @@ java_library(
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/api",
         "//lib/telegram/botapi",
         "@maven//:commons_io_commons_io",
+        "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_spring_beans",
         "@maven//:org_springframework_spring_context",
