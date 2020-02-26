@@ -113,6 +113,33 @@ public interface Repository<T> {
 	}
 
 	/**
+	 * Find all domain objects, ordered with the given order.
+	 *
+	 * @throws UnsupportedOperationException if the given order is unsupported
+	 */
+	default Stream<T> findAll(@NonNull Order<? super T> order) {
+		return findAll(any(), order);
+	}
+
+	/**
+	 * Find a page of domain objects satisfying the given page request. If the request page number is larger than the total number
+	 * of pages, an empty page is returned.
+	 */
+	default Page<T> findAll(@NonNull PageRequest pageRequest) {
+		return findAll(any(), pageRequest);
+	}
+
+	/**
+	 * Find a page of domain objects satisfying the given order and page request. If the request page number is larger than the
+	 * total number of pages, an empty page is returned.
+	 *
+	 * @throws UnsupportedOperationException if the given order is unsupported
+	 */
+	default Page<T> findAll(@NonNull Order<? super T> order, @NonNull PageRequest pageRequest) {
+		return findAll(any(), order, pageRequest);
+	}
+
+	/**
 	 * Find all domain objects satisfying the given specification.
 	 *
 	 * @throws UnsupportedOperationException if the given specification is unsupported
