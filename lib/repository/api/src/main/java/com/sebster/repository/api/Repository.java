@@ -130,7 +130,7 @@ public interface Repository<T> {
 	 * Find a page of domain objects satisfying the given specification and page request. If the request page number is larger than
 	 * the total number of pages, an empty page is returned.
 	 *
-	 * @throws UnsupportedOperationException if the given specification or order is unsupported
+	 * @throws UnsupportedOperationException if the given specification is unsupported
 	 */
 	Page<T> findAll(@NonNull Specification<? super T> specification, @NonNull PageRequest pageRequest);
 
