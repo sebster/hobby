@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -16,6 +17,10 @@ public class ClockService {
 
 	public Clock clock() {
 		return clock;
+	}
+
+	public Date date() {
+		return Date.from(clock.instant());
 	}
 
 	public LocalDate localDate() {
