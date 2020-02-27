@@ -2,7 +2,6 @@ package com.sebster.telegram.botapi.impl;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategy.SNAKE_CASE;
-import static com.sebster.telegram.botapi.TelegramSendMessageOptions.defaultOptions;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toList;
@@ -28,19 +27,17 @@ import com.sebster.telegram.botapi.TelegramSendMessageOptions;
 import com.sebster.telegram.botapi.TelegramService;
 import com.sebster.telegram.botapi.TelegramServiceException;
 import com.sebster.telegram.botapi.TelegramUpdate;
-import com.sebster.telegram.botapi.data.TelegramChat;
-import com.sebster.telegram.botapi.data.TelegramFile;
 import com.sebster.telegram.botapi.data.TelegramFileLink;
 import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramFileDto;
 import com.sebster.telegram.botapi.impl.dto.data.TelegramMessageDto;
-import com.sebster.telegram.botapi.impl.dto.methods.TelegramResponseDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramGetFileResponseDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramGetMeResponseDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramGetUpdatesResponseDto;
-import com.sebster.telegram.botapi.impl.dto.methods.TelegramUpdateDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramResponseDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramSendMessageRequestDto;
 import com.sebster.telegram.botapi.impl.dto.methods.TelegramSendMessageResponseDto;
+import com.sebster.telegram.botapi.impl.dto.methods.TelegramUpdateDto;
 import com.sebster.telegram.botapi.messages.TelegramMessage;
 import lombok.NonNull;
 
@@ -68,35 +65,16 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	public List<TelegramUpdate> getUpdates(int offset) {
-		return getUpdatesImpl(offset, null, null);
-	}
-
-	@Override
-	public List<TelegramUpdate> getUpdates(int offset, @NonNull Duration timeout) {
-		return getUpdatesImpl(offset, null, timeout);
-	}
-
-	@Override
-	public List<TelegramUpdate> getUpdates(int offset, int limit) {
-		return getUpdatesImpl(offset, limit, null);
-	}
-
-	@Override
 	public List<TelegramUpdate> getUpdates(int offset, int limit, @NonNull Duration timeout) {
-		return getUpdatesImpl(offset, limit, timeout);
-	}
-
-	private List<TelegramUpdate> getUpdatesImpl(int offset, Integer limit, Duration timeout) {
-		if (limit != null) {
-			Validate.inclusiveBetween(1, 100, limit, "limit must be between 1 and 100: %s", limit);
-		}
+		Validate.inclusiveBetween(1, DEFAULT_GET_UPDATES_LIMIT, limit,
+				"limit must be between 1 and %d: %s", DEFAULT_GET_UPDATES_LIMIT, limit
+		);
 		Map<String, Object> queryParams = new LinkedHashMap<>();
 		queryParams.put("offset", offset);
-		if (limit != null) {
+		if (limit != DEFAULT_GET_UPDATES_LIMIT) {
 			queryParams.put("limit", limit);
 		}
-		if (timeout != null) {
+		if (!timeout.isZero()) {
 			queryParams.put("timeout", timeout.getSeconds());
 		}
 		List<TelegramUpdateDto> updates = doGet(GET_UPDATES, queryParams, TelegramGetUpdatesResponseDto.class);
@@ -115,42 +93,16 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	public TelegramFileLink getFileLink(@NonNull TelegramFile file) {
-		return getFileLink(file.getFileId());
-	}
-
-	@Override
-	public TelegramMessage sendMessage(long chatId, @NonNull String text) {
-		return sendMessageImpl(chatId, text, defaultOptions());
-	}
-
-	@Override
-	public TelegramMessage sendMessage(@NonNull TelegramChat chat, @NonNull String text) {
-		return sendMessage(chat.getId(), defaultOptions(), text);
-	}
-
-	@Override
-	public TelegramMessage sendMessage(@NonNull String channel, @NonNull String text) {
-		return sendMessageImpl(channel, text, defaultOptions());
-	}
-
-	@Override
 	public TelegramMessage sendMessage(long chatId, @NonNull TelegramSendMessageOptions options, @NonNull String text) {
-		return sendMessageImpl(chatId, text, options);
-	}
-
-	@Override
-	public TelegramMessage sendMessage(@NonNull TelegramChat chat, @NonNull TelegramSendMessageOptions options,
-			@NonNull String text) {
-		return sendMessageImpl(chat.getId(), text, options);
+		return sendMessageImpl(chatId, options, text);
 	}
 
 	@Override
 	public TelegramMessage sendMessage(@NonNull String channel, @NonNull TelegramSendMessageOptions options, @NonNull String text) {
-		return sendMessageImpl(channel, text, options);
+		return sendMessageImpl(channel, options, text);
 	}
 
-	private TelegramMessage sendMessageImpl(Object target, String text, TelegramSendMessageOptions options) {
+	private TelegramMessage sendMessageImpl(Object target, TelegramSendMessageOptions options, String text) {
 		TelegramSendMessageRequestDto request = new TelegramSendMessageRequestDto(target, text, options);
 		TelegramMessageDto response = doPost(SEND_MESSAGE, request, TelegramSendMessageResponseDto.class);
 		return response.toTelegramMessage();

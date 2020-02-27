@@ -1,5 +1,7 @@
 package com.sebster.telegram.botapi;
 
+import static com.sebster.telegram.botapi.TelegramSendMessageOptions.defaultOptions;
+
 import java.time.Duration;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import com.sebster.telegram.botapi.messages.TelegramMessage;
 import lombok.NonNull;
 
 public interface TelegramService {
+
+	int DEFAULT_GET_UPDATES_LIMIT = 100;
 
 	/**
 	 * Get the telegram user of the bot.
@@ -28,7 +32,9 @@ public interface TelegramService {
 	 * @return the list of updates, or an empty list if there are no updates
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	List<TelegramUpdate> getUpdates(int offset);
+	default List<TelegramUpdate> getUpdates(int offset) {
+		return getUpdates(offset, DEFAULT_GET_UPDATES_LIMIT);
+	}
 
 	/**
 	 * Get up to 100 updates (but no more than the specified limit) where the update id is greater than or equal to the specified
@@ -40,7 +46,9 @@ public interface TelegramService {
 	 * @throws IllegalArgumentException if the limit is less that 1 or greater than 100
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	List<TelegramUpdate> getUpdates(int offset, int limit);
+	default List<TelegramUpdate> getUpdates(int offset, int limit) {
+		return getUpdates(offset, limit, Duration.ZERO);
+	}
 
 	/**
 	 * Get up to 100 updates where the update id is greater than or equal to the specified offset. Do long polling if timeout (in
@@ -51,7 +59,9 @@ public interface TelegramService {
 	 * @return the list of updates, or an empty list if there are no updates
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	List<TelegramUpdate> getUpdates(int offset, Duration timeout);
+	default List<TelegramUpdate> getUpdates(int offset, Duration timeout) {
+		return getUpdates(offset, DEFAULT_GET_UPDATES_LIMIT, timeout);
+	}
 
 	/**
 	 * Get up to 100 updates (but no more than the specified limit) where the update id is greater than or equal to the specified
@@ -77,28 +87,36 @@ public interface TelegramService {
 	 */
 	TelegramFileLink getFileLink(@NonNull String fileId);
 
-	TelegramFileLink getFileLink(@NonNull TelegramFile file);
+	default TelegramFileLink getFileLink(@NonNull TelegramFile file) {
+		return getFileLink(file.getFileId());
+	}
 
 	/**
 	 * Use this method to send text messages. On success, the sent Message is returned.
 	 *
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	TelegramMessage sendMessage(long chatId, @NonNull String text);
+	default TelegramMessage sendMessage(long chatId, @NonNull String text) {
+		return sendMessage(chatId, defaultOptions(), text);
+	}
 
 	/**
 	 * Use this method to send text messages. On success, the sent Message is returned.
 	 *
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	TelegramMessage sendMessage(TelegramChat chat, @NonNull String text);
+	default TelegramMessage sendMessage(@NonNull TelegramChat chat, @NonNull String text) {
+		return sendMessage(chat.getId(), text);
+	}
 
 	/**
 	 * Use this method to send text messages. On success, the sent Message is returned.
 	 *
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	TelegramMessage sendMessage(String channel, @NonNull String text);
+	default TelegramMessage sendMessage(String channel, @NonNull String text) {
+		return sendMessage(channel, defaultOptions(), text);
+	}
 
 	/**
 	 * Use this method to send text messages. On success, the sent Message is returned.
@@ -112,7 +130,13 @@ public interface TelegramService {
 	 *
 	 * @throws TelegramServiceException if telegram returns an error response
 	 */
-	TelegramMessage sendMessage(TelegramChat chat, @NonNull TelegramSendMessageOptions options, @NonNull String text);
+	default TelegramMessage sendMessage(
+			@NonNull TelegramChat chat,
+			@NonNull TelegramSendMessageOptions options,
+			@NonNull String text
+	) {
+		return sendMessage(chat.getId(), options, text);
+	}
 
 	/**
 	 * Use this method to send text messages. On success, the sent Message is returned.
