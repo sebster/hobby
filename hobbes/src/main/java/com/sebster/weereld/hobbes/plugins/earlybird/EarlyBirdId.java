@@ -21,6 +21,9 @@ import lombok.ToString;
 public class EarlyBirdId implements Serializable {
 
 	@Column(nullable = false)
+	private long chatId;
+
+	@Column(nullable = false)
 	private String nick;
 
 	@Column(nullable = false)

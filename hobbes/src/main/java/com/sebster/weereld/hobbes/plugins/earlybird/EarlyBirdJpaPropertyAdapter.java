@@ -1,9 +1,11 @@
 package com.sebster.weereld.hobbes.plugins.earlybird;
 
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.CHAT_ID;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.DATE;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.NICK;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.WAKE_UP_TIME;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.WINNER;
+import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird_.chatId;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird_.date;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird_.nick;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird_.wakeUpTime;
@@ -17,6 +19,7 @@ import com.sebster.repository.jpa.properties.AbstractJpaPropertyAdapter;
 public class EarlyBirdJpaPropertyAdapter extends AbstractJpaPropertyAdapter<EarlyBird> {
 
 	public EarlyBirdJpaPropertyAdapter() {
+		map(CHAT_ID, chatId);
 		map(NICK, nick);
 		map(DATE, date);
 		map(WAKE_UP_TIME, wakeUpTime);

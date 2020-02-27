@@ -21,8 +21,11 @@ import lombok.NonNull;
 @IdClass(EarlyBirdId.class)
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-@EqualsAndHashCode(of = { "nick", "date" })
+@EqualsAndHashCode(of = { "chatId", "nick", "date" })
 public class EarlyBird {
+
+	@Id
+	private long chatId;
 
 	@Id
 	private String nick;
@@ -36,7 +39,8 @@ public class EarlyBird {
 	@Column(nullable = false)
 	private boolean winner;
 
-	public EarlyBird(@NonNull String nick, @NonNull LocalDate date, @NonNull LocalTime wakeUpTime) {
+	public EarlyBird(long chatId, @NonNull String nick, @NonNull LocalDate date, @NonNull LocalTime wakeUpTime) {
+		this.chatId = chatId;
 		this.nick = nick;
 		this.date = date;
 		this.wakeUpTime = wakeUpTime;
@@ -47,6 +51,8 @@ public class EarlyBird {
 		this.winner = true;
 	}
 
+	public static final Property<EarlyBird, Long> CHAT_ID =
+			property(EarlyBird.class, "chatId", EarlyBird::getChatId);
 	public static final Property<EarlyBird, String> NICK =
 			property(EarlyBird.class, "nick", EarlyBird::getNick);
 	public static final Property<EarlyBird, LocalDate> DATE =

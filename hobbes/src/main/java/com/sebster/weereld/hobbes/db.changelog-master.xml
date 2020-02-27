@@ -57,4 +57,23 @@
 
 	</changeSet>
 
+	<changeSet id="3" author="sebster">
+
+		<!-- Add chat_id column. -->
+		<addColumn tableName="early_bird">
+			<column name="chat_id" type="bigint"/>
+		</addColumn>
+
+		<!-- Fill chat_id with with default value from application properties.-->
+		<sql>update early_bird set chat_id = ${changeset_3_early_bird_chat_id}</sql>
+
+		<!-- Make chat_id required. -->
+		<addNotNullConstraint tableName="early_bird" columnName="chat_id"/>
+
+		<!-- Make chat_id part of the primary key. -->
+		<dropPrimaryKey tableName="early_bird"/>
+		<addPrimaryKey tableName="early_bird" columnNames="chat_id, date, nick"/>
+
+	</changeSet>
+
 </databaseChangeLog>
