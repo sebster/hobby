@@ -4,6 +4,7 @@ import static com.sebster.repository.api.PageRequest.page;
 import static com.sebster.repository.api.properties.orders.PropertyOrder.orderBy;
 import static com.sebster.telegram.botapi.TelegramSendMessageOptions.html;
 import static com.sebster.weereld.hobbes.people.PersonSpecification.hasTelegramUserId;
+import static com.sebster.weereld.hobbes.people.PersonSpecification.hasZone;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.DATE;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBird.WAKE_UP_TIME;
 import static com.sebster.weereld.hobbes.plugins.earlybird.EarlyBirdSpecification.forNickOnDate;
@@ -206,14 +207,11 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private boolean hasWon(EarlyBird eb) {
-		Stream<Person> telegramUsers = personRepository.findAll(hasTelegramUserId());
+		Stream<Person> telegramUsers = personRepository.findAll(hasTelegramUserId().and(hasZone()));
 		return telegramUsers.noneMatch(person -> canStillBecomeEarlyBird(person, eb));
 	}
 
 	private boolean canStillBecomeEarlyBird(Person person, EarlyBird eb) {
-		if (person.getZone().isEmpty()) {
-			return false;
-		}
 		LocalDateTime personDateTime = dateTime(person.getZone().orElseThrow());
 		if (earlyBirdDate(personDateTime).isAfter(eb.getDate())) {
 			return false;
