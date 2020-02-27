@@ -45,6 +45,7 @@
 	</changeSet>
 
 	<changeSet id="2" author="harmen">
+
 		<createTable tableName="plato_subscription">
 			<column name="chat_id" type="bigint">
 				<constraints primaryKey="true" nullable="false"/>
@@ -52,7 +53,7 @@
 			<column name="interval_lower_bound" type="bigint">
 				<constraints nullable="false"/>
 			</column>
-			<column name="interval_upper_bound" type="bigint" />
+			<column name="interval_upper_bound" type="bigint"/>
 		</createTable>
 
 	</changeSet>
