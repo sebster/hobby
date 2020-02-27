@@ -1,12 +1,16 @@
 package com.sebster.repository.api.properties;
 
-import java.util.Optional;
+import static com.sebster.commons.functions.Consumers.curry;
+import static com.sebster.commons.functions.Consumers.map;
+import static com.sebster.commons.functions.Functions.nullSafe;
+
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import lombok.NonNull;
 
-public interface Property<T, V> extends Function<T, V>, BiConsumer<T, V> {
+public interface Property<T, V> {
 
 	Class<T> getDomainClass();
 
@@ -16,28 +20,47 @@ public interface Property<T, V> extends Function<T, V>, BiConsumer<T, V> {
 		return getDomainClass().getName() + "." + getName();
 	}
 
-	V getValue(@NonNull T object);
+	Function<T, V> getter();
 
-	void setValue(@NonNull T object, V value);
+	Function<T, Consumer<V>> setter();
 
-	default V apply(@NonNull T object) {
-		return getValue(object);
+	boolean isReadOnly();
+
+	default V getValue(@NonNull T object) {
+		return getter().apply(object);
 	}
 
-	default void accept(@NonNull T object, V value) {
-		setValue(object, value);
+	default void setValue(@NonNull T object, V value) {
+		setter().apply(object).accept(value);
+	}
+
+	default <W> Property<T, W> transform(@NonNull Function<V, W> transform) {
+		return property(getDomainClass(), getName(), getter().andThen(transform));
+	}
+
+	default <W> Property<T, W> transformNullSafe(@NonNull Function<V, W> transform) {
+		return transform(nullSafe(transform));
+	}
+
+	default <W> Property<T, W> transform(@NonNull Function<V, W> transform, @NonNull Function<W, V> inverseTransform) {
+		return property(getDomainClass(), getName(), getter().andThen(transform), setter().andThen(map(inverseTransform)));
+	}
+
+	default <W> Property<T, W> transformNullSafe(@NonNull Function<V, W> transform, @NonNull Function<W, V> inverseTransform) {
+		return transform(nullSafe(transform), nullSafe(inverseTransform));
 	}
 
 	static <T, V> Property<T, V> property(@NonNull Class<T> domainClass, @NonNull String name, @NonNull Function<T, V> getter) {
 		return new DefaultPropertyImpl<>(domainClass, name, getter, null);
 	}
 
-	static <T, V> Property<T, V> optionalProperty(
+	static <T, V> Property<T, V> property(
 			@NonNull Class<T> domainClass,
 			@NonNull String name,
-			@NonNull Function<T, Optional<V>> getter
+			@NonNull Function<T, V> getter,
+			@NonNull Function<T, Consumer<V>> setter
 	) {
-		return new DefaultPropertyImpl<>(domainClass, name, object -> getter.apply(object).orElse(null), null);
+		return new DefaultPropertyImpl<>(domainClass, name, getter, setter);
 	}
 
 	static <T, V> Property<T, V> property(
@@ -46,16 +69,7 @@ public interface Property<T, V> extends Function<T, V>, BiConsumer<T, V> {
 			@NonNull Function<T, V> getter,
 			@NonNull BiConsumer<T, V> setter
 	) {
-		return new DefaultPropertyImpl<>(domainClass, name, getter, setter);
-	}
-
-	static <T, V> Property<T, V> optionalProperty(
-			@NonNull Class<T> domainClass,
-			@NonNull String name,
-			@NonNull Function<T, Optional<V>> getter,
-			@NonNull BiConsumer<T, V> setter
-	) {
-		return new DefaultPropertyImpl<>(domainClass, name, object -> getter.apply(object).orElse(null), setter);
+		return property(domainClass, name, getter, curry(setter));
 	}
 
 }

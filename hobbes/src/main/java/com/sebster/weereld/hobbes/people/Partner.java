@@ -1,6 +1,7 @@
 package com.sebster.weereld.hobbes.people;
 
-import static com.sebster.repository.api.properties.Property.optionalProperty;
+import static com.sebster.commons.functions.Functions.unwrapOptional;
+import static com.sebster.repository.api.properties.Property.property;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -39,6 +40,6 @@ public class Partner {
 	}
 
 	public static final Property<Partner, LocalDate> DATE =
-			optionalProperty(Partner.class, "date", Partner::getDate);
+			property(Partner.class, "date", unwrapOptional(Partner::getDate));
 
 }

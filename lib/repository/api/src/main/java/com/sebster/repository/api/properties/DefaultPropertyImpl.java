@@ -2,7 +2,7 @@ package com.sebster.repository.api.properties;
 
 import static lombok.AccessLevel.PACKAGE;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import lombok.AllArgsConstructor;
@@ -18,19 +18,26 @@ class DefaultPropertyImpl<T, V> implements Property<T, V> {
 	private final @NonNull Class<T> domainClass;
 	private final @NonNull String name;
 	private final @NonNull Function<T, V> getter;
-	private final BiConsumer<T, V> setter;
+	private final Function<T, Consumer<V>> setter;
 
 	@Override
-	public V getValue(T object) {
-		return getter.apply(object);
+	public Function<T, V> getter() {
+		return getter;
 	}
 
 	@Override
-	public void setValue(@NonNull T object, V value) {
-		if (setter == null) {
-			throw new UnsupportedOperationException("Property '" + getFullName() + "' is read-only and cannot be set.");
+	public Function<T, Consumer<V>> setter() {
+		if (isReadOnly()) {
+			return t -> v -> {
+				throw new UnsupportedOperationException("Property '" + getFullName() + "' is read-only and cannot be set.");
+			};
 		}
-		setter.accept(object, value);
+		return setter;
+	}
+
+	@Override
+	public boolean isReadOnly() {
+		return setter == null;
 	}
 
 	public String toString() {

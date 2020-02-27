@@ -16,7 +16,7 @@ public class PropertyContainsString<T> implements PropertySpecification<T, Strin
 
 	@Override
 	public boolean isSatisfiedBy(@NonNull T object) {
-		String propertyValue = property.apply(object);
+		String propertyValue = property.getValue(object);
 		return propertyValue != null && propertyValue.contains(substring);
 	}
 

@@ -1,6 +1,6 @@
 package com.sebster.weereld.hobbes.people;
 
-import static com.sebster.repository.api.properties.Property.optionalProperty;
+import static com.sebster.commons.functions.Functions.unwrapOptional;
 import static com.sebster.repository.api.properties.Property.property;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -64,9 +64,10 @@ public class Person {
 			property(Person.class, "nick", Person::getNick);
 
 	public static final Property<Person, Integer> TELEGRAM_USER_ID =
-			optionalProperty(Person.class, "telegramUserId", Person::getTelegramUserId);
+			property(Person.class, "telegramUserId", unwrapOptional(Person::getTelegramUserId));
 
 	public static final Property<Person, LocalDate> BIRTH_DATE =
-			optionalProperty(Person.class, "birthDate", Person::getBirthDate);
+			property(Person.class, "birthDate", unwrapOptional(Person::getBirthDate));
+
 
 }

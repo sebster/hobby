@@ -8,6 +8,7 @@ java_library(
     visibility = ["//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins:__subpackages__"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/functions",
         "//lib/repository/api",
         "//lib/repository/jpa",
         "@maven//:javax_annotation_javax_annotation_api",
