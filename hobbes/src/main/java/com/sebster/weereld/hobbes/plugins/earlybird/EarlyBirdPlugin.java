@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -117,11 +116,11 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private void showLocalTime(TelegramMessage message, String nick) {
-		Optional<Person> person = meOrPersonByNick(message, nick);
+		Person person = meOrPersonByNick(message, nick).orElse(null);
 		TelegramChat chat = message.getChat();
-		if (person.isPresent() && person.get().getZone().isPresent()) {
-			String time = SHORT_TIME_FORMAT.format(time(person.get().getZone().get()));
-			sendMessage(chat, "Bai %s ies it %s.", person.get().getNick(), time);
+		if (person != null && person.getZone().isPresent()) {
+			String time = SHORT_TIME_FORMAT.format(time(person.getZone().get()));
+			sendMessage(chat, "Bai %s ies it %s.", person.getNick(), time);
 		} else {
 			String name = formatIfPresent(message.getFrom().map(TelegramUser::getFirstName), ", %s");
 			sendMessage(chat, "Iek ib chein iedoi" + name + ".");
@@ -130,9 +129,8 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private void showCurrentEarlyBird(TelegramTextMessage message) {
 		TelegramChat chat = message.getChat();
-		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirst(onDate(earlyBirdDate(), chat.getId()), orderBy(WAKE_UP_TIME));
-		if (ebOpt.isPresent()) {
-			EarlyBird eb = ebOpt.get();
+		EarlyBird eb = earlyBirdRepository.findFirst(onDate(earlyBirdDate(), chat.getId()), orderBy(WAKE_UP_TIME)).orElse(null);
+		if (eb != null) {
 			sendMessage(chat, "De %svroige voegil van vandaag ies %s oem %s.",
 					eb.isWinner() ? "" : "voierloepiege ", eb.getNick(), SHORT_TIME_FORMAT.format(eb.getWakeUpTime()));
 		}
@@ -157,31 +155,28 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private void updateEarlyBirdForMessage(TelegramMessage message) {
-		Optional<Person> personOpt = getFrom(message);
-		if (personOpt.isEmpty()) {
+		Person person = getFrom(message).orElse(null);
+		if (person == null) {
 			// This message is not from a known telegram user.
 			return;
 		}
-		Person person = personOpt.get();
 
-		Optional<ZoneId> zoneOpt = person.getZone();
-		if (zoneOpt.isEmpty()) {
+		ZoneId zone = person.getZone().orElse(null);
+		if (zone == null) {
 			// The time zone of the telegram user is unknown.
 			return;
 		}
-		ZoneId zone = zoneOpt.get();
 
 		TelegramChat chat = message.getChat();
 		LocalDateTime ebDateTime = LocalDateTime.ofInstant(message.getDate().toInstant(), zone);
 		LocalDate ebDate = earlyBirdDate(ebDateTime);
-		Optional<EarlyBird> ebOpt = earlyBirdRepository.findOne(forNickOnDate(ebDate, person.getNick(), chat.getId()));
-		if (ebOpt.isPresent()) {
+		if (earlyBirdRepository.anyMatch(forNickOnDate(ebDate, person.getNick(), chat.getId()))) {
 			// This person's wake-up time is already registered for today.
 			return;
 		}
 
 		// Get the current early bird before we save the new one.
-		Optional<EarlyBird> oldEb = earlyBirdRepository.findFirst(onDate(ebDate, chat.getId()), orderBy(WAKE_UP_TIME));
+		EarlyBird oldEb = earlyBirdRepository.findFirst(onDate(ebDate, chat.getId()), orderBy(WAKE_UP_TIME)).orElse(null);
 
 		EarlyBird eb = new EarlyBird(chat.getId(), person.getNick(), ebDate, ebDateTime.toLocalTime());
 		if (hasWon(eb)) {
@@ -189,22 +184,21 @@ public class EarlyBirdPlugin extends BasePlugin {
 		}
 		earlyBirdRepository.add(eb);
 
-		if (oldEb.isEmpty() && eb.isWinner()) {
+		if (oldEb != null && eb.isWinner()) {
 			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
-		} else if (oldEb.isEmpty()) {
+		} else if (oldEb == null) {
 			sendMessage(chat, "Jai maakt noeg kans oep de vroige voegil vandaag, %s!", eb.getNick());
-		} else if (eb.getWakeUpTime().isBefore(oldEb.get().getWakeUpTime())) {
-			sendMessage(chat, "Jai ibt de vroigivoegil van %s afgipiekt, %s!", oldEb.get().getNick(), eb.getNick());
+		} else if (eb.getWakeUpTime().isBefore(oldEb.getWakeUpTime())) {
+			sendMessage(chat, "Jai ibt de vroigivoegil van %s afgipiekt, %s!", oldEb.getNick(), eb.getNick());
 		}
 	}
 
 	private void checkForWinner(TelegramChat chat) {
-		Optional<EarlyBird> ebOpt = earlyBirdRepository.findFirst(onDate(earlyBirdDate(), chat.getId()), orderBy(WAKE_UP_TIME));
-		if (ebOpt.isEmpty() || ebOpt.get().isWinner()) {
-			// We already have a winner.
+		EarlyBird eb = earlyBirdRepository.findFirst(onDate(earlyBirdDate(), chat.getId()), orderBy(WAKE_UP_TIME)).orElse(null);
+		if (eb == null || eb.isWinner()) {
+			// Nobody woke up yet or there is already a winner.
 			return;
 		}
-		EarlyBird eb = ebOpt.get();
 		if (hasWon(eb)) {
 			eb.markWinner();
 			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
@@ -220,7 +214,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		if (person.getZone().isEmpty()) {
 			return false;
 		}
-		LocalDateTime personDateTime = dateTime(person.getZone().get());
+		LocalDateTime personDateTime = dateTime(person.getZone().orElseThrow());
 		if (earlyBirdDate(personDateTime).isAfter(eb.getDate())) {
 			return false;
 		}
