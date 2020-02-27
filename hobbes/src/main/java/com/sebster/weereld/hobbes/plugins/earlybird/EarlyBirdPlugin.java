@@ -176,11 +176,13 @@ public class EarlyBirdPlugin extends BasePlugin {
 			return;
 		}
 
-		// Get the current early bird before we save the new one.
+		// Get the current early bird before we add the new wake up time.
 		EarlyBird oldEb = earlyBirdRepository.findFirst(onDate(ebDate, chat.getId()), orderBy(WAKE_UP_TIME)).orElse(null);
 
+		// Add this person's wake up time.
 		EarlyBird eb = new EarlyBird(chat.getId(), person.getNick(), ebDate, ebDateTime.toLocalTime());
-		if (hasWon(eb)) {
+		if (cannotBeDefeated(eb)) {
+			// Mark as winner immediately if the person cannot be defeated.
 			eb.markWinner();
 		}
 		earlyBirdRepository.add(eb);
@@ -200,13 +202,13 @@ public class EarlyBirdPlugin extends BasePlugin {
 			// Nobody woke up yet or there is already a winner.
 			return;
 		}
-		if (hasWon(eb)) {
+		if (cannotBeDefeated(eb)) {
 			eb.markWinner();
 			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
 		}
 	}
 
-	private boolean hasWon(EarlyBird eb) {
+	private boolean cannotBeDefeated(EarlyBird eb) {
 		Stream<Person> telegramUsers = personRepository.findAll(hasTelegramUserId().and(hasZone()));
 		return telegramUsers.noneMatch(person -> canStillBecomeEarlyBird(person, eb));
 	}
@@ -226,6 +228,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 	private LocalDate earlyBirdDate(LocalDateTime dateTime) {
 		LocalDate date = dateTime.toLocalDate();
 		if (dateTime.toLocalTime().isBefore(VROEGE_VOGEL_CUTOFF_TIME)) {
+			// First part of the night still counts for the previous date.
 			date = date.minusDays(1);
 		}
 		return date;
