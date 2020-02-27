@@ -58,6 +58,10 @@ public class Person {
 		return Optional.ofNullable(zone).map(ZoneId::of);
 	}
 
+	public void setZone(ZoneId zone) {
+		this.zone = zone != null ? zone.getId() : null;
+	}
+
 	// Properties
 
 	public static final Property<Person, String> NICK =
@@ -69,5 +73,7 @@ public class Person {
 	public static final Property<Person, LocalDate> BIRTH_DATE =
 			property(Person.class, "birthDate", unwrapOptional(Person::getBirthDate));
 
+	public static final Property<Person, ZoneId> ZONE =
+			property(Person.class, "zone", unwrapOptional(Person::getZone), Person::setZone);
 
 }

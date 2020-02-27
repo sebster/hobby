@@ -6,6 +6,7 @@ import static com.sebster.repository.api.properties.specifications.PropertySpeci
 import static com.sebster.weereld.hobbes.people.Person.BIRTH_DATE;
 import static com.sebster.weereld.hobbes.people.Person.NICK;
 import static com.sebster.weereld.hobbes.people.Person.TELEGRAM_USER_ID;
+import static com.sebster.weereld.hobbes.people.Person.ZONE;
 
 import com.sebster.repository.api.specifications.Specification;
 import lombok.NonNull;
@@ -22,6 +23,10 @@ public interface PersonSpecification extends Specification<Person> {
 
 	static Specification<Person> hasTelegramUserId() {
 		return isNotNull(TELEGRAM_USER_ID);
+	}
+
+	static Specification<Person> hasZone() {
+		return isNotNull(ZONE);
 	}
 
 	static Specification<Person> hasBirthDate() {
