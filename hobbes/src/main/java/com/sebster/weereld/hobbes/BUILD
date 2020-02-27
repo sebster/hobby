@@ -29,6 +29,7 @@ java_library(
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/tickers/bitcoin/kraken",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/tickers/metals/bullionvault",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/tickers/rates/wuvwav",
+        "//lib/commons/src/main/java/com/sebster/commons/clock/springboot",
         "//lib/telegram/botapi-impl",
         "@maven//:com_h2database_h2",
         "@maven//:org_apache_httpcomponents_httpclient",

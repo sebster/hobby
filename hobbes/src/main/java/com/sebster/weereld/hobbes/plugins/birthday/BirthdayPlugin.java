@@ -33,6 +33,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.sebster.commons.clock.ClockService;
 import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.data.TelegramUser;
 import com.sebster.telegram.botapi.messages.TelegramTextMessage;
@@ -54,6 +55,7 @@ public class BirthdayPlugin extends BasePlugin {
 
 	private final @NonNull BirthdayProperties properties;
 	private final @NonNull BirthdayService birthdayService;
+	private final @NonNull ClockService clockService;
 
 	@Override
 	public String getName() {
@@ -84,7 +86,7 @@ public class BirthdayPlugin extends BasePlugin {
 		if (singChatId == null) {
 			return;
 		}
-		LocalDate today = date();
+		LocalDate today = clockService.localDate();
 		Set<Birthday> bdays = birthdayService.birthdays(withBirthdayOn(today));
 		if (!bdays.isEmpty()) {
 			sendMessage(singChatId, "ER IS ER EEN JARIG!");
@@ -158,7 +160,7 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private void showBirthdaysToday(TelegramChat chat) {
-		LocalDate today = date();
+		LocalDate today = clockService.localDate();
 		Set<Birthday> birthdays = birthdayService.birthdays(withMonth(today.getMonthValue()).and(withDay(today.getDayOfMonth())));
 		if (birthdays.isEmpty()) {
 			sendMessage(chat, "Ik ken niemand die vandaag jarig is!");
@@ -183,14 +185,16 @@ public class BirthdayPlugin extends BasePlugin {
 		if (bday == null) {
 			sendMessage(chat, "Ik ken helemaal geen %s" + formatIfNotNull(from, ", %s") + "!", name);
 		} else {
-			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.getName(), bday.getDate(), bday.getAge(date()));
+			LocalDate today = clockService.localDate();
+			sendMessage(chat, "%s is geboren op %s en is %d jaar oud.", bday.getName(), bday.getDate(), bday.getAge(today));
 		}
 	}
 
 	private void showBirthdaysForDate(TelegramChat chat, LocalDate date) {
 		Set<Birthday> bdays = birthdayService.birthdays(withBirthdayOn(date));
+		LocalDate today = clockService.localDate();
 		if (bdays.isEmpty()) {
-			sendMessage(chat, "Ik ken niemand die op %s jarig %s!", date, date.isBefore(date()) ? "was" : "is");
+			sendMessage(chat, "Ik ken niemand die op %s jarig %s!", date, date.isBefore(today) ? "was" : "is");
 		} else {
 			StringBuilder message = new StringBuilder();
 			for (Birthday bday : bdays) {
@@ -198,7 +202,7 @@ public class BirthdayPlugin extends BasePlugin {
 				if (age == 0) {
 					message.append(format("%s is op %s geboren!\n", bday.getName(), date));
 				} else {
-					String verb = date.isBefore(date()) ? "werdt" : "wordt";
+					String verb = date.isBefore(today) ? "werdt" : "wordt";
 					message.append(format("%s %s op %s maar liefst %d jaar oud!\n", bday.getName(), verb, date, age));
 				}
 			}
@@ -250,7 +254,7 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	private LocalDate getNextOccurrence(int month, int day) {
-		LocalDate today = date();
+		LocalDate today = clockService.localDate();
 		LocalDate nextDate = today.withMonth(month).withDayOfMonth(day);
 		if (nextDate.isBefore(today)) {
 			nextDate = nextDate.plusYears(1);

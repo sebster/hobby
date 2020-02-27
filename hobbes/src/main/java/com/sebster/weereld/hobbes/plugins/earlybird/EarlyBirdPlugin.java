@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import com.sebster.commons.clock.ClockService;
 import com.sebster.repository.api.Repository;
 import com.sebster.telegram.botapi.data.TelegramChat;
 import com.sebster.telegram.botapi.data.TelegramUser;
@@ -55,6 +56,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 	private final @NonNull Repository<EarlyBird> earlyBirdRepository;
 	private final @NonNull EarlyBirdProperties properties;
+	private final @NonNull ClockService clockService;
 
 	@Override
 	public String getName() {
@@ -120,7 +122,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 		Person person = meOrPersonByNick(message, nick).orElse(null);
 		TelegramChat chat = message.getChat();
 		if (person != null && person.getZone().isPresent()) {
-			String time = SHORT_TIME_FORMAT.format(time(person.getZone().get()));
+			String time = SHORT_TIME_FORMAT.format(clockService.localTime(person.getZone().get()));
 			sendMessage(chat, "Bai %s ies it %s.", person.getNick(), time);
 		} else {
 			String name = formatIfPresent(message.getFrom().map(TelegramUser::getFirstName), ", %s");
@@ -214,7 +216,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private boolean canStillBecomeEarlyBird(Person person, EarlyBird eb) {
-		LocalDateTime personDateTime = dateTime(person.getZone().orElseThrow());
+		LocalDateTime personDateTime = clockService.localDateTime(person.getZone().orElseThrow());
 		if (earlyBirdDate(personDateTime).isAfter(eb.getDate())) {
 			return false;
 		}
@@ -222,7 +224,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 	}
 
 	private LocalDate earlyBirdDate() {
-		return earlyBirdDate(dateTime());
+		return earlyBirdDate(clockService.localDateTime());
 	}
 
 	private LocalDate earlyBirdDate(LocalDateTime dateTime) {

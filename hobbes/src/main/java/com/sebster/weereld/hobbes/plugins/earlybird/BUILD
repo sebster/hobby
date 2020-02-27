@@ -10,6 +10,7 @@ java_library(
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/people",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/api",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/utils",
+        "//lib/commons/src/main/java/com/sebster/commons/clock",
         "//lib/repository/api",
         "//lib/repository/jpa",
         "//lib/telegram/botapi",
