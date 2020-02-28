@@ -49,6 +49,8 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 				"<b>plato</b> - krijg een willekeurig citaat uit de Stanford Encyclopedia of Philosophy.\n"
 						+ "<b>plato aan</b> - krijg af en toe een citaat van plato \n"
 						+ "<b>plato aan &lt;interval&gt;</b> - krijg elke &lt;interval&gt; een citaat (voorbeeld: plato aan 1d) \n"
+						+ "<b>plato aan &lt;min interval&gt; &lt;max interval&gt;</b>"
+						+ " - krijg tussen elke &lt;min interval&gt; en &lt;max interval&gt; een citaat (voorbeeld: plato aan 4h 8h) \n"
 						+ "<b>plato uit</b> - stop je abonnement");
 	}
 
