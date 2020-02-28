@@ -47,6 +47,7 @@ maven_install(
         "org.springframework:spring-tx:5.2.3.RELEASE",
         "org.springframework:spring-web:5.2.3.RELEASE",
         "org.springframework.boot:spring-boot:2.2.4.RELEASE",
+        "org.springframework.boot:spring-boot-test:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-autoconfigure:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-devtools:2.2.4.RELEASE",
         "org.springframework.boot:spring-boot-loader:2.2.4.RELEASE",
