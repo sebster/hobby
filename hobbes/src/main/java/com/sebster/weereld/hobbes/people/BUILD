@@ -4,7 +4,6 @@ java_library(
     name = "people",
     srcs = glob(["*.java"]),
     plugins = ["//3rdparty/org/hibernate:hibernate_jpamodelgen_plugin"],
-    resources = ["demo-data.sql"],
     visibility = [
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins:__subpackages__",
         "//hobbes/src/test/java/com/sebster/weereld/hobbes/plugins:__subpackages__",
