@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hobbes
+  namespace: hobbes
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: hobbes
+  template:
+    metadata:
+      labels:
+        app: hobbes
+    spec:
+      containers:
+        - name: hobbes
+          image: 127.0.0.1:32000/hobbes:develop
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: application-config
+              mountPath: "/config/"
+              readOnly: true
+      volumes:
+        - name: application-config
+          configMap:
+            name: hobbes-config
