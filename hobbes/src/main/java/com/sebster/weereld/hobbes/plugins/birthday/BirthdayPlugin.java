@@ -32,6 +32,7 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sebster.commons.clock.ClockService;
 import com.sebster.telegram.botapi.data.TelegramChat;
@@ -81,6 +82,7 @@ public class BirthdayPlugin extends BasePlugin {
 	}
 
 	@Scheduled(cron = "0 0 0 * * *")
+	@Transactional(readOnly = true)
 	public void sing() {
 		Long singChatId = properties.getSingChatId();
 		if (singChatId == null) {
