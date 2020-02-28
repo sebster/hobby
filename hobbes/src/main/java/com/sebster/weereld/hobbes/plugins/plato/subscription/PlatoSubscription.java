@@ -13,27 +13,26 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-@EqualsAndHashCode(of = { "chatId" })
-@AllArgsConstructor(access = PRIVATE)
-@ToString(doNotUseGetters = true)
+@EqualsAndHashCode(of = "chatId")
+@ToString
 public class PlatoSubscription {
 
 	@Id
 	private long chatId;
 
 	@Embedded
+	@Setter
 	private PlatoSchedule schedule;
 
-	public void setSchedule(PlatoSchedule schedule) {
-		this.schedule = schedule;
-	}
-
-	public static PlatoSubscription platoSubscription(long chatId, PlatoSchedule schedule) {
+	public static PlatoSubscription platoSubscription(long chatId, @NonNull PlatoSchedule schedule) {
 		return new PlatoSubscription(chatId, schedule);
 	}
 

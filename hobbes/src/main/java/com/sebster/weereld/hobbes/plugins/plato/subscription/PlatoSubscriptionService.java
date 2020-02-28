@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sebster.repository.api.Repository;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -29,11 +30,11 @@ public class PlatoSubscriptionService {
 		subscribe(chatId, properties.getIntervalLowerBound(), properties.getIntervalUpperBound());
 	}
 
-	public void subscribe(long chatId, Duration interval) {
+	public void subscribe(long chatId, @NonNull Duration interval) {
 		subscribe(chatId, interval, null);
 	}
 
-	public void subscribe(long chatId, Duration intervalLowerBound, Duration intervalUpperBound) {
+	public void subscribe(long chatId, @NonNull Duration intervalLowerBound, Duration intervalUpperBound) {
 		PlatoSchedule schedule = platoSchedule(
 				intervalLowerBound.toMillis(),
 				intervalUpperBound != null ? intervalUpperBound.toMillis() : null
