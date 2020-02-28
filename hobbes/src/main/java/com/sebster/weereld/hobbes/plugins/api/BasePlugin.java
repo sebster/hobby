@@ -5,6 +5,7 @@ import static com.sebster.weereld.hobbes.people.PersonSpecification.withTelegram
 import static java.lang.String.format;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.transaction.Transactional;
 
@@ -26,10 +27,14 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 	protected TelegramService telegramService;
 	protected Repository<Person> personRepository;
 
+	private final AtomicBoolean enabled = new AtomicBoolean(false);
+
 	@Override
 	@Transactional
 	public void receiveMessage(TelegramMessage telegramMessage) {
-		telegramMessage.accept(this);
+		if (isEnabled()) {
+			message.accept(this);
+		}
 	}
 
 	@Override
@@ -67,6 +72,29 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 
 	protected Optional<Person> meOrPersonByNick(@NonNull TelegramMessage message, @NonNull String nick) {
 		return isMe(nick) ? getFrom(message) : personRepository.findOne(withNick(nick));
+	}
+
+	@Override
+	public void enable() {
+		enabled.set(true);
+		onEnable();
+	}
+
+	protected void onEnable() {
+	}
+
+	@Override
+	public void disable() {
+		enabled.set(false);
+		onDisable();
+	}
+
+	protected void onDisable() {
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled.get();
 	}
 
 	@Autowired

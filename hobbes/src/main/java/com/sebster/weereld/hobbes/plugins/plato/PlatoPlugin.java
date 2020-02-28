@@ -98,4 +98,14 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 		sendMessage(chatId, PlatoEntryService.getQuoteFromRandomEntry());
 	}
 
+	@Override
+	protected void onEnable() {
+		subscriptionService.startAllSubscriptions();
+	}
+
+	@Override
+	protected void onDisable() {
+		subscriptionService.stopAllSubscriptions();
+	}
+
 }

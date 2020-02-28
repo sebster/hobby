@@ -60,7 +60,9 @@ public class PluginInfoPlugin extends BasePlugin {
 
 	private void listPlugins(TelegramChat chat) {
 		sendMessage(chat, "De volgende plugins zijn beschikbaar:");
-		plugins.forEach(plugin -> sendMessage(chat, html(), "<b>" + plugin.getName() + "</b>: " + plugin.getDescription()));
+		plugins.stream()
+				.filter(Plugin::isEnabled)
+				.forEach(plugin -> sendMessage(chat, html(), "<b>" + plugin.getName() + "</b>: " + plugin.getDescription()));
 		sendMessage(chat, html(), "Gebruik <code>help &lt;plugin&gt;</code> voor help voor een plugin.");
 	}
 

@@ -84,6 +84,9 @@ public class BirthdayPlugin extends BasePlugin {
 	@Scheduled(cron = "0 0 0 * * *")
 	@Transactional(readOnly = true)
 	public void sing() {
+		if (!isEnabled()) {
+			return;
+		}
 		Long singChatId = properties.getSingChatId();
 		if (singChatId == null) {
 			return;

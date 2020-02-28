@@ -13,4 +13,10 @@ public interface Plugin {
 
 	void receiveMessage(TelegramMessage telegramMessage);
 
+	void enable();
+
+	void disable();
+
+	boolean isEnabled();
+
 }

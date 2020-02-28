@@ -3,17 +3,20 @@ package com.sebster.weereld.hobbes.plugins.plato.subscription;
 import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSchedule.platoSchedule;
 import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSubscription.platoSubscription;
 import static com.sebster.weereld.hobbes.plugins.plato.subscription.PlatoSubscriptionSpecification.withChatId;
+import static java.util.stream.Collectors.toList;
 
 import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sebster.repository.api.Repository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Transactional
 @AllArgsConstructor
 @Slf4j
 public class PlatoSubscriptionService {
@@ -58,6 +61,14 @@ public class PlatoSubscriptionService {
 		repository.removeAll(withChatId(chatId));
 		scheduler.cancelScheduledTaskFor(chatId);
 		log.debug("Cancelled subscription for {}", chatId);
+	}
+
+	public void startAllSubscriptions() {
+		scheduler.addScheduledTasksFor(repository.findAll().collect(toList()));
+	}
+
+	public void stopAllSubscriptions() {
+		scheduler.cancelAllScheduledTasks();
 	}
 
 }

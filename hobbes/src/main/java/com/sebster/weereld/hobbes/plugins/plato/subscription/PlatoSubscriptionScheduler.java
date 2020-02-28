@@ -2,6 +2,7 @@ package com.sebster.weereld.hobbes.plugins.plato.subscription;
 
 import static java.util.Objects.requireNonNullElseGet;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +10,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import com.sebster.repository.api.Repository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,17 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PlatoSubscriptionScheduler {
 
 	private final PlatoMessageService messageService;
-	private final Repository<PlatoSubscription> repository;
-
 	private final TaskScheduler taskScheduler;
-	private final PlatformTransactionManager platformTransactionManager;
 
 	private final Map<Long, ScheduledFuture<?>> scheduledSubscriptions = new HashMap<>();
-
-	@PostConstruct
-	public void scheduleSubscriptions() {
-		executeInTransaction(() -> repository.findAll().forEach(this::addScheduledTaskFor));
-	}
 
 	public void addScheduledTaskFor(PlatoSubscription subscription) {
 		ScheduledFuture<?> future = taskScheduler.schedule(
@@ -58,15 +44,12 @@ public class PlatoSubscriptionScheduler {
 				.ifPresent(scheduledFuture -> scheduledFuture.cancel(true));
 	}
 
-	private TransactionTemplate getTransactionTemplate(TransactionDefinition transactionDefinition) {
-		return new TransactionTemplate(platformTransactionManager, transactionDefinition);
+	public void cancelAllScheduledTasks() {
+		scheduledSubscriptions.keySet().forEach(this::cancelScheduledTaskFor);
 	}
 
-	private void executeInTransaction(Runnable action) {
-		getTransactionTemplate(new DefaultTransactionDefinition()).execute(status -> {
-			action.run();
-			return null;
-		});
+	public void addScheduledTasksFor(Collection<PlatoSubscription> subscriptions) {
+		subscriptions.forEach(this::addScheduledTaskFor);
 	}
 
 	@AllArgsConstructor
