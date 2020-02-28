@@ -77,4 +77,8 @@
 
 	</changeSet>
 
+	<changeSet id="4" author="sebster">
+		<sql>update plato_subscription set interval_upper_bound=null where interval_upper_bound=0</sql>
+	</changeSet>
+
 </databaseChangeLog>
