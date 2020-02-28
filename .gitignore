@@ -1,5 +1,4 @@
 .ijwb/
 *.iml
 /bazel-*
-application-user.properties
-/hobbes/deployment-*
+/user/
