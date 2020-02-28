@@ -14,4 +14,6 @@ public class HobbesProperties {
 	private List<Integer> telegramFromWhiteList = new ArrayList<>();
 	private List<Long> telegramChatWhiteList = new ArrayList<>();
 
+	private List<String> enabledPlugins = new ArrayList<>();
+
 }

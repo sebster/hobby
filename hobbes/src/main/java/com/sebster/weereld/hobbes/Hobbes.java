@@ -39,7 +39,10 @@ public class Hobbes implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		logEnabledPlugins();
+		List<Plugin> enabledPlugins = getEnabledPlugins();
+		logPlugins("Available plugins", plugins);
+		logPlugins("Enabled plugins", enabledPlugins);
+
 		logWhiteLists();
 
 		int lastUpdateId = -1;
@@ -49,7 +52,7 @@ public class Hobbes implements CommandLineRunner {
 				List<TelegramUpdate> updates = telegramService.getUpdates(lastUpdateId + 1, POLL_TIMEOUT);
 				for (TelegramUpdate update : updates) {
 					log.debug("Received update: " + update);
-					processUpdate(update);
+					processUpdate(update, enabledPlugins);
 					lastUpdateId = update.getUpdateId();
 				}
 				duration = INITIAL_ERROR_DELAY;
@@ -61,7 +64,7 @@ public class Hobbes implements CommandLineRunner {
 		}
 	}
 
-	private void processUpdate(TelegramUpdate update) {
+	private void processUpdate(TelegramUpdate update, List<Plugin> enabledPlugins) {
 		if (update.getMessage().isEmpty()) {
 			log.warn("Update without message received: " + update);
 			return;
@@ -71,7 +74,7 @@ public class Hobbes implements CommandLineRunner {
 			log.warn("Non-whitelisted update received: " + update);
 			return;
 		}
-		for (Plugin plugin : plugins) {
+		for (Plugin plugin : enabledPlugins) {
 			try {
 				plugin.receiveMessage(message);
 			} catch (RuntimeException e) {
@@ -94,9 +97,22 @@ public class Hobbes implements CommandLineRunner {
 		return hobbesProperties.getTelegramChatWhiteList().stream().anyMatch(allowedChat -> allowedChat == chat);
 	}
 
-	private void logEnabledPlugins() {
+	private List<Plugin> getEnabledPlugins() {
+		return plugins.stream().filter(this::isPluginEnabled).collect(toList());
+	}
+
+	private boolean isPluginEnabled(Plugin plugin) {
+		List<String> enabledPluginNames = hobbesProperties.getEnabledPlugins();
+		if (enabledPluginNames == null || enabledPluginNames.isEmpty()) {
+			// No plugins explicitly enabled, all plugins enabled by default.
+			return true;
+		}
+		return enabledPluginNames.contains(plugin.getName());
+	}
+
+	private void logPlugins(String logMesage, List<Plugin> plugins) {
 		List<String> pluginNames = plugins.stream().map(Plugin::getName).collect(toList());
-		log.info("Running with the following plugins enabled: {}", pluginNames);
+		log.info("{}: {}", logMesage, pluginNames);
 	}
 
 	private void logWhiteLists() {
