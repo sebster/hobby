@@ -9,9 +9,9 @@ public interface Plugin {
 
 	String getDescription();
 
-	void showHelp(TelegramChat telegramChat);
+	void showHelp(TelegramChat chat);
 
-	void receiveMessage(TelegramMessage telegramMessage);
+	void receiveMessage(TelegramMessage message);
 
 	void enable();
 

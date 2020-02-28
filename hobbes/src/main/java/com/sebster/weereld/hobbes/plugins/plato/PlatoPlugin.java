@@ -44,8 +44,8 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 	}
 
 	@Override
-	public void showHelp(TelegramChat telegramChat) {
-		sendMessage(telegramChat, html(),
+	public void showHelp(TelegramChat chat) {
+		sendMessage(chat, html(),
 				"<b>plato</b> - krijg een willekeurig citaat uit de Stanford Encyclopedia of Philosophy.\n"
 						+ "<b>plato aan</b> - krijg af en toe een citaat van plato \n"
 						+ "<b>plato aan &lt;interval&gt;</b> - krijg elke &lt;interval&gt; een citaat (voorbeeld: plato aan 1d) \n"

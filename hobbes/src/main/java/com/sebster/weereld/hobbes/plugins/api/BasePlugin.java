@@ -31,7 +31,7 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 
 	@Override
 	@Transactional
-	public void receiveMessage(TelegramMessage telegramMessage) {
+	public void receiveMessage(TelegramMessage message) {
 		if (isEnabled()) {
 			message.accept(this);
 		}
