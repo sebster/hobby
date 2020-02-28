@@ -68,9 +68,9 @@ public class PlatoSubscriptionScheduler {
 
 		private Date determineNextTime(Date lastExecutionTime) {
 			long lowerBound = schedule.getIntervalLowerBound();
-			long upperBound = schedule.getIntervalUpperBound();
+			Long upperBound = schedule.getIntervalUpperBound().orElse(null);
 
-			if (upperBound == 0L) {
+			if (upperBound == null) {
 				return new Date(lastExecutionTime.getTime() + lowerBound);
 			} else {
 				long range = upperBound - lowerBound;

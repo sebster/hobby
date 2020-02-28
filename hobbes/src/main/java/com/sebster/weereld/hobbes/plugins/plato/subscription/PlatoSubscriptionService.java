@@ -30,13 +30,16 @@ public class PlatoSubscriptionService {
 	}
 
 	public void subscribe(long chatId, Duration interval) {
-		subscribe(chatId, interval, Duration.ZERO);
+		subscribe(chatId, interval, null);
 	}
 
 	public void subscribe(long chatId, Duration intervalLowerBound, Duration intervalUpperBound) {
-		Optional<PlatoSubscription> subscription = repository.findOne(withChatId(chatId));
-		PlatoSchedule schedule = platoSchedule(intervalLowerBound.toMillis(), intervalUpperBound.toMillis());
+		PlatoSchedule schedule = platoSchedule(
+				intervalLowerBound.toMillis(),
+				intervalUpperBound != null ? intervalUpperBound.toMillis() : null
+		);
 
+		Optional<PlatoSubscription> subscription = repository.findOne(withChatId(chatId));
 		if (subscription.isPresent()) {
 			updateSubscription(subscription.get(), schedule);
 		} else {

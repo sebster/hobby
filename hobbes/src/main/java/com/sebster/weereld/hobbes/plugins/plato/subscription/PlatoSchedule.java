@@ -3,6 +3,8 @@ package com.sebster.weereld.hobbes.plugins.plato.subscription;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
+import java.util.Optional;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -22,9 +24,13 @@ public class PlatoSchedule {
 	private long intervalLowerBound;
 
 	@Column
-	private long intervalUpperBound;
+	private Long intervalUpperBound;
 
-	public static PlatoSchedule platoSchedule(long intervalLowerBound, long intervalUpperBound) {
+	public Optional<Long> getIntervalUpperBound() {
+		return Optional.ofNullable(intervalUpperBound);
+	}
+
+	public static PlatoSchedule platoSchedule(long intervalLowerBound, Long intervalUpperBound) {
 		return new PlatoSchedule(intervalLowerBound, intervalUpperBound);
 	}
 
