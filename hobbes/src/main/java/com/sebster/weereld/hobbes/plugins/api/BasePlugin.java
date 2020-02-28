@@ -23,10 +23,7 @@ import lombok.NonNull;
 
 public abstract class BasePlugin extends TelegramMessageVisitorAdapter implements Plugin {
 
-	@Autowired
 	protected TelegramService telegramService;
-
-	@Autowired
 	protected Repository<Person> personRepository;
 
 	@Override
@@ -70,6 +67,16 @@ public abstract class BasePlugin extends TelegramMessageVisitorAdapter implement
 
 	protected Optional<Person> meOrPersonByNick(@NonNull TelegramMessage message, @NonNull String nick) {
 		return isMe(nick) ? getFrom(message) : personRepository.findOne(withNick(nick));
+	}
+
+	@Autowired
+	public void setTelegramService(TelegramService telegramService) {
+		this.telegramService = telegramService;
+	}
+
+	@Autowired
+	public void setPersonRepository(Repository<Person> personRepository) {
+		this.personRepository = personRepository;
 	}
 
 }
