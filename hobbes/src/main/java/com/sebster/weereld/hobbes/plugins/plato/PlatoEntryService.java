@@ -20,28 +20,27 @@ public class PlatoEntryService {
 	private static final String PLATO_ENTRY_BASE_URL_STRING = "https://plato.stanford.edu/entries/";
 
 	private static final Pattern CITATION_PATTERN = compile("(?i)<div id=\"preamble\">\\n\\n<p>.*\\n([^.]*.[^.]*.)");
-	private static final Pattern ENTRY_PATTERN = compile(
+	private static final Pattern ENTRY_NAME_PATTERN = compile(
 			"(?i) {12}<li><a href=\"https://plato.stanford.edu/cgi-bin/encyclopedia/archinfo\\.cgi\\?entry=([\\-\\w]*)");
 
 	private final PlatoWebClient webClient;
 
-	String getQuoteFromRandomEntry() {
-
+	String getCitationFromRandomEntry() {
 		Optional<String> randomEntry = webClient.getRandomEntry();
 
 		if (randomEntry.isPresent()) {
-			Optional<String> citation = citation(randomEntry.get());
+			Optional<String> quote = quote(randomEntry.get());
 			Optional<String> link = entryLink(randomEntry.get());
 
-			if (link.isPresent() || citation.isPresent()) {
-				return String.join("\n", citation.orElse(""), link.orElse(""));
+			if (link.isPresent() || quote.isPresent()) {
+				return String.join("\n", quote.orElse(""), link.orElse(""));
 			}
 		}
 
 		return "Ik sta met m'n mond vol tanden...";
 	}
 
-	private Optional<String> citation(String entry) {
+	private Optional<String> quote(String entry) {
 		return firstMatch(entry, CITATION_PATTERN)
 				.map(citation -> citation
 						.replace(" \n", " ")
@@ -52,7 +51,7 @@ public class PlatoEntryService {
 	}
 
 	private Optional<String> entryLink(String entry) {
-		return firstMatch(entry, ENTRY_PATTERN)
+		return firstMatch(entry, ENTRY_NAME_PATTERN)
 				.map(name -> PLATO_ENTRY_BASE_URL_STRING + name);
 	}
 

@@ -63,7 +63,7 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 		long chatId = message.getChat().getId();
 
 		if (PLATO_RANDOM_ENTRY_PATTERN.matcher(text).matches()) {
-			sendQuoteFromRandomEntry(chatId);
+			sendCitationFromRandomEntry(chatId);
 			return;
 		}
 
@@ -99,8 +99,8 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 
 	}
 
-	public void sendQuoteFromRandomEntry(long chatId) {
-		sendMessage(chatId, entryService.getQuoteFromRandomEntry());
+	public void sendCitationFromRandomEntry(long chatId) {
+		sendMessage(chatId, entryService.getCitationFromRandomEntry());
 	}
 
 	@Override

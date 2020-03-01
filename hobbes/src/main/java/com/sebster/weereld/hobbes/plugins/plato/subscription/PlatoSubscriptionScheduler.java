@@ -29,7 +29,7 @@ public class PlatoSubscriptionScheduler {
 
 	public void addScheduledTaskFor(PlatoSubscription subscription) {
 		ScheduledFuture<?> future = taskScheduler.schedule(
-				() -> messageService.sendQuoteFromRandomEntry(subscription.getChatId()),
+				() -> messageService.sendCitationFromRandomEntry(subscription.getChatId()),
 				new PlatoTrigger(subscription.getSchedule())
 		);
 		scheduledSubscriptions.put(subscription.getChatId(), future);
