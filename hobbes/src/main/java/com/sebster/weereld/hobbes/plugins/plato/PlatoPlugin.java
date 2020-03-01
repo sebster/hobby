@@ -33,6 +33,9 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 	@Autowired
 	private PlatoSubscriptionService subscriptionService;
 
+	@Autowired
+	private PlatoEntryService entryService;
+
 	@Override
 	public String getName() {
 		return "plato";
@@ -97,7 +100,7 @@ public class PlatoPlugin extends BasePlugin implements PlatoMessageService {
 	}
 
 	public void sendQuoteFromRandomEntry(long chatId) {
-		sendMessage(chatId, PlatoEntryService.getQuoteFromRandomEntry());
+		sendMessage(chatId, entryService.getQuoteFromRandomEntry());
 	}
 
 	@Override
