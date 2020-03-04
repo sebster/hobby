@@ -15,6 +15,6 @@ public class PlatoProperties implements PlatoDefaultSchedulingIntervalProvider {
 
 	Duration intervalLowerBound = ofDays(3);
 	Duration intervalUpperBound = ofDays(7);
-	long unsolicitedQuotesChatId;
+	int quoteCharactersTarget = 400;
 
 }

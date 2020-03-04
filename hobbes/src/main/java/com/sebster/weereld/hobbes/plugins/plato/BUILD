@@ -3,7 +3,10 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "plato",
     srcs = glob(["*.java"]),
-    visibility = ["//hobbes/src/main/java/com/sebster/weereld/hobbes:__pkg__"],
+    visibility = [
+        "//hobbes/src/main/java/com/sebster/weereld/hobbes:__pkg__",
+        "//hobbes/src/test/java/com/sebster/weereld/hobbes/plugins/plato:__pkg__",
+    ],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
         "//hobbes/src/main/java/com/sebster/weereld/hobbes/plugins/api",
