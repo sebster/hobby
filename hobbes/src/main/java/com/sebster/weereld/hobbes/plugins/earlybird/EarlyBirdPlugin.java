@@ -183,7 +183,8 @@ public class EarlyBirdPlugin extends BasePlugin {
 
 		// Add this person's wake up time.
 		EarlyBird eb = new EarlyBird(chat.getId(), person.getNick(), ebDate, ebDateTime.toLocalTime());
-		if (cannotBeDefeated(eb)) {
+		boolean beatsOldEb = oldEb == null || eb.getWakeUpTime().isBefore(oldEb.getWakeUpTime());
+		if (beatsOldEb && cannotBeDefeated(eb)) {
 			// Mark as winner immediately if the person cannot be defeated.
 			eb.markWinner();
 		}
@@ -193,7 +194,7 @@ public class EarlyBirdPlugin extends BasePlugin {
 			sendMessage(chat, "De vroige voegil van %s ies chiwoerdin: %s! Gifiliecieteird!", eb.getDate(), eb.getNick());
 		} else if (oldEb == null) {
 			sendMessage(chat, "Jai maakt noeg kans oep de vroige voegil vandaag, %s!", eb.getNick());
-		} else if (eb.getWakeUpTime().isBefore(oldEb.getWakeUpTime())) {
+		} else if (beatsOldEb) {
 			sendMessage(chat, "Jai ibt de vroigivoegil van %s afgipiekt, %s!", oldEb.getNick(), eb.getNick());
 		}
 	}
