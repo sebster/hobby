@@ -16,7 +16,7 @@ import lombok.NonNull;
 public class Consumers {
 
 	/**
-	 * Convert a bi-consumer to function returning a consumer by curring the specified bi-consumer.
+	 * Convert a bi-consumer to function returning a consumer by currying the specified bi-consumer.
 	 */
 	public static <U, V> Function<U, Consumer<V>> curry(@NonNull BiConsumer<U, V> biConsumer) {
 		return u -> v -> biConsumer.accept(u, v);
