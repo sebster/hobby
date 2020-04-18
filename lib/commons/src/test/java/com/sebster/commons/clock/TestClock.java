@@ -5,7 +5,9 @@ import static lombok.AccessLevel.PRIVATE;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -49,6 +51,20 @@ public class TestClock extends Clock {
 	 */
 	public TestClock sleep(@NonNull Duration duration) {
 		offset.set(offset.get().plus(duration));
+		return this;
+	}
+
+	/**
+	 * Pretend to sleep until the specified time. This effectively advances the test clock to at least the specified time
+	 * immediately.
+	 */
+	public TestClock sleepUntil(@NonNull LocalTime localTime) {
+		ZonedDateTime now = instant().atZone(getZone());
+		ZonedDateTime target = now.with(localTime);
+		if (target.isBefore(now)) {
+			target = target.plusDays(1);
+		}
+		sleep(Duration.between(now, target));
 		return this;
 	}
 
