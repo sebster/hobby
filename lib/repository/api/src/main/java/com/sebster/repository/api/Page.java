@@ -59,7 +59,7 @@ public interface Page<T> extends Iterable<T> {
 	}
 
 	/**
-	 * Get the contents of the page.
+	 * Get the contents of the page. The returned list is immutable.
 	 */
 	List<T> getItems();
 
