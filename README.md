@@ -19,6 +19,15 @@ Currently this includes:
         -   /telegram/botapi - telegram Bot API client
         -   /telegram/botapi-impl - implementation of the Telegram Bot API client
 -   /hobbes - a silly telegram bot
+-   /remarkable - tools for my reMarkable (https://www.remarkable.com)
+    -   /lib - libraries for using the remarkable
+        -   /lib/cloudapi - unofficial client for the reMarkable cloud storage API
+        -   /lib/cloudapi-impl - implementation of the reMarkable cloud storage API client
+    -   /apps - applications for the reMarkable
+        -   /apps/auto-import - watch a folder and automatically import documents to the reMarkable (TODO)
+        -   /apps/auto-mirror - watch two reMarkables and make sure they have identical contents (TODO)
+        -   /apps/backup - make a backup of the reMarkable to the local file system
+        -   /apps/restore - restore files from a backup to the reMarkable (TODO)
 -   /3rd-party - bazel rules for 3rd party libraries
 -   /tools - custom bazel rules for spring, docker images, etc.
 
