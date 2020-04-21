@@ -51,14 +51,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	}
 
 	@Override
-	public String login(@NonNull String authToken) {
-		return sessionTokens.computeIfAbsent(authToken, token -> {
-			log.debug("login");
-			return getBody(restTemplate.exchange(TOKEN_URL, POST, emptyRequest(token), String.class));
-		});
-	}
-
-	@Override
 	public String register(@NonNull UUID clientId, @NonNull String clientType, @NonNull String code) {
 		log.debug("register: clientId={} clientType={} code={}", clientId, clientType, code);
 		return getBody(restTemplate.exchange(
@@ -68,6 +60,15 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 				String.class
 		));
 	}
+
+	@Override
+	public String login(@NonNull String authToken) {
+		return sessionTokens.computeIfAbsent(authToken, token -> {
+			log.debug("login");
+			return getBody(restTemplate.exchange(TOKEN_URL, POST, emptyRequest(token), String.class));
+		});
+	}
+
 
 	@Override
 	public List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl) {
