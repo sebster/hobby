@@ -28,6 +28,9 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	private static final String REGISTRATION_URL =
 			"https://my.remarkable.com/token/json/2/device/new";
 
+	private static final String DEREGISTRATION_URL =
+			"https://my.remarkable.com/token/json/2/device/delete";
+
 	private static final String TOKEN_URL =
 			"https://my.remarkable.com/token/json/2/user/new";
 
@@ -59,6 +62,17 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 				request(new RegistrationRequestDto(code, clientType, clientId.toString()), null),
 				String.class
 		));
+	}
+
+	@Override
+	public void unregister(@NonNull String loginToken) {
+		log.debug("unregister");
+		restTemplate.exchange(
+				DEREGISTRATION_URL,
+				POST,
+				emptyRequest(loginToken),
+				Void.class
+		);
 	}
 
 	@Override

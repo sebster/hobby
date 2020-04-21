@@ -13,6 +13,11 @@ public interface RemarkableApiClient {
 	String register(@NonNull UUID clientId, @NonNull String clientType, @NonNull String code);
 
 	/**
+	 * Unregister the client with the specified login code.
+	 */
+	void unregister(@NonNull String loginToken);
+
+	/**
 	 * Log the client in. Returns a session token that can be used for subsequent API calls.
 	 */
 	String login(@NonNull String loginToken);
