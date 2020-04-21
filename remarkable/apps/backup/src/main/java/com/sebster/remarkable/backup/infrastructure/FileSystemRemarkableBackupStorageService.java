@@ -65,19 +65,16 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		Map<UUID, ItemMetadata> metadata = loadMetadataMap();
 		ItemMetadata itemMetadata = metadata.computeIfAbsent(document.getId(), id -> new ItemMetadata());
 		updateDocumentMetadata(itemMetadata, document);
+		downloadData(document, downloadLink);
 		saveMetadataMap(metadata);
-		downloadDocumentData(document, downloadLink);
 	}
 
 	@Override
-	public void deleteFolder(RemarkableFolder folder) {
-		deleteItemMetadata(folder);
-	}
-
-	@Override
-	public void deleteDocument(RemarkableDocument document) {
-		deleteItemMetadata(document);
-		deleteDocumentData(document);
+	public void deleteItem(RemarkableItem item) {
+		Map<UUID, ItemMetadata> metadata = loadMetadataMap();
+		metadata.remove(item.getId());
+		deleteData(item);
+		saveMetadataMap(metadata);
 	}
 
 	private void updateFolderMetadata(ItemMetadata itemMetadata, RemarkableFolder folder) {
@@ -100,26 +97,19 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		itemMetadata.setModificationTime(item.getModificationTime());
 	}
 
-	private void downloadDocumentData(RemarkableDocument document, RemarkableDownloadLink downloadLink) {
-		File documentFile = getDocumentFile(document);
+	private void downloadData(RemarkableDocument document, RemarkableDownloadLink downloadLink) {
 		try {
-			copyInputStreamToFile(downloadLink.getUrl().openStream(), documentFile);
+			copyInputStreamToFile(downloadLink.getUrl().openStream(), getDataFile(document));
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
 
-	private void deleteDocumentData(RemarkableDocument document) {
-		File documentFile = getDocumentFile(document);
-		if (!documentFile.delete()) {
-			throw new UncheckedIOException(new IOException("Could not delete file: " + documentFile));
+	private void deleteData(RemarkableItem item) {
+		File dataFile = getDataFile(item);
+		if (dataFile.exists() && !dataFile.delete()) {
+			throw new UncheckedIOException(new IOException("Could not delete file: " + dataFile));
 		}
-	}
-
-	public void deleteItemMetadata(RemarkableItem item) {
-		Map<UUID, ItemMetadata> metadata = loadMetadataMap();
-		metadata.remove(item.getId());
-		saveMetadataMap(metadata);
 	}
 
 	private List<ItemMetadata> loadMetadata() {
@@ -154,8 +144,8 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		return new File(location, METADATA_FILE);
 	}
 
-	private File getDocumentFile(RemarkableDocument document) {
-		return new File(location, document.getId().toString() + ".zip");
+	private File getDataFile(RemarkableItem item) {
+		return new File(location, item.getId().toString() + ".zip");
 	}
 
 }

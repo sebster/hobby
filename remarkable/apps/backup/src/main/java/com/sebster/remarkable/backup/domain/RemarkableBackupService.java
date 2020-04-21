@@ -46,7 +46,7 @@ public class RemarkableBackupService {
 			RemarkableItem remoteItem = remote.findItem(localItem.getId()).orElse(null);
 			if (remoteItem == null) {
 				log.debug("deleted: (v{}) {}", localItem.getVersion(), localItem);
-				deleteItem(localItem);
+				storageService.deleteItem(remoteItem);
 			}
 		});
 	}
@@ -55,12 +55,6 @@ public class RemarkableBackupService {
 		item
 				.withFolder(storageService::storeFolder)
 				.withDocument(document -> storageService.storeDocument(document, getDownloadLink(item)));
-	}
-
-	private void deleteItem(RemarkableItem item) {
-		item
-				.withFolder(storageService::deleteFolder)
-				.withDocument(storageService::deleteDocument);
 	}
 
 	private RemarkableDownloadLink getDownloadLink(RemarkableItem item) {

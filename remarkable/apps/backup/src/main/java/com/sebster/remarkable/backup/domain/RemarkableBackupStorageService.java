@@ -15,7 +15,6 @@ public interface RemarkableBackupStorageService {
 
 	void storeDocument(@NonNull RemarkableDocument document, @NonNull RemarkableDownloadLink downloadLink);
 
-	void deleteFolder(RemarkableFolder remarkableItems);
+	void deleteItem(RemarkableItem remarkableItem);
 
-	void deleteDocument(RemarkableDocument document);
 }
