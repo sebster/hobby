@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
@@ -34,8 +35,7 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	private static final String METADATA_FILE = "metadata.json";
 
 	private final @NonNull File location;
-
-	private FileSystemItemMetadataStore itemMetadataStore;
+	private final @NonNull ObjectMapper mapper;
 
 	@PostConstruct
 	public void init() {
@@ -124,15 +124,22 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 
 	private List<ItemMetadata> loadMetadata() {
 		File metadataFile = getMetadataFile();
-		if (metadataFile.exists()) {
-			return itemMetadataStore.load(metadataFile);
-		} else {
+		if (!metadataFile.exists()) {
 			return emptyList();
+		}
+		try {
+			return mapper.readValue(metadataFile, mapper.getTypeFactory().constructCollectionType(List.class, ItemMetadata.class));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
 	}
 
 	private void saveMetadata(Collection<ItemMetadata> metadata) {
-		itemMetadataStore.save(getMetadataFile(), metadata);
+		try {
+			mapper.writeValue(getMetadataFile(), metadata);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 
 	private Map<UUID, ItemMetadata> loadMetadataMap() {

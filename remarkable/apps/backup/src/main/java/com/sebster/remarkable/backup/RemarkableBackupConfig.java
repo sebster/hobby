@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.remarkable.backup.domain.RemarkableBackupService;
 import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
 import com.sebster.remarkable.backup.infrastructure.FileSystemRemarkableBackupStorageService;
-import com.sebster.remarkable.backup.infrastructure.FileSystemItemMetadataStore;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 
 @Configuration
@@ -16,13 +15,8 @@ import com.sebster.remarkable.cloudapi.RemarkableClient;
 public class RemarkableBackupConfig {
 
 	@Bean
-	public FileSystemItemMetadataStore metadataStore(ObjectMapper objectMapper) {
-		return new FileSystemItemMetadataStore(objectMapper);
-	}
-
-	@Bean
-	public RemarkableBackupStorageService storageService(RemarkableBackupProperties properties, FileSystemItemMetadataStore metadataStore) {
-		return new FileSystemRemarkableBackupStorageService(properties.getLocation(), metadataStore);
+	public RemarkableBackupStorageService storageService(RemarkableBackupProperties properties, ObjectMapper objectMapper) {
+		return new FileSystemRemarkableBackupStorageService(properties.getLocation(), objectMapper);
 	}
 
 	@Bean

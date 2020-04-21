@@ -22,8 +22,8 @@ public class RemarkableBackupService {
 		RemarkableCollection local = storageService.list();
 
 		remote.traverse().forEach(remoteItem -> {
-			RemarkableItem localItem = local.findItem(remoteItem.getId()).orElse(null);
 			int remoteVersion = remoteItem.getVersion();
+			RemarkableItem localItem = local.findItem(remoteItem.getId()).orElse(null);
 			if (localItem == null) {
 				log.debug("new: (v{}) {}", remoteVersion, remoteItem);
 				storeItem(remoteItem);
@@ -58,7 +58,9 @@ public class RemarkableBackupService {
 	}
 
 	private void deleteItem(RemarkableItem item) {
-		item.withFolder(storageService::deleteFolder).withDocument(storageService::deleteDocument);
+		item
+				.withFolder(storageService::deleteFolder)
+				.withDocument(storageService::deleteDocument);
 	}
 
 	private RemarkableDownloadLink getDownloadLink(RemarkableItem item) {
