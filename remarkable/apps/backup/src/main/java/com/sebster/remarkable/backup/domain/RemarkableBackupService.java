@@ -46,7 +46,7 @@ public class RemarkableBackupService {
 			RemarkableItem remoteItem = remote.findItem(localItem.getId()).orElse(null);
 			if (remoteItem == null) {
 				log.debug("deleted: (v{}) {}", localItem.getVersion(), localItem);
-				storageService.deleteItem(remoteItem);
+				storageService.deleteItem(localItem);
 			}
 		});
 	}
