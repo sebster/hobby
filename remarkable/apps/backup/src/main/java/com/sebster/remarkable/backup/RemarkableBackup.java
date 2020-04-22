@@ -12,11 +12,12 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class RemarkableBackup implements CommandLineRunner {
 
+	private final @NonNull RemarkableBackupProperties backupProperties;
 	private final @NonNull RemarkableBackupService backupService;
 
 	@Override
 	public void run(String... args) {
-		backupService.run();
+		backupService.backup(backupProperties.getClientId());
 	}
 
 	public static void main(String[] args) {

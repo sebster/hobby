@@ -1,6 +1,6 @@
 package com.sebster.remarkable.cloudapi.impl;
 
-import java.util.UUID;
+import java.io.File;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -8,9 +8,8 @@ import lombok.Data;
 
 @ConfigurationProperties(prefix = "remarkable")
 @Data
-public class RemarkableClientProperties {
+public class RemarkableProperties {
 
-	private UUID clientId;
-	private String loginToken;
+	private File clients = new File(System.getProperty("user.home") + "/.remarkable-clients.json");
 
 }

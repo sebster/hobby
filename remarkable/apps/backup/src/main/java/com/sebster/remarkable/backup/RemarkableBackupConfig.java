@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.remarkable.backup.domain.RemarkableBackupService;
 import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
 import com.sebster.remarkable.backup.infrastructure.FileSystemRemarkableBackupStorageService;
-import com.sebster.remarkable.cloudapi.RemarkableClient;
+import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 
 @Configuration
 @EnableConfigurationProperties(RemarkableBackupProperties.class)
@@ -20,8 +20,11 @@ public class RemarkableBackupConfig {
 	}
 
 	@Bean
-	public RemarkableBackupService remarkableBackupService(RemarkableClient client, RemarkableBackupStorageService storageService) {
-		return new RemarkableBackupService(client, storageService);
+	public RemarkableBackupService remarkableBackupService(
+			RemarkableClientManager clientManager,
+			RemarkableBackupStorageService storageService
+	) {
+		return new RemarkableBackupService(clientManager, storageService);
 	}
 
 }

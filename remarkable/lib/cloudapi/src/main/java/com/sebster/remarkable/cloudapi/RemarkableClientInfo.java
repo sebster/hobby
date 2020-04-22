@@ -9,6 +9,6 @@ import lombok.Value;
 public class RemarkableClientInfo {
 
 	@NonNull UUID clientId;
-	@NonNull String loginToken;
+	@NonNull String description;
 
 }

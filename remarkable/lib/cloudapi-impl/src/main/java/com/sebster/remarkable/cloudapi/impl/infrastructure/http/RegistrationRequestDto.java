@@ -11,10 +11,10 @@ class RegistrationRequestDto {
 	@JsonProperty("code")
 	private String code;
 
-	@JsonProperty("devicesDesc")
+	@JsonProperty("DeviceDesc")
 	private String clientType;
 
-	@JsonProperty("deviceID")
+	@JsonProperty("DeviceID")
 	private String clientId;
 
 }

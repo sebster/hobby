@@ -16,6 +16,7 @@ java_library(
         "//3rdparty/org/projectlombok/lombok",
         "//remarkable/lib/cloudapi",
         "//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl/controller",
+        "//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl/infrastructure",
         "//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl/infrastructure/http",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:javax_validation_validation_api",

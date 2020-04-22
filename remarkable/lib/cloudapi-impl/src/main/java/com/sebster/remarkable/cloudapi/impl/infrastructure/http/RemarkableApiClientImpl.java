@@ -58,7 +58,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		log.debug("register: clientId={} clientType={} code={}", clientId, clientType, code);
 		return getBody(restTemplate.exchange(
 				REGISTRATION_URL,
-				GET,
+				POST,
 				request(new RegistrationRequestDto(code, clientType, clientId.toString()), null),
 				String.class
 		));
@@ -82,7 +82,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 			return getBody(restTemplate.exchange(TOKEN_URL, POST, emptyRequest(token), String.class));
 		});
 	}
-
 
 	@Override
 	public List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl) {
