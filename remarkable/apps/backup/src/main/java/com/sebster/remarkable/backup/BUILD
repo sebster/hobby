@@ -1,6 +1,7 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
 load("//tools/rules_images:defs.bzl", "java_image")
 load("//tools/rules_resources:defs.bzl", "resource_jar")
+load("//tools/rules_spring:defs.bzl", "spring_boot_jar")
 
 resource_jar(
     name = "properties",
@@ -48,4 +49,11 @@ java_image(
     main_class = "com.sebster.remarkable.backup.RemarkableBackup",
     visibility = ["//visibility:public"],
     runtime_deps = [":backup"],
+)
+
+spring_boot_jar(
+    name = "spring_boot_jar",
+    app = ":backup",
+    main_class = "com.sebster.remarkable.backup.RemarkableBackup",
+    visibility = ["//visibility:public"],
 )
