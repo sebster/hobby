@@ -8,23 +8,23 @@ import lombok.NonNull;
 public interface RemarkableClientManager {
 
 	/**
-	 * Register a client and return the new client id.
+	 * Register and return a new client.
 	 */
-	UUID register(@NonNull String code, String description);
+	RemarkableClient register(@NonNull String code, String description);
 
 	/**
 	 * List the client known by this client manager.
 	 */
-	List<RemarkableClientInfo> listClients();
+	List<RemarkableClient> listClients();
 
 	/**
-	 * Get the specified client.
+	 * Get the client with the specified id.
 	 */
 	RemarkableClient getClient(@NonNull UUID id);
 
 	/**
-	 * Unregister the client with the specified id.
+	 * Unregister the specified client.
 	 */
-	void unregister(@NonNull UUID id);
+	void unregister(@NonNull RemarkableClient client);
 
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
-import com.sebster.remarkable.cloudapi.RemarkableClientInfo;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -21,29 +20,33 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	private final @NonNull RemarkableApiClient apiClient;
 
 	@Override
-	public UUID register(@NonNull String code, String description) {
+	public RemarkableClient register(@NonNull String code, String description) {
 		UUID clientId = randomUUID();
 		String loginToken = apiClient.register(clientId, WINDOWS_CLIENT_TYPE, code);
-		clientStore.addClientDescriptor(new RemarkableClientDescriptor(clientId, description, loginToken));
-		return clientId;
+		RemarkableClientInfo clientInfo = new RemarkableClientInfo(clientId, description, loginToken);
+		clientStore.addClient(clientInfo);
+		return createClient(clientInfo);
 	}
 
 	@Override
-	public List<RemarkableClientInfo> listClients() {
-		return clientStore.loadClientDescriptors().stream().map(RemarkableClientDescriptor::toInfo).collect(toList());
+	public List<RemarkableClient> listClients() {
+		return clientStore.loadClients().stream().map(this::createClient).collect(toList());
 	}
 
 	@Override
 	public RemarkableClient getClient(@NonNull UUID clientId) {
-		RemarkableClientDescriptor clientDescriptor = clientStore.loadClientDescriptor(clientId);
-		return new RemarkableClientImpl(clientDescriptor.toInfo(), clientDescriptor.getLoginToken(), apiClient);
+		return createClient(clientStore.loadClient(clientId));
 	}
 
 	@Override
-	public void unregister(@NonNull UUID clientId) {
-		RemarkableClientDescriptor clientDescriptor = clientStore.loadClientDescriptor(clientId);
-		apiClient.unregister(clientDescriptor.getLoginToken());
-		clientStore.removeClientDescriptor(clientId);
+	public void unregister(@NonNull RemarkableClient client) {
+		RemarkableClientInfo clientInfo = clientStore.loadClient(client.getId());
+		apiClient.unregister(clientInfo.getLoginToken());
+		clientStore.removeClient(client.getId());
+	}
+
+	private RemarkableClient createClient(RemarkableClientInfo clientInfo) {
+		return new RemarkableClientImpl(clientInfo, apiClient);
 	}
 
 }

@@ -4,7 +4,9 @@ import java.util.UUID;
 
 public interface RemarkableClient {
 
-	RemarkableClientInfo getInfo();
+	UUID getId();
+
+	String getDescription();
 
 	RemarkableRootFolder list();
 
@@ -19,13 +21,5 @@ public interface RemarkableClient {
 	RemarkableDownloadLink downloadLink(UUID id);
 
 	RemarkableDownloadLink downloadLink(RemarkablePath path);
-
-	default UUID getId() {
-		return getInfo().getClientId();
-	}
-
-	default String getDescription() {
-		return getInfo().getDescription();
-	}
 
 }

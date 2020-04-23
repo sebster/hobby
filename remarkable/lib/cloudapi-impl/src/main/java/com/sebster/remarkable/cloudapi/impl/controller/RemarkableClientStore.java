@@ -8,17 +8,17 @@ import lombok.NonNull;
 
 public interface RemarkableClientStore {
 
-	List<RemarkableClientDescriptor> loadClientDescriptors();
+	List<RemarkableClientInfo> loadClients();
 
-	default RemarkableClientDescriptor loadClientDescriptor(UUID clientId) {
-		return loadClientDescriptors().stream()
+	default RemarkableClientInfo loadClient(UUID clientId) {
+		return loadClients().stream()
 				.filter(client -> Objects.equals(client.getClientId(), clientId))
 				.findFirst()
 				.orElseThrow(() -> new IllegalStateException("No client with id: " + clientId));
 	}
 
-	void addClientDescriptor(@NonNull RemarkableClientDescriptor clientDescriptor);
+	void addClient(@NonNull RemarkableClientInfo clientInfo);
 
-	void removeClientDescriptor(@NonNull UUID clientId);
+	void removeClient(@NonNull UUID clientId);
 
 }

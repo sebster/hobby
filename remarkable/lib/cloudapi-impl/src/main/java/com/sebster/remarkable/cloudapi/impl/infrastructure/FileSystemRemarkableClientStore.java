@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.sebster.remarkable.cloudapi.impl.controller.RemarkableClientDescriptor;
+import com.sebster.remarkable.cloudapi.impl.controller.RemarkableClientInfo;
 import com.sebster.remarkable.cloudapi.impl.controller.RemarkableClientStore;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -24,7 +24,7 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 	private final @NonNull ObjectMapper mapper;
 
 	@Override
-	public List<RemarkableClientDescriptor> loadClientDescriptors() {
+	public List<RemarkableClientInfo> loadClients() {
 		if (!clients.exists()) {
 			return emptyList();
 		}
@@ -36,8 +36,8 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 	}
 
 	@Override
-	public void addClientDescriptor(@NonNull RemarkableClientDescriptor clientDescriptor) {
-		List<RemarkableClientDescriptor> clientDescriptors = new ArrayList<>(loadClientDescriptors());
+	public void addClient(@NonNull RemarkableClientInfo clientDescriptor) {
+		List<RemarkableClientInfo> clientDescriptors = new ArrayList<>(loadClients());
 		if (clientExists(clientDescriptor.getClientId(), clientDescriptors)) {
 			throw new IllegalArgumentException("Duplicate client with id: " + clientDescriptor.getClientId());
 		}
@@ -46,8 +46,8 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 	}
 
 	@Override
-	public void removeClientDescriptor(@NonNull UUID clientId) {
-		List<RemarkableClientDescriptor> clientDescriptors = new ArrayList<>(loadClientDescriptors());
+	public void removeClient(@NonNull UUID clientId) {
+		List<RemarkableClientInfo> clientDescriptors = new ArrayList<>(loadClients());
 		if (!clientExists(clientId, clientDescriptors)) {
 			throw new IllegalArgumentException("No client with id: " + clientId);
 		}
@@ -55,15 +55,15 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 		saveClientDescriptors(clientDescriptors);
 	}
 
-	private boolean clientExists(@NonNull UUID clientId, List<RemarkableClientDescriptor> clientDescriptors) {
+	private boolean clientExists(@NonNull UUID clientId, List<RemarkableClientInfo> clientDescriptors) {
 		return clientDescriptors.stream().anyMatch(descriptor -> Objects.equals(descriptor.getClientId(), clientId));
 	}
 
 	private CollectionType getClientDescriptorListType() {
-		return mapper.getTypeFactory().constructCollectionType(List.class, RemarkableClientDescriptor.class);
+		return mapper.getTypeFactory().constructCollectionType(List.class, RemarkableClientInfo.class);
 	}
 
-	private void saveClientDescriptors(List<RemarkableClientDescriptor> clientDescriptors) {
+	private void saveClientDescriptors(List<RemarkableClientInfo> clientDescriptors) {
 		try {
 			mapper.writeValue(clients, clientDescriptors);
 		} catch (IOException e) {
