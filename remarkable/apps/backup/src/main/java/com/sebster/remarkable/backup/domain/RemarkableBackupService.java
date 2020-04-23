@@ -24,7 +24,7 @@ public class RemarkableBackupService {
 		log.info("Backing up client {}: {}", client.getId(), client.getDescription());
 
 		RemarkableCollection remote = client.list();
-		RemarkableCollection local = storageService.list();
+		RemarkableCollection local = storageService.list(clientId);
 
 		remote.traverse().forEach(remoteItem -> {
 			int remoteVersion = remoteItem.getVersion();
@@ -51,7 +51,7 @@ public class RemarkableBackupService {
 			RemarkableItem remoteItem = remote.findItem(localItem.getId()).orElse(null);
 			if (remoteItem == null) {
 				log.debug("deleted: (v{}) {}", localItem.getVersion(), localItem);
-				storageService.deleteItem(localItem);
+				storageService.deleteItem(clientId, localItem);
 			}
 		});
 
@@ -60,8 +60,8 @@ public class RemarkableBackupService {
 
 	private void storeItem(RemarkableItem item, RemarkableClient client) {
 		item
-				.withFolder(storageService::storeFolder)
-				.withDocument(document -> storageService.storeDocument(document, getDownloadLink(item, client)));
+				.withFolder(folder -> storageService.storeFolder(client.getId(), folder))
+				.withDocument(document -> storageService.storeDocument(client.getId(), document, getDownloadLink(item, client)));
 	}
 
 	private RemarkableDownloadLink getDownloadLink(RemarkableItem item, RemarkableClient client) {

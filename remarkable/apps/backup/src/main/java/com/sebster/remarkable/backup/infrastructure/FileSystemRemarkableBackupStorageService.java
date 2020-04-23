@@ -39,42 +39,37 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 
 	@PostConstruct
 	public void init() {
-		if (!location.exists() && !location.mkdirs()) {
-			throw new IllegalStateException("Cannot create backup location: " + location);
-		}
-		if (!location.isDirectory()) {
-			throw new IllegalStateException("Backup location must be a directory: " + location);
-		}
+		ensureDirectoryExists(location);
 	}
 
 	@Override
-	public RemarkableRootFolder list() {
-		return new ItemMetadataListUnmarshaller(loadMetadata()).unmarshal();
+	public RemarkableRootFolder list(UUID clientId) {
+		return new ItemMetadataListUnmarshaller(loadMetadata(clientId)).unmarshal();
 	}
 
 	@Override
-	public void storeFolder(RemarkableFolder folder) {
-		Map<UUID, ItemMetadata> metadata = loadMetadataMap();
+	public void storeFolder(UUID clientId, RemarkableFolder folder) {
+		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		ItemMetadata itemMetadata = metadata.computeIfAbsent(folder.getId(), id -> new ItemMetadata());
 		updateFolderMetadata(itemMetadata, folder);
-		saveMetadataMap(metadata);
+		saveMetadataMap(clientId, metadata);
 	}
 
 	@Override
-	public void storeDocument(RemarkableDocument document, RemarkableDownloadLink downloadLink) {
-		Map<UUID, ItemMetadata> metadata = loadMetadataMap();
+	public void storeDocument(UUID clientId, RemarkableDocument document, RemarkableDownloadLink downloadLink) {
+		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		ItemMetadata itemMetadata = metadata.computeIfAbsent(document.getId(), id -> new ItemMetadata());
 		updateDocumentMetadata(itemMetadata, document);
-		downloadData(document, downloadLink);
-		saveMetadataMap(metadata);
+		downloadData(clientId, document, downloadLink);
+		saveMetadataMap(clientId, metadata);
 	}
 
 	@Override
-	public void deleteItem(RemarkableItem item) {
-		Map<UUID, ItemMetadata> metadata = loadMetadataMap();
+	public void deleteItem(UUID clientId, RemarkableItem item) {
+		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		metadata.remove(item.getId());
-		deleteData(item);
-		saveMetadataMap(metadata);
+		deleteData(clientId, item);
+		saveMetadataMap(clientId, metadata);
 	}
 
 	private void updateFolderMetadata(ItemMetadata itemMetadata, RemarkableFolder folder) {
@@ -97,23 +92,23 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		itemMetadata.setModificationTime(item.getModificationTime());
 	}
 
-	private void downloadData(RemarkableDocument document, RemarkableDownloadLink downloadLink) {
+	private void downloadData(UUID clientId, RemarkableDocument document, RemarkableDownloadLink downloadLink) {
 		try {
-			copyInputStreamToFile(downloadLink.getUrl().openStream(), getDataFile(document));
+			copyInputStreamToFile(downloadLink.getUrl().openStream(), getDataFile(clientId, document));
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
 
-	private void deleteData(RemarkableItem item) {
-		File dataFile = getDataFile(item);
+	private void deleteData(UUID clientId, RemarkableItem item) {
+		File dataFile = getDataFile(clientId, item);
 		if (dataFile.exists() && !dataFile.delete()) {
 			throw new UncheckedIOException(new IOException("Could not delete file: " + dataFile));
 		}
 	}
 
-	private List<ItemMetadata> loadMetadata() {
-		File metadataFile = getMetadataFile();
+	private List<ItemMetadata> loadMetadata(UUID clientId) {
+		File metadataFile = getMetadataFile(clientId);
 		if (!metadataFile.exists()) {
 			return emptyList();
 		}
@@ -124,28 +119,43 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		}
 	}
 
-	private void saveMetadata(Collection<ItemMetadata> metadata) {
+	private void saveMetadata(UUID clientId, Collection<ItemMetadata> metadata) {
 		try {
-			mapper.writeValue(getMetadataFile(), metadata);
+			ensureDirectoryExists(getClientLocation(clientId));
+			mapper.writeValue(getMetadataFile(clientId), metadata);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
 
-	private Map<UUID, ItemMetadata> loadMetadataMap() {
-		return loadMetadata().stream().collect(toMap(ItemMetadata::getId, identity()));
+	private Map<UUID, ItemMetadata> loadMetadataMap(UUID clientId) {
+		return loadMetadata(clientId).stream().collect(toMap(ItemMetadata::getId, identity()));
 	}
 
-	private void saveMetadataMap(Map<UUID, ItemMetadata> metadata) {
-		saveMetadata(metadata.values());
+	private void saveMetadataMap(UUID clientId, Map<UUID, ItemMetadata> metadata) {
+		saveMetadata(clientId, metadata.values());
 	}
 
-	private File getMetadataFile() {
-		return new File(location, METADATA_FILE);
+	private File getMetadataFile(UUID clientId) {
+		return new File(getClientLocation(clientId), METADATA_FILE);
 	}
 
-	private File getDataFile(RemarkableItem item) {
-		return new File(location, item.getId().toString() + ".zip");
+	private File getDataFile(UUID clientId, RemarkableItem item) {
+		return new File(getClientLocation(clientId), item.getId().toString() + ".zip");
+	}
+
+	@NonNull
+	private File getClientLocation(UUID clientId) {
+		return new File(location, clientId.toString());
+	}
+
+	private void ensureDirectoryExists(@NonNull File location) {
+		if (!location.exists() && !location.mkdirs()) {
+			throw new IllegalStateException("Cannot create backup location: " + location);
+		}
+		if (!location.isDirectory()) {
+			throw new IllegalStateException("Backup location must be a directory: " + location);
+		}
 	}
 
 }

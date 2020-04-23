@@ -1,5 +1,7 @@
 package com.sebster.remarkable.backup.domain;
 
+import java.util.UUID;
+
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
@@ -9,12 +11,12 @@ import lombok.NonNull;
 
 public interface RemarkableBackupStorageService {
 
-	RemarkableRootFolder list();
+	RemarkableRootFolder list(@NonNull UUID clientId);
 
-	void storeFolder(@NonNull RemarkableFolder folder);
+	void storeFolder(@NonNull UUID clientId, @NonNull RemarkableFolder folder);
 
-	void storeDocument(@NonNull RemarkableDocument document, @NonNull RemarkableDownloadLink downloadLink);
+	void storeDocument(@NonNull UUID clientId, @NonNull RemarkableDocument document, @NonNull RemarkableDownloadLink downloadLink);
 
-	void deleteItem(RemarkableItem remarkableItem);
+	void deleteItem(@NonNull UUID clientId, RemarkableItem remarkableItem);
 
 }
