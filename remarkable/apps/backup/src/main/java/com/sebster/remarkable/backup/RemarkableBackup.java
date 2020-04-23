@@ -17,7 +17,7 @@ public class RemarkableBackup implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		backupService.backup(backupProperties.getClientId());
+		backupService.backup(backupProperties.getClientId(), backupProperties.getType());
 	}
 
 	public static void main(String[] args) {
