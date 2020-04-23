@@ -11,7 +11,7 @@ resource_jar(
 )
 
 java_library(
-    name = "backup",
+    name = "app",
     srcs = glob(["*.java"]),
     plugins = [
         "//3rdparty/org/springframework/boot:spring_boot_configuration_processor_plugin",
@@ -41,19 +41,19 @@ java_binary(
     name = "bin",
     main_class = "com.sebster.remarkable.backup.RemarkableBackup",
     visibility = ["//visibility:public"],
-    runtime_deps = [":backup"],
+    runtime_deps = [":app"],
 )
 
 java_image(
     name = "image",
     main_class = "com.sebster.remarkable.backup.RemarkableBackup",
     visibility = ["//visibility:public"],
-    runtime_deps = [":backup"],
+    runtime_deps = [":app"],
 )
 
 spring_boot_jar(
-    name = "spring_boot_jar",
-    app = ":backup",
+    name = "backup",
+    app = ":app",
     main_class = "com.sebster.remarkable.backup.RemarkableBackup",
     visibility = ["//visibility:public"],
 )
