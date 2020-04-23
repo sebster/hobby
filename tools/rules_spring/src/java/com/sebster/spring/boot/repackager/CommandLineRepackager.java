@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.boot.loader.tools.Libraries;
 import org.springframework.boot.loader.tools.Library;
@@ -45,8 +46,9 @@ public class CommandLineRepackager implements Runnable {
 
 	private static Libraries libraries(List<File> dependencies) {
 		return callback -> {
-			for (File dependency : dependencies) {
-				callback.library(new Library(dependency, RUNTIME));
+			for (int i = 0; i < dependencies.size(); i++) {
+				File dependency = dependencies.get(i);
+				callback.library(new Library(i + "_" + dependency.getName(), dependency, RUNTIME, false));
 			}
 		};
 	}
