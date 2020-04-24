@@ -3,10 +3,8 @@ package com.sebster.remarkable.backup.domain;
 import static com.sebster.remarkable.backup.domain.RemarkableBackupType.FULL;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
-import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
@@ -18,23 +16,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RemarkableBackupService {
 
-	private final @NonNull RemarkableClientManager clientManager;
 	private final @NonNull RemarkableBackupStorageService storageService;
 
-	public void backup(@NonNull UUID clientId, @NonNull RemarkableBackupType type) {
+	public void backup(@NonNull RemarkableClient client, @NonNull RemarkableBackupType type) {
 
-		RemarkableClient client = clientManager.getClient(clientId);
-		log.info("Starting {} backup: {} ({})", type, client.getDescription(), clientId);
+		log.info("Starting {} backup: {}", type, client);
 
 		RemarkableCollection remote = client.list();
-		RemarkableCollection local = storageService.list(clientId);
+		RemarkableCollection local = storageService.list(client.getId());
 
 		remote.traverse().forEach(remoteItem -> {
 			int remoteVersion = remoteItem.getVersion();
 			RemarkableItem localItem = local.findItem(remoteItem.getId()).orElse(null);
 			if (localItem == null) {
 				log.debug("New: (v{}) {}", remoteVersion, remoteItem);
-				storeItem(remoteItem, client);
+				storeItem(client, remoteItem);
 			} else {
 				int localVersion = localItem.getVersion();
 				if (remoteVersion > localVersion) {
@@ -43,10 +39,10 @@ public class RemarkableBackupService {
 					} else {
 						log.debug("Changed (v{} -> v{}): {}", localVersion, remoteVersion, remoteItem);
 					}
-					storeItem(remoteItem, client);
+					storeItem(client, remoteItem);
 				} else if (remoteVersion == localVersion && type == FULL) {
 					log.debug("Refresh: (v{}) {}", remoteVersion, remoteItem);
-					storeItem(remoteItem, client);
+					storeItem(client, remoteItem);
 				} else {
 					log.debug("Unchanged: (v{}) {}", remoteVersion, remoteItem);
 				}
@@ -57,20 +53,20 @@ public class RemarkableBackupService {
 			RemarkableItem remoteItem = remote.findItem(localItem.getId()).orElse(null);
 			if (remoteItem == null) {
 				log.debug("Deleted: (v{}) {}", localItem.getVersion(), localItem);
-				storageService.deleteItem(clientId, localItem);
+				storageService.deleteItem(client.getId(), localItem);
 			}
 		});
 
 		log.info("Backup complete.");
 	}
 
-	private void storeItem(RemarkableItem item, RemarkableClient client) {
+	private void storeItem(RemarkableClient client, RemarkableItem item) {
 		item
 				.withFolder(folder -> storageService.storeFolder(client.getId(), folder))
-				.withDocument(document -> storageService.storeDocument(client.getId(), document, getDownloadLink(item, client)));
+				.withDocument(document -> storageService.storeDocument(client.getId(), document, getDownloadLink(client, item)));
 	}
 
-	private RemarkableDownloadLink getDownloadLink(RemarkableItem item, RemarkableClient client) {
+	private RemarkableDownloadLink getDownloadLink(RemarkableClient client, RemarkableItem item) {
 		return item.getDownloadLink().orElseGet(() -> client.downloadLink(item.getId()));
 	}
 
