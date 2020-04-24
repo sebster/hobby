@@ -53,8 +53,15 @@ java_image(
 )
 
 spring_boot_jar(
-    name = "backup",
+    name = "jar",
     app = ":app",
+    jar = "remarkable-backup.jar",
     main_class = "com.sebster.remarkable.backup.RemarkableBackup",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "backup",
+    actual = ":bin",
     visibility = ["//visibility:public"],
 )
