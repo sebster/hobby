@@ -5,9 +5,14 @@ import static java.util.Collections.emptyList;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,16 +25,16 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 
-	private final @NonNull File clients;
+	private final @NonNull File clientsFile;
 	private final @NonNull ObjectMapper mapper;
 
 	@Override
 	public List<RemarkableClientInfo> loadClients() {
-		if (!clients.exists()) {
+		if (!clientsFile.exists()) {
 			return emptyList();
 		}
 		try {
-			return mapper.readValue(clients, getClientDescriptorListType());
+			return mapper.readValue(clientsFile, getClientDescriptorListType());
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -37,8 +42,9 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 
 	@Override
 	public void addClient(@NonNull RemarkableClientInfo clientDescriptor) {
+		ensureClientsFileExistsAndHasCorrectPermissions();
 		List<RemarkableClientInfo> clientDescriptors = new ArrayList<>(loadClients());
-		if (clientExists(clientDescriptor.getClientId(), clientDescriptors)) {
+		if (clientAlreadyExists(clientDescriptor.getClientId(), clientDescriptors)) {
 			throw new IllegalArgumentException("Duplicate client with id: " + clientDescriptor.getClientId());
 		}
 		clientDescriptors.add(clientDescriptor);
@@ -48,14 +54,14 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 	@Override
 	public void removeClient(@NonNull UUID clientId) {
 		List<RemarkableClientInfo> clientDescriptors = new ArrayList<>(loadClients());
-		if (!clientExists(clientId, clientDescriptors)) {
+		if (!clientAlreadyExists(clientId, clientDescriptors)) {
 			throw new IllegalArgumentException("No client with id: " + clientId);
 		}
 		clientDescriptors.removeIf(descriptor -> Objects.equals(descriptor.getClientId(), clientId));
 		saveClientDescriptors(clientDescriptors);
 	}
 
-	private boolean clientExists(@NonNull UUID clientId, List<RemarkableClientInfo> clientDescriptors) {
+	private boolean clientAlreadyExists(@NonNull UUID clientId, List<RemarkableClientInfo> clientDescriptors) {
 		return clientDescriptors.stream().anyMatch(descriptor -> Objects.equals(descriptor.getClientId(), clientId));
 	}
 
@@ -65,7 +71,21 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 
 	private void saveClientDescriptors(List<RemarkableClientInfo> clientDescriptors) {
 		try {
-			mapper.writeValue(clients, clientDescriptors);
+			mapper.writeValue(clientsFile, clientDescriptors);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	private void ensureClientsFileExistsAndHasCorrectPermissions() {
+		try {
+			Set<PosixFilePermission> ownerReadWrite = PosixFilePermissions.fromString("rw-------");
+			if (!clientsFile.exists()) {
+				FileAttribute<?> permissions = PosixFilePermissions.asFileAttribute(ownerReadWrite);
+				Files.createFile(clientsFile.toPath(), permissions);
+			} else {
+				Files.setPosixFilePermissions(clientsFile.toPath(), ownerReadWrite);
+			}
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
