@@ -20,6 +20,7 @@ spring_repackage = rule(
     implementation = _spring_repackage_impl,
     attrs = {
         "main_class": attr.string(),
+        "jar": attr.string(),
         "app": attr.label(providers = [JavaInfo], allow_single_file = True),
         "_repackager": attr.label(
             default = "//tools/rules_spring:spring_boot_repackager",
@@ -28,14 +29,15 @@ spring_repackage = rule(
         ),
     },
     outputs = {
-        "jar": "%{name}.jar",
+        "jar": "%{jar}",
     },
 )
 
-def spring_boot_jar(name, main_class, app, visibility = None, **kwargs):
+def spring_boot_jar(name, main_class, app, jar = None, visibility = None, **kwargs):
     spring_repackage(
         name = name,
         main_class = main_class,
+        jar = jar or "%s.jar" % name,
         app = app,
         visibility = visibility,
     )
