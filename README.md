@@ -7,10 +7,12 @@ Currently this includes:
 -   A repository API for querying and persisting domain objects.
 -   Telegram client for the Bot API (https://core.telegram.org/bots/api).
 -   A silly telegram bot with plugins to do all kinds of silly stuff.
+-   Tools for working with my reMarkable tablets.
 
 ## Repository Structure
 
 -   /lib - useful generic libraries
+    -   /commons - generic utilities
     -   /repository - repository API
         -   /repository/api - repository API for use in domain classes
         -   /repository/mem - in memory repository API implementation, for use in domain logic tests
