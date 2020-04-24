@@ -1,6 +1,10 @@
 package com.sebster.remarkable.cloudapi;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import lombok.NonNull;
@@ -21,6 +25,44 @@ public interface RemarkableClientManager {
 	 * Get the client with the specified id.
 	 */
 	RemarkableClient getClient(@NonNull UUID id);
+
+	/**
+	 * Get a client by its index in the list, the start of its id, or part of its description.
+	 * Throws an illegal argument exception if no clients match, or if multiple clients match.
+	 */
+	default RemarkableClient getClient(@NonNull String selector) {
+		return findClient(selector).orElseThrow(() -> new IllegalArgumentException("No such client: " + selector));
+	}
+
+	/**
+	 * Find a client by its index in the list, the start of its id, or part of its description.
+	 * Returns an empty optional if no clients match, or if multiple clients match.
+	 */
+	default Optional<RemarkableClient> findClient(@NonNull String selector) {
+		List<RemarkableClient> clients = listClients();
+
+		// Can the selector be interpreted as a client number?
+		for (int i = 0; i < clients.size(); i++) {
+			if (Objects.equals(selector, String.valueOf(i + 1))) {
+				return Optional.of(clients.get(i));
+			}
+		}
+
+		// Can the selector be interpreted as the start of a client description?
+		var byId = clients.stream().filter(client -> client.getId().toString().startsWith(selector)).collect(toList());
+		if (byId.size() == 1) {
+			return Optional.of(byId.get(0));
+		}
+
+		// Can the selector be interpreted as the part of a client description?
+		var byDescription = clients.stream().filter(client -> client.getDescription().contains(selector)).collect(toList());
+		if (byDescription.size() == 1) {
+			return Optional.of(byDescription.get(0));
+		}
+
+		// No match.
+		return Optional.empty();
+	}
 
 	/**
 	 * Unregister the specified client.
