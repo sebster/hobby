@@ -16,7 +16,7 @@ public class UnregisterCommand implements Runnable {
 
 	@Override
 	public void run() {
-		cli.withClient(client -> {
+		cli.doWithClient(client -> {
 			cli.getClientManager().unregister(client);
 			cli.println("Unregistered " + client);
 			cli.setClient(null);

@@ -62,8 +62,8 @@ public class RemarkableBackupService {
 
 	private void storeItem(RemarkableClient client, RemarkableItem item) {
 		item
-				.withFolder(folder -> storageService.storeFolder(client.getId(), folder))
-				.withDocument(document -> storageService.storeDocument(client.getId(), document, getDownloadLink(client, item)));
+				.doWithFolder(folder -> storageService.storeFolder(client.getId(), folder))
+				.doWithDocument(document -> storageService.storeDocument(client.getId(), document, getDownloadLink(client, item)));
 	}
 
 	private RemarkableDownloadLink getDownloadLink(RemarkableClient client, RemarkableItem item) {

@@ -55,11 +55,11 @@ public class Cli implements Runnable {
 		terminal.writer().println(object);
 	}
 
-	public void withClient(Consumer<RemarkableClient> action) {
+	public void doWithClient(Consumer<RemarkableClient> action) {
 		getClient().ifPresentOrElse(action, () -> println("No client selected."));
 	}
 
-	public void withClient(String selector, Consumer<RemarkableClient> action) {
+	public void doWithClient(String selector, Consumer<RemarkableClient> action) {
 		clientManager.findClient(selector).ifPresentOrElse(action, () -> println("Unknown client: " + selector));
 	}
 
