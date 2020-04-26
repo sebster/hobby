@@ -27,7 +27,7 @@ public class ClientCommand implements Runnable {
 	@Override
 	public void run() {
 		if (selector != null) {
-			cli.doWithClient(selector, cli::setClient);
+			cli.doWithClient(selector.trim(), cli::setClient);
 		} else {
 			cli.doWithClient(cli::println);
 		}
