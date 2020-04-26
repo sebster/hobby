@@ -68,7 +68,7 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 	}
 
 	default Optional<RemarkableItem> findItem(@NonNull UUID id) {
-		return traverse().filter(item -> Objects.equals(item.getId(), id)).findFirst();
+		return recurse().filter(item -> Objects.equals(item.getId(), id)).findFirst();
 	}
 
 	default Optional<RemarkableFolder> findFolder(@NonNull UUID id) {
@@ -112,9 +112,9 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 		return stream().iterator();
 	}
 
-	default Stream<RemarkableItem> traverse() {
+	default Stream<RemarkableItem> recurse() {
 		return Stream.concat(
-				getFolders().stream().flatMap(folder -> Stream.concat(Stream.of(folder), folder.traverse())),
+				getFolders().stream().flatMap(folder -> Stream.concat(Stream.of(folder), folder.recurse())),
 				getDocuments().stream()
 		);
 	}

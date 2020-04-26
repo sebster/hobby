@@ -40,7 +40,7 @@ public class ListCommand implements Runnable {
 	}
 
 	private void printCollection(RemarkableCollection collection) {
-		Stream<RemarkableItem> items = recursive ? collection.traverse() : collection.stream();
+		Stream<RemarkableItem> items = recursive ? collection.recurse() : collection.stream();
 		items.forEach(this::printItem);
 	}
 

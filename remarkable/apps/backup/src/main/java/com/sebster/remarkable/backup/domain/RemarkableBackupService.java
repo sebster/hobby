@@ -25,7 +25,7 @@ public class RemarkableBackupService {
 		RemarkableCollection remote = client.list();
 		RemarkableCollection local = storageService.list(client.getId());
 
-		remote.traverse().forEach(remoteItem -> {
+		remote.recurse().forEach(remoteItem -> {
 			int remoteVersion = remoteItem.getVersion();
 			RemarkableItem localItem = local.findItem(remoteItem.getId()).orElse(null);
 			if (localItem == null) {
@@ -49,7 +49,7 @@ public class RemarkableBackupService {
 			}
 		});
 
-		local.traverse().forEach(localItem -> {
+		local.recurse().forEach(localItem -> {
 			RemarkableItem remoteItem = remote.findItem(localItem.getId()).orElse(null);
 			if (remoteItem == null) {
 				log.debug("Deleted: (v{}) {}", localItem.getVersion(), localItem);
