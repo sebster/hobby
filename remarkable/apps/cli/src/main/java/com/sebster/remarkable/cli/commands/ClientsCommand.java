@@ -1,8 +1,5 @@
 package com.sebster.remarkable.cli.commands;
 
-import java.util.List;
-
-import com.sebster.remarkable.cloudapi.RemarkableClient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
@@ -19,10 +16,7 @@ public class ClientsCommand implements Runnable {
 
 	@Override
 	public void run() {
-		List<RemarkableClient> clients = cli.getClientManager().listClients();
-		for (int i = 0; i < clients.size(); i++) {
-			cli.println((i + 1) + ") " + clients.get(i));
-		}
+		cli.getClientManager().listClients().forEach(cli::println);
 	}
 
 }

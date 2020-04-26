@@ -18,8 +18,9 @@ public class ClientCommand implements Runnable {
 	@Parameters(
 			index = "0",
 			paramLabel = "client",
-			description = "The client (number, start of id, part of description).",
+			description = "The client (start of id, part of description).",
 			arity = "0..1"
+
 	)
 	private String selector;
 
