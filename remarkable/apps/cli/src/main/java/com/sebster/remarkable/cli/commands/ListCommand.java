@@ -8,9 +8,8 @@ import static org.jline.utils.AttributedStyle.RED;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
-import com.sebster.remarkable.cloudapi.RemarkableClient;
+import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
@@ -37,12 +36,11 @@ public class ListCommand implements Runnable {
 
 	@Override
 	public void run() {
-		cli.doWithClient(this::printList);
+		cli.doWithClient(client -> printCollection(client.list()));
 	}
 
-	private void printList(RemarkableClient client) {
-		RemarkableRootFolder root = client.list();
-		Stream<RemarkableItem> items = recursive ? root.traverse() : root.stream();
+	private void printCollection(RemarkableCollection collection) {
+		Stream<RemarkableItem> items = recursive ? collection.traverse() : collection.stream();
 		items.forEach(this::printItem);
 	}
 
