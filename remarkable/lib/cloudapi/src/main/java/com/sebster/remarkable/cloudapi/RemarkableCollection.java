@@ -27,6 +27,30 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 		return getDocuments().stream().filter(document -> Objects.equals(document.getName(), name)).findFirst();
 	}
 
+	default RemarkableItem getItem(@NonNull String name) {
+		return findItem(name).orElseThrow(() -> new IllegalArgumentException("Not found: " + name));
+	}
+
+	default RemarkableFolder getFolder(@NonNull String name) {
+		return findFolder(name).orElseThrow(() -> new IllegalArgumentException("Not found: " + name));
+	}
+
+	default RemarkableDocument getDocument(@NonNull String name) {
+		return findDocument(name).orElseThrow(() -> new IllegalArgumentException("Not found: " + name));
+	}
+
+	default boolean hasItem(@NonNull String name) {
+		return findItem(name).isPresent();
+	}
+
+	default boolean hasFolder(@NonNull String name) {
+		return findFolder(name).isPresent();
+	}
+
+	default boolean hasDocument(@NonNull String name) {
+		return findDocument(name).isPresent();
+	}
+
 	default Optional<RemarkableItem> findItem(@NonNull RemarkablePath path) {
 		if (path.getTail().isEmpty()) {
 			return findItem(path.getHead());
