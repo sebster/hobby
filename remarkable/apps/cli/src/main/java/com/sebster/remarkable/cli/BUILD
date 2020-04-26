@@ -57,7 +57,7 @@ spring_boot_jar(
     name = "jar",
     app = ":app",
     jar = "remarkable-cli.jar",
-    main_class = "com.sebster.remarkable.cli.RemarkableClie",
+    main_class = "com.sebster.remarkable.cli.RemarkableCli",
     visibility = ["//visibility:public"],
 )
 
