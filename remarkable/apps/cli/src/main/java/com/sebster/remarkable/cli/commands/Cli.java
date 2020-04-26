@@ -33,13 +33,11 @@ import picocli.CommandLine.HelpCommand;
 		}
 )
 @RequiredArgsConstructor
+@Getter
 public class Cli implements Runnable {
 
 	private final @NonNull Terminal terminal;
-
-	@Getter
 	private final @NonNull RemarkableClientManager clientManager;
-
 	private RemarkableClient client;
 
 	public Optional<RemarkableClient> getClient() {
