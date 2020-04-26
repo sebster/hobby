@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -47,6 +49,14 @@ public final class RemarkablePath {
 	@Override
 	public String toString() {
 		return String.join("/", components);
+	}
+
+	public static RemarkablePath parse(String path) {
+		return new RemarkablePath(
+				Stream.of(path.split("/"))
+						.filter(component -> !component.isEmpty())
+						.collect(Collectors.toCollection(ArrayList::new))
+		);
 	}
 
 	public static RemarkablePath path(@NonNull String name) {
