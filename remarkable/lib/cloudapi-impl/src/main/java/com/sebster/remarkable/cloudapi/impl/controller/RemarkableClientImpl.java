@@ -5,13 +5,11 @@ import java.util.UUID;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 
 @AllArgsConstructor
 public class RemarkableClientImpl implements RemarkableClient {
 
-	@Getter
 	private final @NonNull RemarkableClientInfo info;
 
 	private final @NonNull RemarkableApiClient apiClient;
