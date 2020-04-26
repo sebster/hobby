@@ -80,8 +80,7 @@ public class RemarkableCli implements CommandLineRunner {
 		String line;
 		while (true) {
 			try {
-				String remarkable = cli.getClient().map(RemarkableClient::getDescription).orElse("");
-				line = reader.readLine(remarkable + "> ", null, (MaskingCallback) null, null);
+				line = reader.readLine(cli.getPrompt(), null, (MaskingCallback) null, null);
 				if (line.matches("^\\s*#.*")) {
 					continue;
 				}

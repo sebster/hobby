@@ -74,6 +74,10 @@ public class Cli implements Runnable {
 		terminal.writer().printf(format, arguments);
 	}
 
+	public String getPrompt() {
+		return withStyle(BOLD, (client != null ? client.getDescription() : "") + "> ");
+	}
+
 	public String withStyle(@NonNull AttributedStyle style, @NonNull Object string) {
 		return new AttributedStringBuilder().styled(style, string.toString()).toAnsi(terminal);
 	}
