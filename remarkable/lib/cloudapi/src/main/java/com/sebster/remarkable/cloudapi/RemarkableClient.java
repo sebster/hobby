@@ -35,4 +35,10 @@ public interface RemarkableClient {
 		}
 	}
 
+	default void createFolders(@NonNull RemarkablePath path) {
+		createFolders(null, path);
+	}
+
+	void createFolders(RemarkableFolder parent, @NonNull RemarkablePath path);
+
 }

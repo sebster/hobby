@@ -2,6 +2,8 @@ package com.sebster.remarkable.cloudapi.impl;
 
 import static java.util.Collections.singletonList;
 
+import java.time.Clock;
+
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +48,7 @@ public class RemarkableCloudApiAutoConfiguration {
 
 	@Bean
 	public RemarkableClientManager remarkableClientManager(RemarkableClientStore clientStore, RemarkableApiClient apiClient) {
-		return new RemarkableClientManagerImpl(clientStore, apiClient);
+		return new RemarkableClientManagerImpl(Clock.systemDefaultZone(), clientStore, apiClient);
 	}
 
 }

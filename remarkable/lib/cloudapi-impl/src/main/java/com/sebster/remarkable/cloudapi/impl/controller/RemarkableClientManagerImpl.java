@@ -3,6 +3,7 @@ package com.sebster.remarkable.cloudapi.impl.controller;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 
 	public static final String WINDOWS_CLIENT_TYPE = "desktop-windows";
 
+	private final @NonNull Clock clock;
 	private final @NonNull RemarkableClientStore clientStore;
 	private final @NonNull RemarkableApiClient apiClient;
 
@@ -46,7 +48,7 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	}
 
 	private RemarkableClient createClient(RemarkableClientInfo clientInfo) {
-		return new RemarkableClientImpl(clientInfo, apiClient);
+		return new RemarkableClientImpl(clock, clientInfo, apiClient);
 	}
 
 }
