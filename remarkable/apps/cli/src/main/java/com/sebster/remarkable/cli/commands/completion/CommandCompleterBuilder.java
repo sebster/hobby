@@ -31,7 +31,7 @@ public class CommandCompleterBuilder {
 		return completer;
 	}
 
-	public static CommandCompleterBuilder command(@NonNull Class<?> command) {
+	public static CommandCompleterBuilder commandCompleter(@NonNull Class<?> command) {
 		return new CommandCompleterBuilder(command);
 	}
 
