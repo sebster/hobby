@@ -31,7 +31,6 @@ java_library(
         "@maven//:commons_io_commons_io",
         "@maven//:info_picocli_picocli",
         "@maven//:info_picocli_picocli_shell_jline3",
-        "@maven//:org_fusesource_jansi_jansi",
         "@maven//:org_jline_jline",
         "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_boot_spring_boot",

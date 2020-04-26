@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.fusesource.jansi.AnsiConsole;
 import org.jline.builtins.Builtins;
 import org.jline.builtins.Completers;
 import org.jline.builtins.Options.HelpException;
@@ -50,7 +49,6 @@ public class RemarkableCli implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws IOException {
-		AnsiConsole.systemInstall();
 		Terminal terminal = TerminalBuilder.builder().build();
 
 		// Set up JLine built-in commands.
