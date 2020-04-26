@@ -6,7 +6,7 @@ import picocli.CommandLine.ParentCommand;
 @Command(
 		name = "unregister",
 		mixinStandardHelpOptions = true,
-		description = "Unregister the active client",
+		description = "Unregister the selected client",
 		version = "1.0"
 )
 public class UnregisterCommand implements Runnable {
