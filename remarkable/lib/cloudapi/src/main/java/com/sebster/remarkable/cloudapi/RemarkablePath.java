@@ -5,6 +5,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,9 +19,14 @@ import lombok.NonNull;
 @AllArgsConstructor(access = PRIVATE)
 @Getter
 @EqualsAndHashCode
-public final class RemarkablePath {
+public final class RemarkablePath implements Iterable<String> {
 
 	private final List<String> components;
+
+	@Override
+	public Iterator<String> iterator() {
+		return components.iterator();
+	}
 
 	public String getName() {
 		return components.get(components.size() - 1);
