@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
 import lombok.Value;
@@ -31,6 +32,7 @@ public class ItemInfoDto {
 		}
 		try {
 			return Optional.of(new RemarkableDownloadLink(
+					UUID.fromString(getId()),
 					URI.create(getBlobUrlGet()).toURL(),
 					Instant.parse(getBlobUrlGetExpires())
 			));
