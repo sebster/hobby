@@ -2,6 +2,7 @@ package com.sebster.remarkable.backup.domain;
 
 import static com.sebster.remarkable.backup.domain.RemarkableBackupType.FULL;
 
+import java.io.InputStream;
 import java.util.Objects;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
@@ -63,7 +64,11 @@ public class RemarkableBackupService {
 	private void storeItem(RemarkableClient client, RemarkableItem item) {
 		item
 				.doWithFolder(folder -> storageService.storeFolder(client.getId(), folder))
-				.doWithDocument(document -> storageService.storeDocument(client.getId(), document, getDownloadLink(client, item)));
+				.doWithDocument(document -> storageService.storeDocument(client.getId(), document, getData(client, item)));
+	}
+
+	private InputStream getData(RemarkableClient client, RemarkableItem item) {
+		return client.download(getDownloadLink(client, item));
 	}
 
 	private RemarkableDownloadLink getDownloadLink(RemarkableClient client, RemarkableItem item) {

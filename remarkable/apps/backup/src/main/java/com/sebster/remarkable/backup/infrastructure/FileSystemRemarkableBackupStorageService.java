@@ -9,6 +9,7 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +21,6 @@ import javax.annotation.PostConstruct;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
-import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
@@ -56,11 +56,11 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	}
 
 	@Override
-	public void storeDocument(UUID clientId, RemarkableDocument document, RemarkableDownloadLink downloadLink) {
+	public void storeDocument(UUID clientId, RemarkableDocument document, InputStream data) {
 		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		ItemMetadata itemMetadata = metadata.computeIfAbsent(document.getId(), id -> new ItemMetadata());
 		updateDocumentMetadata(itemMetadata, document);
-		downloadData(clientId, document, downloadLink);
+		saveData(clientId, document, data);
 		saveMetadataMap(clientId, metadata);
 	}
 
@@ -92,9 +92,9 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		itemMetadata.setModificationTime(item.getModificationTime());
 	}
 
-	private void downloadData(UUID clientId, RemarkableDocument document, RemarkableDownloadLink downloadLink) {
+	private void saveData(UUID clientId, RemarkableDocument document, InputStream inputStream) {
 		try {
-			copyInputStreamToFile(downloadLink.getUrl().openStream(), getDataFile(clientId, document));
+			copyInputStreamToFile(inputStream, getDataFile(clientId, document));
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
