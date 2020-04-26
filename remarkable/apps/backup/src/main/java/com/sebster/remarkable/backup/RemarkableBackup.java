@@ -47,4 +47,5 @@ public class RemarkableBackup implements ApplicationRunner {
 	public static void main(String[] args) {
 		SpringApplication.run(RemarkableBackup.class, args);
 	}
+
 }

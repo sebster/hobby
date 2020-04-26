@@ -1,7 +1,7 @@
 package com.sebster.remarkable.backup.infrastructure;
 
-import static com.sebster.remarkable.backup.infrastructure.ItemType.DOCUMENT;
-import static com.sebster.remarkable.backup.infrastructure.ItemType.FOLDER;
+import static com.sebster.remarkable.backup.infrastructure.ItemMetadata.ItemType.DOCUMENT;
+import static com.sebster.remarkable.backup.infrastructure.ItemMetadata.ItemType.FOLDER;
 import static java.util.Collections.emptyList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -28,6 +28,9 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Remarkable backup storage service implementation which writes the backup to a directory on the file system.
+ */
 @AllArgsConstructor
 @Slf4j
 public class FileSystemRemarkableBackupStorageService implements RemarkableBackupStorageService {
@@ -43,12 +46,12 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	}
 
 	@Override
-	public RemarkableRootFolder list(UUID clientId) {
+	public RemarkableRootFolder list(@NonNull UUID clientId) {
 		return new ItemMetadataListUnmarshaller(loadMetadata(clientId)).unmarshal();
 	}
 
 	@Override
-	public void storeFolder(UUID clientId, RemarkableFolder folder) {
+	public void storeFolder(@NonNull UUID clientId, @NonNull RemarkableFolder folder) {
 		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		ItemMetadata itemMetadata = metadata.computeIfAbsent(folder.getId(), id -> new ItemMetadata());
 		updateFolderMetadata(itemMetadata, folder);
@@ -56,7 +59,7 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	}
 
 	@Override
-	public void storeDocument(UUID clientId, RemarkableDocument document, InputStream data) {
+	public void storeDocument(@NonNull UUID clientId, @NonNull RemarkableDocument document, @NonNull InputStream data) {
 		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		ItemMetadata itemMetadata = metadata.computeIfAbsent(document.getId(), id -> new ItemMetadata());
 		updateDocumentMetadata(itemMetadata, document);
@@ -65,7 +68,7 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	}
 
 	@Override
-	public void deleteItem(UUID clientId, RemarkableItem item) {
+	public void deleteItem(@NonNull UUID clientId, @NonNull RemarkableItem item) {
 		Map<UUID, ItemMetadata> metadata = loadMetadataMap(clientId);
 		metadata.remove(item.getId());
 		deleteData(clientId, item);
@@ -144,12 +147,11 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 		return new File(getClientLocation(clientId), item.getId().toString() + ".zip");
 	}
 
-	@NonNull
 	private File getClientLocation(UUID clientId) {
 		return new File(location, clientId.toString());
 	}
 
-	private void ensureDirectoryExists(@NonNull File location) {
+	private void ensureDirectoryExists(File location) {
 		if (!location.exists() && !location.mkdirs()) {
 			throw new IllegalStateException("Cannot create backup location: " + location);
 		}

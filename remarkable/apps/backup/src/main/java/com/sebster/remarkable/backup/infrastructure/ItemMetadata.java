@@ -11,7 +11,7 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemMetadata {
+class ItemMetadata {
 
 	private @NonNull UUID id;
 	private int version;
@@ -21,5 +21,9 @@ public class ItemMetadata {
 	private @NonNull Instant modificationTime;
 	private int currentPage;
 	private boolean bookmarked;
+
+	enum ItemType {
+		FOLDER, DOCUMENT
+	}
 
 }

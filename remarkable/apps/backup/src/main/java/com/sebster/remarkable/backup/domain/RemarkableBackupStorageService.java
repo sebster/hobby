@@ -17,6 +17,6 @@ public interface RemarkableBackupStorageService {
 
 	void storeDocument(@NonNull UUID clientId, @NonNull RemarkableDocument document, @NonNull InputStream data);
 
-	void deleteItem(@NonNull UUID clientId, RemarkableItem remarkableItem);
+	void deleteItem(@NonNull UUID clientId, @NonNull RemarkableItem remarkableItem);
 
 }

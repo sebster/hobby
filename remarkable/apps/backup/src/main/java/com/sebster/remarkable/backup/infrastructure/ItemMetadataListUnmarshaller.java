@@ -1,7 +1,7 @@
 package com.sebster.remarkable.backup.infrastructure;
 
-import static com.sebster.remarkable.backup.infrastructure.ItemType.DOCUMENT;
-import static com.sebster.remarkable.backup.infrastructure.ItemType.FOLDER;
+import static com.sebster.remarkable.backup.infrastructure.ItemMetadata.ItemType.DOCUMENT;
+import static com.sebster.remarkable.backup.infrastructure.ItemMetadata.ItemType.FOLDER;
 import static java.util.Comparator.comparing;
 
 import java.util.Collection;
@@ -20,11 +20,11 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @AllArgsConstructor
-public class ItemMetadataListUnmarshaller {
+class ItemMetadataListUnmarshaller {
 
 	private final @NonNull Collection<ItemMetadata> itemMetadata;
 
-	public RemarkableRootFolder unmarshal() {
+	RemarkableRootFolder unmarshal() {
 		RemarkableRootFolderBuilder rootFolderBuilder = RemarkableRootFolder.builder();
 		unmarshalIntoCollection(rootFolderBuilder);
 		return rootFolderBuilder.build();
@@ -69,7 +69,7 @@ public class ItemMetadataListUnmarshaller {
 		);
 	}
 
-	private Stream<ItemMetadata> getChildren(RemarkableCollectionBuilder parent, ItemType type) {
+	private Stream<ItemMetadata> getChildren(RemarkableCollectionBuilder parent, ItemMetadata.ItemType type) {
 		UUID parentId = parent.getFolder().map(RemarkableItem::getId).orElse(null);
 		return itemMetadata.stream()
 				.filter(itemInfo -> Objects.equals(itemInfo.getParentId(), parentId))
