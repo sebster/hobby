@@ -5,11 +5,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+@Builder
 @JsonInclude(NON_NULL)
 public class ItemInfoJsonDto {
 
@@ -40,37 +40,37 @@ public class ItemInfoJsonDto {
 	private String parent;
 
 	ItemInfoDto unmarshal() {
-		return new ItemInfoDto(
-				id,
-				version,
-				message,
-				success,
-				blobUrlGet,
-				blobUrlGetExpires,
-				modifiedClient,
-				type,
-				visibleName,
-				currentPage,
-				bookmarked,
-				parent
-		);
+		return ItemInfoDto.builder()
+				.id(id)
+				.version(version)
+				.message(message)
+				.success(success)
+				.blobUrlGet(blobUrlGet)
+				.blobUrlGetExpires(blobUrlGetExpires)
+				.modifiedClient(modifiedClient)
+				.type(type)
+				.visibleName(visibleName)
+				.currentPage(currentPage)
+				.bookmarked(bookmarked)
+				.parent(parent)
+				.build();
 	}
 
 	static ItemInfoJsonDto marshal(ItemInfoDto itemInfoDto) {
-		return new ItemInfoJsonDto(
-				itemInfoDto.getId(),
-				itemInfoDto.getVersion(),
-				itemInfoDto.getMessage().orElse(null),
-				itemInfoDto.getSuccess().orElse(null),
-				itemInfoDto.getBlobUrlGet().orElse(null),
-				itemInfoDto.getBlobUrlGetExpires().orElse(null),
-				itemInfoDto.getModifiedClient().orElse(null),
-				itemInfoDto.getType().orElse(null),
-				itemInfoDto.getVisibleName().orElse(null),
-				itemInfoDto.getCurrentPage().orElse(null),
-				itemInfoDto.getBookmarked().orElse(null),
-				itemInfoDto.getParent().orElse(null)
-		);
+		return ItemInfoJsonDto.builder()
+				.id(itemInfoDto.getId())
+				.version(itemInfoDto.getVersion())
+				.message(itemInfoDto.getMessage().orElse(null))
+				.success(itemInfoDto.getSuccess().orElse(null))
+				.blobUrlGet(itemInfoDto.getBlobUrlGet().orElse(null))
+				.blobUrlGetExpires(itemInfoDto.getBlobUrlGetExpires().orElse(null))
+				.modifiedClient(itemInfoDto.getModifiedClient().orElse(null))
+				.type(itemInfoDto.getType().orElse(null))
+				.visibleName(itemInfoDto.getVisibleName().orElse(null))
+				.currentPage(itemInfoDto.getCurrentPage().orElse(null))
+				.bookmarked(itemInfoDto.getBookmarked().orElse(null))
+				.parent(itemInfoDto.getParent().orElse(null))
+				.build();
 	}
 
 }

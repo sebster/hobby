@@ -10,10 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
 @Value
+@Builder
 public class ItemInfoDto {
 
 	public static final String FOLDER_TYPE = "CollectionType";
