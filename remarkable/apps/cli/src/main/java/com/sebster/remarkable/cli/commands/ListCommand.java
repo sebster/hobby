@@ -1,9 +1,6 @@
 package com.sebster.remarkable.cli.commands;
 
 import static java.time.ZoneId.systemDefault;
-import static org.jline.utils.AttributedStyle.BOLD;
-import static org.jline.utils.AttributedStyle.CYAN;
-import static org.jline.utils.AttributedStyle.RED;
 
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
@@ -47,20 +44,14 @@ public class ListCommand implements Runnable {
 	private void printItem(RemarkableItem item) {
 		if (longFormat) {
 			cli.printf("%s    %4d    %s     %s\n",
-					cli.withStyle(BOLD.foreground(CYAN), item.getId()),
+					cli.withItemIdStyle(item.getId()),
 					item.getVersion(),
 					DATE_TIME_FORMAT.format(item.getModificationTime()),
-					getDisplay(item)
+					cli.withItemStyle(item)
 			);
 		} else {
-			cli.println(getDisplay(item));
+			cli.println(cli.withItemStyle(item));
 		}
-	}
-
-	private String getDisplay(RemarkableItem item) {
-		return item.isFolder() ?
-				cli.withStyle(BOLD.foreground(RED), item.getPath()) + "/" :
-				item.toString();
 	}
 
 }

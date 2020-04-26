@@ -1,6 +1,13 @@
 package com.sebster.remarkable.cli.commands;
 
+import static org.jline.utils.AttributedStyle.BOLD;
+import static org.jline.utils.AttributedStyle.CYAN;
+import static org.jline.utils.AttributedStyle.GREEN;
+import static org.jline.utils.AttributedStyle.RED;
+
+import java.io.File;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import org.jline.terminal.Terminal;
@@ -9,6 +16,7 @@ import org.jline.utils.AttributedStyle;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
+import com.sebster.remarkable.cloudapi.RemarkableItem;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -58,11 +66,11 @@ public class Cli implements Runnable {
 		this.client = null;
 	}
 
-	public void println(Object object) {
+	public void println(@NonNull Object object) {
 		terminal.writer().println(object);
 	}
 
-	public void printf(String format, Object... arguments) {
+	public void printf(@NonNull String format, Object... arguments) {
 		terminal.writer().printf(format, arguments);
 	}
 
@@ -70,12 +78,32 @@ public class Cli implements Runnable {
 		return new AttributedStringBuilder().styled(style, string.toString()).toAnsi(terminal);
 	}
 
-	public void doWithClient(Consumer<RemarkableClient> action) {
-		getClient().ifPresentOrElse(action, () -> println("No client selected."));
+	public String withItemIdStyle(@NonNull UUID itemId) {
+		return withStyle(BOLD.foreground(CYAN), itemId);
 	}
 
-	public void doWithClient(String selector, Consumer<RemarkableClient> action) {
-		clientManager.findClient(selector).ifPresentOrElse(action, () -> println("Unknown client: " + selector));
+	public String withItemStyle(@NonNull RemarkableItem item) {
+		return item.isFolder() ?
+				withStyle(BOLD.foreground(RED), item.getPath()) + "/" :
+				withStyle(BOLD.foreground(GREEN), item.getPath());
+	}
+
+	public Object withFileStyle(@NonNull File file) {
+		return file.isDirectory() ?
+				withStyle(BOLD.foreground(RED), file + "/") :
+				withStyle(BOLD.foreground(GREEN), file.getPath());
+	}
+
+	public String withErrorStyle(@NonNull String message) {
+		return "Error: " + message;
+	}
+
+	public void doWithClient(@NonNull Consumer<RemarkableClient> action) {
+		getClient().ifPresentOrElse(action, () -> println(withErrorStyle("No client selected.")));
+	}
+
+	public void doWithClient(@NonNull String selector, @NonNull Consumer<RemarkableClient> action) {
+		clientManager.findClient(selector).ifPresentOrElse(action, () -> println(withErrorStyle("Unknown client: " + selector)));
 	}
 
 }
