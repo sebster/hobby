@@ -1,10 +1,12 @@
 package com.sebster.commons.collections;
 
+import static java.util.stream.Collectors.toList;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -20,6 +22,10 @@ public class Lists {
 		List<T> result = new ArrayList<>(list);
 		Collections.reverse(result);
 		return result;
+	}
+
+	public static <U, V> List<V> map(@NonNull List<U> list, Function<U, V> function) {
+		return list.stream().map(function).collect(toList());
 	}
 
 }
