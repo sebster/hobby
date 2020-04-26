@@ -29,6 +29,7 @@ import picocli.CommandLine.HelpCommand;
 				ClientCommand.class,
 				RegisterCommand.class,
 				UnregisterCommand.class,
+				ListCommand.class,
 				HelpCommand.class,
 		}
 )
