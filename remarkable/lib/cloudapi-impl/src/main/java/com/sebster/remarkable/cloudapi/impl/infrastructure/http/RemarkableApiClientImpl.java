@@ -1,5 +1,6 @@
 package com.sebster.remarkable.cloudapi.impl.infrastructure.http;
 
+import static com.sebster.commons.collections.Lists.map;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -41,7 +42,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	private static final String DOCUMENT_URL_TEMPLATE =
 			"https://storage-host//document-storage/json/2/docs";
 
-	private static final ParameterizedTypeReference<List<ItemInfoDto>> ITEM_LIST_TYPE = new ParameterizedTypeReference<>() {
+	private static final ParameterizedTypeReference<List<ItemInfoJsonDto>> ITEM_LIST_TYPE = new ParameterizedTypeReference<>() {
 	};
 
 	private final @NonNull RestTemplate restTemplate;
@@ -86,20 +87,20 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	@Override
 	public List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl) {
 		log.debug("list all: includeBlobUrl={}", includeBlobUrl);
-		List<ItemInfoDto> list = getBody(restTemplate.exchange(
+		List<ItemInfoJsonDto> list = getBody(restTemplate.exchange(
 				getDocumentUrlBuilder(sessionToken).queryParam("withBlob", includeBlobUrl).toUriString(),
 				GET,
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
 		));
 		log.debug("list all: {} items", list.size());
-		return list;
+		return map(list, ItemInfoJsonDto::unmarshal);
 	}
 
 	@Override
 	public ItemInfoDto list(@NonNull String sessionToken, @NonNull UUID id, boolean includeBlobUrl) {
 		log.debug("list: id={} includeBlobUrl={}", id, includeBlobUrl);
-		return getItemInfo(getBody(restTemplate.exchange(
+		return getItemInfo(map(getBody(restTemplate.exchange(
 				getDocumentUrlBuilder(sessionToken)
 						.queryParam("doc", id.toString())
 						.queryParam("withBlob", includeBlobUrl)
@@ -107,7 +108,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 				GET,
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
-		)));
+		)), ItemInfoJsonDto::unmarshal));
 	}
 
 	private String getStorageHost(String sessionToken) {

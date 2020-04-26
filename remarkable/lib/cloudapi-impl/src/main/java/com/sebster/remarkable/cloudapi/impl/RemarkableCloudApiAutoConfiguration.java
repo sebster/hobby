@@ -13,12 +13,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
-import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
 import com.sebster.remarkable.cloudapi.impl.controller.RemarkableApiClient;
 import com.sebster.remarkable.cloudapi.impl.controller.RemarkableClientManagerImpl;
 import com.sebster.remarkable.cloudapi.impl.controller.RemarkableClientStore;
 import com.sebster.remarkable.cloudapi.impl.infrastructure.FileSystemRemarkableClientStore;
-import com.sebster.remarkable.cloudapi.impl.infrastructure.http.ItemInfoDtoJsonMapping;
 import com.sebster.remarkable.cloudapi.impl.infrastructure.http.RemarkableApiClientImpl;
 
 @ComponentScan(basePackageClasses = RemarkableCloudApiAutoConfiguration.class)
@@ -30,7 +28,7 @@ public class RemarkableCloudApiAutoConfiguration {
 			Jackson2ObjectMapperBuilder objectMapperBuilder,
 			RestTemplateBuilder restTemplateBuilder
 	) {
-		ObjectMapper objectMapper = objectMapperBuilder.mixIn(ItemInfoDto.class, ItemInfoDtoJsonMapping.class).build();
+		ObjectMapper objectMapper = objectMapperBuilder.build();
 		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
 		messageConverter.setSupportedMediaTypes(singletonList(new MediaType("text", "plain")));
 		RestTemplate restTemplate = restTemplateBuilder.additionalMessageConverters(messageConverter).build();

@@ -1,5 +1,9 @@
 package com.sebster.remarkable.cloudapi.impl.controller;
 
+import static com.sebster.commons.functions.Functions.unwrapOptional;
+import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.DOCUMENT_TYPE;
+import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER_TYPE;
+import static java.time.Instant.EPOCH;
 import static java.util.Comparator.comparing;
 
 import java.time.Instant;
@@ -20,9 +24,6 @@ import lombok.NonNull;
 
 @AllArgsConstructor
 class ItemInfoDtoListUnmarshaller {
-
-	public static final String FOLDER_TYPE = "CollectionType";
-	public static final String DOCUMENT_TYPE = "DocumentType";
 
 	private final @NonNull List<ItemInfoDto> itemInfos;
 
@@ -46,8 +47,8 @@ class ItemInfoDtoListUnmarshaller {
 				UUID.fromString(itemInfo.getId()),
 				itemInfo.getVersion(),
 				parent.getFolder().orElse(null),
-				itemInfo.getVisibleName(),
-				Instant.parse(itemInfo.getModifiedClient()),
+				itemInfo.getVisibleName().orElse(itemInfo.getId()),
+				itemInfo.getModifiedClient().map(Instant::parse).orElse(EPOCH),
 				itemInfo.getDownloadLink().orElse(null)
 		);
 		unmarshalIntoCollection(folderBuilder);
@@ -63,10 +64,10 @@ class ItemInfoDtoListUnmarshaller {
 				UUID.fromString(itemInfo.getId()),
 				itemInfo.getVersion(),
 				parent.getFolder().orElse(null),
-				itemInfo.getVisibleName(),
-				Instant.parse(itemInfo.getModifiedClient()),
+				itemInfo.getVisibleName().orElse(itemInfo.getId()),
+				itemInfo.getModifiedClient().map(Instant::parse).orElse(EPOCH),
 				itemInfo.getDownloadLink().orElse(null),
-				itemInfo.getCurrentPage(),
+				itemInfo.getCurrentPage().orElse(0),
 				itemInfo.isBookmarked()
 		);
 	}
@@ -74,9 +75,9 @@ class ItemInfoDtoListUnmarshaller {
 	private Stream<ItemInfoDto> getChildren(RemarkableCollectionBuilder parent, String type) {
 		String parentId = parent.getFolder().map(RemarkableItem::getId).map(UUID::toString).orElse("");
 		return itemInfos.stream()
-				.filter(itemInfo -> Objects.equals(itemInfo.getParent(), parentId))
-				.filter(itemInfo -> Objects.equals(itemInfo.getType(), type))
-				.sorted(comparing(ItemInfoDto::getVisibleName));
+				.filter(itemInfo -> Objects.equals(parentId, itemInfo.getParent().orElse(null)))
+				.filter(itemInfo -> Objects.equals(type, itemInfo.getType().orElse(null)))
+				.sorted(comparing(unwrapOptional(ItemInfoDto::getVisibleName)));
 	}
 
 }

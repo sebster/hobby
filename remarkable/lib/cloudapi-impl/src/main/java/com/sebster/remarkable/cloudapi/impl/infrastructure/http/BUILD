@@ -7,6 +7,7 @@ java_library(
     visibility = ["//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl:__pkg__"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/collections",
         "//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl/controller",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:org_slf4j_slf4j_api",
