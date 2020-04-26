@@ -19,7 +19,7 @@ public class UnregisterCommand implements Runnable {
 		cli.doWithClient(client -> {
 			cli.getClientManager().unregister(client);
 			cli.println("Unregistered " + client);
-			cli.setClient(null);
+			cli.deselectClient();
 		});
 	}
 

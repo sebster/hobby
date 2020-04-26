@@ -10,7 +10,6 @@ import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
@@ -41,7 +40,6 @@ public class Cli implements Runnable {
 	@Getter
 	private final @NonNull RemarkableClientManager clientManager;
 
-	@Setter
 	private RemarkableClient client;
 
 	public Optional<RemarkableClient> getClient() {
@@ -50,6 +48,14 @@ public class Cli implements Runnable {
 
 	public void run() {
 		println(new CommandLine(this).getUsageMessage());
+	}
+
+	public void selectClient(@NonNull RemarkableClient client) {
+		this.client = client;
+	}
+
+	public void deselectClient() {
+		this.client = null;
 	}
 
 	public void println(Object object) {
