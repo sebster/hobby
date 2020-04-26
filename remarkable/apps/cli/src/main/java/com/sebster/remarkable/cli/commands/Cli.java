@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.jline.terminal.Terminal;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
@@ -58,6 +60,14 @@ public class Cli implements Runnable {
 
 	public void println(Object object) {
 		terminal.writer().println(object);
+	}
+
+	public void printf(String format, Object... arguments) {
+		terminal.writer().printf(format, arguments);
+	}
+
+	public String withStyle(@NonNull AttributedStyle style, @NonNull Object string) {
+		return new AttributedStringBuilder().styled(style, string.toString()).toAnsi(terminal);
 	}
 
 	public void doWithClient(Consumer<RemarkableClient> action) {
