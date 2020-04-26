@@ -21,10 +21,6 @@ public interface RemarkableClient {
 		return list().getItem(path);
 	}
 
-	RemarkableDownloadLink downloadLink(UUID id);
-
-	RemarkableDownloadLink downloadLink(RemarkablePath path);
-
 	default InputStream download(RemarkableItem item) {
 		return download(item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("Download link unknown: " + item)));
 	}
