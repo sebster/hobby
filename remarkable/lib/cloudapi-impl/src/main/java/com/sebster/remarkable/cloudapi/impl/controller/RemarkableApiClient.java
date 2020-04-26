@@ -32,4 +32,9 @@ public interface RemarkableApiClient {
 	 */
 	ItemInfoDto list(@NonNull String sessionToken, @NonNull UUID id, boolean includeBlobUrl);
 
+	/**
+	 * Update the metadata of one or more items on the reMarkable.
+	 */
+	List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos);
+
 }

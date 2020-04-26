@@ -4,6 +4,7 @@ import static com.sebster.commons.collections.Lists.map;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -41,6 +42,9 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 
 	private static final String DOCUMENT_URL_TEMPLATE =
 			"https://storage-host//document-storage/json/2/docs";
+
+	private static final String UPDATE_METADATA_URL_TEMPLATE =
+			"https://storage-host/document-storage/json/2/upload/update-status";
 
 	private static final ParameterizedTypeReference<List<ItemInfoJsonDto>> ITEM_LIST_TYPE = new ParameterizedTypeReference<>() {
 	};
@@ -88,7 +92,9 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	public List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl) {
 		log.debug("list all: includeBlobUrl={}", includeBlobUrl);
 		List<ItemInfoJsonDto> list = getBody(restTemplate.exchange(
-				getDocumentUrlBuilder(sessionToken).queryParam("withBlob", includeBlobUrl).toUriString(),
+				getStorageUrlBuilder(sessionToken, DOCUMENT_URL_TEMPLATE)
+						.queryParam("withBlob", includeBlobUrl)
+						.toUriString(),
 				GET,
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
@@ -101,7 +107,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	public ItemInfoDto list(@NonNull String sessionToken, @NonNull UUID id, boolean includeBlobUrl) {
 		log.debug("list: id={} includeBlobUrl={}", id, includeBlobUrl);
 		return getItemInfo(map(getBody(restTemplate.exchange(
-				getDocumentUrlBuilder(sessionToken)
+				getStorageUrlBuilder(sessionToken, DOCUMENT_URL_TEMPLATE)
 						.queryParam("doc", id.toString())
 						.queryParam("withBlob", includeBlobUrl)
 						.toUriString(),
@@ -109,6 +115,17 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
 		)), ItemInfoJsonDto::unmarshal));
+	}
+
+	@Override
+	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos) {
+		log.debug("updateMetadata: items={}", itemInfos);
+		return map(getBody(restTemplate.exchange(
+				getStorageUrlBuilder(sessionToken, UPDATE_METADATA_URL_TEMPLATE).toUriString(),
+				PUT,
+				request(map(itemInfos, ItemInfoJsonDto::marshal), sessionToken),
+				ITEM_LIST_TYPE
+		)), ItemInfoJsonDto::unmarshal);
 	}
 
 	private String getStorageHost(String sessionToken) {
@@ -125,8 +142,8 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		});
 	}
 
-	public UriComponentsBuilder getDocumentUrlBuilder(String sessionToken) {
-		return UriComponentsBuilder.fromUriString(DOCUMENT_URL_TEMPLATE).host(getStorageHost(sessionToken));
+	private UriComponentsBuilder getStorageUrlBuilder(String sessionToken, String documentUrlTemplate) {
+		return UriComponentsBuilder.fromUriString(documentUrlTemplate).host(getStorageHost(sessionToken));
 	}
 
 	private HttpEntity<Void> emptyRequest(String authToken) {
