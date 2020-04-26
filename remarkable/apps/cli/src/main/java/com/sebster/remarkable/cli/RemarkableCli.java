@@ -34,6 +34,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.sebster.remarkable.cli.commands.Cli;
+import com.sebster.remarkable.cli.commands.ClientCommand;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.AllArgsConstructor;
@@ -65,6 +66,7 @@ public class RemarkableCli implements CommandLineRunner {
 		CommandLine cmd = new CommandLine(cli);
 		PicocliCommands picocliCommands = new PicocliCommands(workDir, cmd);
 		systemCompleter.add(picocliCommands.compileCompleters());
+		systemCompleter.add(ClientCommand.completer(clientManager));
 		systemCompleter.compile();
 		LineReader reader = LineReaderBuilder.builder()
 				.terminal(terminal)

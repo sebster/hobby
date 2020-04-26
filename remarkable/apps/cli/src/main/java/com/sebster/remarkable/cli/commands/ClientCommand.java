@@ -1,5 +1,10 @@
 package com.sebster.remarkable.cli.commands;
 
+import org.jline.builtins.Completers.SystemCompleter;
+
+import com.sebster.remarkable.cli.commands.completion.ClientsCompleter;
+import com.sebster.remarkable.cli.commands.completion.CommandCompleterBuilder;
+import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
@@ -31,6 +36,13 @@ public class ClientCommand implements Runnable {
 		} else {
 			cli.doWithClient(cli::println);
 		}
+	}
+
+	public static SystemCompleter completer(RemarkableClientManager clientManager) {
+		return CommandCompleterBuilder
+				.command(ClientCommand.class)
+				.argumentCompleter(new ClientsCompleter(clientManager))
+				.build();
 	}
 
 }
