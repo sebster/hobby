@@ -12,6 +12,7 @@ import picocli.CommandLine.ParentCommand;
 
 @Command(
 		name = "client",
+		aliases = "select",
 		mixinStandardHelpOptions = true,
 		description = "Select a client or show the selected client",
 		version = "1.0"
