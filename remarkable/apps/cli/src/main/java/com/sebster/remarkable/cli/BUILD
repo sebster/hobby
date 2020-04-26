@@ -19,23 +19,16 @@ java_library(
     resource_jars = ["properties"],
     runtime_deps = [
         "//remarkable/lib/cloudapi-impl",
-        "@maven//:org_apache_httpcomponents_httpclient",
-        "@maven//:org_springframework_boot_spring_boot_starter_json",
-        "@maven//:org_springframework_boot_spring_boot_starter_web",
     ],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
         "//remarkable/apps/cli/src/main/java/com/sebster/remarkable/cli/commands",
         "//remarkable/lib/cloudapi",
-        "@maven//:com_fasterxml_jackson_core_jackson_databind",
-        "@maven//:commons_io_commons_io",
         "@maven//:info_picocli_picocli",
         "@maven//:info_picocli_picocli_shell_jline3",
         "@maven//:org_jline_jline",
-        "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_boot_spring_boot_autoconfigure",
-        "@maven//:org_springframework_spring_context",
     ],
 )
 

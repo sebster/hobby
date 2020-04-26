@@ -34,7 +34,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.sebster.remarkable.cli.commands.Cli;
 import com.sebster.remarkable.cli.commands.ClientCommand;
-import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

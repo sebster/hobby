@@ -10,6 +10,8 @@ java_library(
     resource_jars = [":spring_autoconfig"],
     visibility = ["//visibility:public"],
     runtime_deps = [
+        "@maven//:org_apache_httpcomponents_httpclient",
+        "@maven//:org_springframework_boot_spring_boot_starter_json",
         "@maven//:org_springframework_boot_spring_boot_starter_validation",
     ],
     deps = [
