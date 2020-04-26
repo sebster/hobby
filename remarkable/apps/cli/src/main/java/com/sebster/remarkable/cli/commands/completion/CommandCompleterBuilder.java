@@ -27,7 +27,7 @@ public class CommandCompleterBuilder {
 	}
 
 	public SystemCompleter build() {
-		completer.add(commandSpec.name(), new ArgumentCompleter(argumentCompleters));
+		commandSpec.names().forEach(name -> completer.add(name, new ArgumentCompleter(argumentCompleters)));
 		return completer;
 	}
 
