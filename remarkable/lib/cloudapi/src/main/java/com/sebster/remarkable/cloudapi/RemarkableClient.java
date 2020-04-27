@@ -24,12 +24,12 @@ public interface RemarkableClient {
 	}
 
 	default InputStream download(@NonNull RemarkableItem item) {
-		return download(item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("Download link unknown: " + item)));
+		return download(item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("No download link: " + item)));
 	}
 
 	default InputStream download(@NonNull RemarkableDownloadLink link) {
 		try {
-			return link.getUrl().openStream();
+			return link.getUrl().toURL().openStream();
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

@@ -52,18 +52,18 @@ public class RemarkableClientImpl implements RemarkableClient {
 
 		// Create the folder creation request DTOs.
 		Instant modificationTime = clock.instant();
-		String parentId = parent != null ? parent.getId().toString() : null;
+		UUID parentId = parent != null ? parent.getId() : null;
 		List<ItemInfoDto> folderInfos = new ArrayList<>();
 		while (path != null) {
-			String folderId = randomUUID().toString();
+			UUID folderId = randomUUID();
 			folderInfos.add(
 					ItemInfoDto.builder()
 							.id(folderId)
 							.version(1)
-							.modifiedClient(modificationTime.toString())
+							.modificationTime(modificationTime)
 							.type(FOLDER_TYPE)
-							.visibleName(path.getHead())
-							.parent(parentId)
+							.name(path.getHead())
+							.parentId(parentId)
 							.build()
 			);
 			parentId = folderId;
@@ -84,8 +84,8 @@ public class RemarkableClientImpl implements RemarkableClient {
 
 	private void checkResults(List<ItemInfoDto> results) {
 		for (ItemInfoDto result : results) {
-			if (!result.isSuccess()) {
-				throw new RuntimeException(result.getMessage().orElse(null));
+			if (result.hasError()) {
+				throw new RuntimeException(result.getErrorMessage().orElse(null));
 			}
 		}
 	}

@@ -1,20 +1,16 @@
 package com.sebster.remarkable.cloudapi.impl.infrastructure.http;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
-@Data
-@AllArgsConstructor
-class RegistrationRequestDto {
+@Value
+class RegistrationRequestJsonDto {
 
 	@JsonProperty("code")
-	private String code;
-
+	String code;
 	@JsonProperty("DeviceDesc")
-	private String clientType;
-
+	String clientType;
 	@JsonProperty("DeviceID")
-	private String clientId;
+	String clientId;
 
 }

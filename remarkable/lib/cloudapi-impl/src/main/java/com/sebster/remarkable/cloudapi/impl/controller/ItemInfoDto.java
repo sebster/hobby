@@ -1,9 +1,5 @@
 package com.sebster.remarkable.cloudapi.impl.controller;
 
-import static java.time.Instant.EPOCH;
-
-import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
@@ -21,65 +17,45 @@ public class ItemInfoDto {
 	public static final String FOLDER_TYPE = "CollectionType";
 	public static final String DOCUMENT_TYPE = "DocumentType";
 
-	@NonNull String id;
+	@NonNull UUID id;
 	int version;
 
-	String message;
-	Boolean success;
-	String blobUrlGet;
-	String blobUrlGetExpires;
-	String modifiedClient;
 	String type;
-	String visibleName;
+	String name;
+	UUID parentId;
+	URI downloadLink;
+	Instant downloadLinkExpiration;
+	Instant modificationTime;
 	Integer currentPage;
 	Boolean bookmarked;
-	String parent;
 
-	public Optional<String> getMessage() {
-		return Optional.ofNullable(message);
-	}
-
-	public Optional<Boolean> getSuccess() {
-		return Optional.ofNullable(success);
-	}
-
-	public boolean isSuccess() {
-		return getSuccess().orElse(true);
-	}
-
-	public Optional<String> getBlobUrlGet() {
-		return Optional.ofNullable(blobUrlGet);
-	}
-
-	public Optional<String> getBlobUrlGetExpires() {
-		return Optional.ofNullable(blobUrlGetExpires);
-	}
-
-	public Optional<RemarkableDownloadLink> getDownloadLink() {
-		if (blobUrlGet == null) {
-			return Optional.empty();
-		}
-		try {
-			return Optional.of(new RemarkableDownloadLink(
-					UUID.fromString(getId()),
-					URI.create(blobUrlGet).toURL(),
-					getBlobUrlGetExpires().map(Instant::parse).orElse(EPOCH)
-			));
-		} catch (MalformedURLException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
-
-	public Optional<String> getModifiedClient() {
-		return Optional.ofNullable(modifiedClient);
-	}
+	String errorMessage;
 
 	public Optional<String> getType() {
 		return Optional.ofNullable(type);
 	}
 
-	public Optional<String> getVisibleName() {
-		return Optional.ofNullable(visibleName);
+	public Optional<String> getName() {
+		return Optional.ofNullable(name);
+	}
+
+	public Optional<UUID> getParentId() {
+		return Optional.ofNullable(parentId);
+	}
+
+	public Optional<RemarkableDownloadLink> getDownloadLink() {
+		if (downloadLink == null) {
+			return Optional.empty();
+		}
+		return Optional.of(new RemarkableDownloadLink(id, downloadLink, downloadLinkExpiration));
+	}
+
+	public Optional<Instant> getDownloadLinkExpiration() {
+		return Optional.ofNullable(downloadLinkExpiration);
+	}
+
+	public Optional<Instant> getModificationTime() {
+		return Optional.ofNullable(modificationTime);
 	}
 
 	public Optional<Integer> getCurrentPage() {
@@ -94,8 +70,12 @@ public class ItemInfoDto {
 		return getBookmarked().orElse(false);
 	}
 
-	public Optional<String> getParent() {
-		return Optional.ofNullable(parent);
+	public boolean hasError() {
+		return errorMessage != null;
+	}
+
+	public Optional<String> getErrorMessage() {
+		return Optional.ofNullable(errorMessage);
 	}
 
 }

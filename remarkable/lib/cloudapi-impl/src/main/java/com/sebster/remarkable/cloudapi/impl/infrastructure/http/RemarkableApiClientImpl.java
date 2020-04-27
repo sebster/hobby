@@ -6,8 +6,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,7 +62,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		return getBody(restTemplate.exchange(
 				REGISTRATION_URL,
 				POST,
-				request(new RegistrationRequestDto(code, clientType, clientId.toString()), null),
+				request(new RegistrationRequestJsonDto(code, clientType, clientId.toString()), null),
 				String.class
 		));
 	}
@@ -131,14 +129,17 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	private String getStorageHost(String sessionToken) {
 		return storageHosts.computeIfAbsent(sessionToken, token -> {
 			log.debug("getStorageHost");
-			String storageHost = getBody(restTemplate.exchange(
+			StorageHostResponseJsonDto response = getBody(restTemplate.exchange(
 					STORAGE_DISCOVERY_URL,
 					GET,
 					emptyRequest(sessionToken),
-					StorageHostResponseDto.class
-			)).getHost();
-			log.debug("getStorageHost: {}", storageHost);
-			return storageHost;
+					StorageHostResponseJsonDto.class
+			));
+			if (!"OK".equalsIgnoreCase(response.getStatus())) {
+				throw new RuntimeException("Storage host unavailable: status=" + response.getStatus());
+			}
+			log.debug("getStorageHost: {}", response.getHost());
+			return response.getHost();
 		});
 	}
 
@@ -162,7 +163,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		T body = responseEntity.getBody();
 		if (body == null) {
 			// Should not happen.
-			throw new IllegalStateException("Missing response body");
+			throw new IllegalStateException("No response body");
 		}
 		;
 		return body;
@@ -172,10 +173,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		if (items.size() != 1) {
 			// Should not happen.
 			throw new IllegalStateException("Incorrect number of items: expected 1, got " + items.size());
-		}
-		ItemInfoDto itemInfo = items.get(0);
-		if (!itemInfo.isSuccess()) {
-			throw new UncheckedIOException(new IOException("Item " + itemInfo.getId() + ": " + itemInfo.getMessage()));
 		}
 		return items.get(0);
 	}

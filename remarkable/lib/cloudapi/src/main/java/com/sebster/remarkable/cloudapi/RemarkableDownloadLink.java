@@ -1,16 +1,22 @@
 package com.sebster.remarkable.cloudapi;
 
-import java.net.URL;
+import java.net.URI;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
+import lombok.NonNull;
 import lombok.Value;
 
 @Value
 public class RemarkableDownloadLink {
 
-	UUID itemId;
-	URL url;
+	@NonNull UUID itemId;
+	@NonNull URI url;
 	Instant expirationTime;
+
+	public Optional<Instant> getExpirationTime() {
+		return Optional.ofNullable(expirationTime);
+	}
 
 }

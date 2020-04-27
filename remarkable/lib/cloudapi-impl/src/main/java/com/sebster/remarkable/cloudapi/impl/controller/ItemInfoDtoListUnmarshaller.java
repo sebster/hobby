@@ -6,7 +6,6 @@ import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER
 import static java.time.Instant.EPOCH;
 import static java.util.Comparator.comparing;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -44,11 +43,11 @@ class ItemInfoDtoListUnmarshaller {
 
 	private RemarkableFolder unmarshalFolder(RemarkableCollectionBuilder parent, ItemInfoDto itemInfo) {
 		RemarkableFolderBuilder folderBuilder = RemarkableFolder.builder(
-				UUID.fromString(itemInfo.getId()),
+				itemInfo.getId(),
 				itemInfo.getVersion(),
 				parent.getFolder().orElse(null),
-				itemInfo.getVisibleName().orElse(itemInfo.getId()),
-				itemInfo.getModifiedClient().map(Instant::parse).orElse(EPOCH),
+				itemInfo.getName().orElse(itemInfo.getId().toString()),
+				itemInfo.getModificationTime().orElse(EPOCH),
 				itemInfo.getDownloadLink().orElse(null)
 		);
 		unmarshalIntoCollection(folderBuilder);
@@ -61,11 +60,11 @@ class ItemInfoDtoListUnmarshaller {
 
 	private RemarkableDocument unmarshalDocument(RemarkableCollectionBuilder parent, ItemInfoDto itemInfo) {
 		return new RemarkableDocument(
-				UUID.fromString(itemInfo.getId()),
+				itemInfo.getId(),
 				itemInfo.getVersion(),
 				parent.getFolder().orElse(null),
-				itemInfo.getVisibleName().orElse(itemInfo.getId()),
-				itemInfo.getModifiedClient().map(Instant::parse).orElse(EPOCH),
+				itemInfo.getName().orElse(itemInfo.getId().toString()),
+				itemInfo.getModificationTime().orElse(EPOCH),
 				itemInfo.getDownloadLink().orElse(null),
 				itemInfo.getCurrentPage().orElse(0),
 				itemInfo.isBookmarked()
@@ -73,11 +72,11 @@ class ItemInfoDtoListUnmarshaller {
 	}
 
 	private Stream<ItemInfoDto> getChildren(RemarkableCollectionBuilder parent, String type) {
-		String parentId = parent.getFolder().map(RemarkableItem::getId).map(UUID::toString).orElse("");
+		UUID parentId = parent.getFolder().map(RemarkableItem::getId).orElse(null);
 		return itemInfos.stream()
-				.filter(itemInfo -> Objects.equals(parentId, itemInfo.getParent().orElse(null)))
+				.filter(itemInfo -> Objects.equals(parentId, itemInfo.getParentId().orElse(null)))
 				.filter(itemInfo -> Objects.equals(type, itemInfo.getType().orElse(null)))
-				.sorted(comparing(unwrapOptional(ItemInfoDto::getVisibleName)));
+				.sorted(comparing(unwrapOptional(ItemInfoDto::getName)));
 	}
 
 }
