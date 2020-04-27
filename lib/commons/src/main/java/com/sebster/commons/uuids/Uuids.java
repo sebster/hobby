@@ -4,10 +4,10 @@ import static lombok.AccessLevel.PRIVATE;
 
 import java.util.regex.Pattern;
 
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-@AllArgsConstructor(access = PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public class Uuids {
 
 	public static Pattern UUID_PATTERN =

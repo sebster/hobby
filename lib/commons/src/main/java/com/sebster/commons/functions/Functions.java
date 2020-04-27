@@ -5,13 +5,13 @@ import static lombok.AccessLevel.PRIVATE;
 import java.util.Optional;
 import java.util.function.Function;
 
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
  * Utility functions for manipulating {@link Function}s.
  */
-@AllArgsConstructor(access = PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public class Functions {
 
 	/**

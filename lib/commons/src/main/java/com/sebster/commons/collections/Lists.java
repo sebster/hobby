@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-@AllArgsConstructor(access = PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public class Lists {
 
 	/**
