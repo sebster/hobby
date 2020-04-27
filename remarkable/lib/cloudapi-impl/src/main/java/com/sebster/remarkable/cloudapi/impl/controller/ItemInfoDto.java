@@ -12,7 +12,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class ItemInfoDto {
+public class ItemInfoDto implements ErrorDto<ItemInfoDto> {
 
 	public static final String FOLDER_TYPE = "CollectionType";
 	public static final String DOCUMENT_TYPE = "DocumentType";
@@ -74,10 +74,7 @@ public class ItemInfoDto {
 		return getBookmarked().orElse(false);
 	}
 
-	public boolean hasError() {
-		return errorMessage != null;
-	}
-
+	@Override
 	public Optional<String> getErrorMessage() {
 		return Optional.ofNullable(errorMessage);
 	}

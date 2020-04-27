@@ -73,21 +73,13 @@ public class RemarkableClientImpl implements RemarkableClient {
 		// If any folders need to be created, invoke the API and check the results.
 		if (!folderInfos.isEmpty()) {
 			String sessionToken = apiClient.login(info.getLoginToken());
-			checkResults(apiClient.updateMetadata(sessionToken, folderInfos));
+			apiClient.updateMetadata(sessionToken, folderInfos).forEach(ErrorDto::throwOnError);
 		}
 	}
 
 	@Override
 	public String toString() {
 		return info.getDescription() + " (" + info.getClientId() + ")";
-	}
-
-	private void checkResults(List<ItemInfoDto> results) {
-		for (ItemInfoDto result : results) {
-			if (result.hasError()) {
-				throw new RuntimeException(result.getErrorMessage().orElse(null));
-			}
-		}
 	}
 
 }
