@@ -23,8 +23,8 @@ public class ItemInfoDto {
 	String type;
 	String name;
 	UUID parentId;
-	URI downloadLink;
-	Instant downloadLinkExpiration;
+	URI downloadUrl;
+	Instant downloadUrlExpiration;
 	Instant modificationTime;
 	Integer currentPage;
 	Boolean bookmarked;
@@ -43,15 +43,19 @@ public class ItemInfoDto {
 		return Optional.ofNullable(parentId);
 	}
 
-	public Optional<RemarkableDownloadLink> getDownloadLink() {
-		if (downloadLink == null) {
-			return Optional.empty();
-		}
-		return Optional.of(new RemarkableDownloadLink(id, downloadLink, downloadLinkExpiration));
+	public Optional<URI> getDownloadUrl() {
+		return Optional.ofNullable(downloadUrl);
 	}
 
-	public Optional<Instant> getDownloadLinkExpiration() {
-		return Optional.ofNullable(downloadLinkExpiration);
+	public Optional<Instant> getDownloadUrlExpiration() {
+		return Optional.ofNullable(downloadUrlExpiration);
+	}
+
+	public Optional<RemarkableDownloadLink> getDownloadLink() {
+		if (downloadUrl == null) {
+			return Optional.empty();
+		}
+		return Optional.of(new RemarkableDownloadLink(id, downloadUrl, downloadUrlExpiration));
 	}
 
 	public Optional<Instant> getModificationTime() {

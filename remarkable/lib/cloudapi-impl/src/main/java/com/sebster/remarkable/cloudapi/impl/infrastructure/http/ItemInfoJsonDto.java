@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Builder
@@ -54,8 +55,8 @@ public class ItemInfoJsonDto {
 				.type(type)
 				.name(visibleName)
 				.parentId(Optional.ofNullable(parent).filter(StringUtils::isNotBlank).map(UUID::fromString).orElse(null))
-				.downloadLink(URI.create(blobUrlGet))
-				.downloadLinkExpiration(Optional.ofNullable(blobUrlGetExpires).map(Instant::parse).orElse(null))
+				.downloadUrl(URI.create(blobUrlGet))
+				.downloadUrlExpiration(Optional.ofNullable(blobUrlGetExpires).map(Instant::parse).orElse(null))
 				.modificationTime(Optional.ofNullable(modifiedClient).map(Instant::parse).orElse(null))
 				.currentPage(currentPage)
 				.bookmarked(bookmarked);
@@ -67,20 +68,20 @@ public class ItemInfoJsonDto {
 		return builder.build();
 	}
 
-	static ItemInfoJsonDto marshal(ItemInfoDto itemInfoDto) {
+	static ItemInfoJsonDto marshal(@NonNull ItemInfoDto itemInfo) {
 		return ItemInfoJsonDto.builder()
-				.id(itemInfoDto.getId().toString())
-				.version(itemInfoDto.getVersion())
-				.message(itemInfoDto.getErrorMessage().orElse(null))
-				.success(itemInfoDto.hasError())
-				.blobUrlGet(itemInfoDto.getDownloadLink().map(Object::toString).orElse(null))
-				.blobUrlGetExpires(itemInfoDto.getDownloadLinkExpiration().map(Object::toString).orElse(null))
-				.modifiedClient(itemInfoDto.getModificationTime().map(Object::toString).orElse(null))
-				.type(itemInfoDto.getType().orElse(null))
-				.visibleName(itemInfoDto.getName().orElse(null))
-				.currentPage(itemInfoDto.getCurrentPage().orElse(null))
-				.bookmarked(itemInfoDto.getBookmarked().orElse(null))
-				.parent(itemInfoDto.getParentId().map(Object::toString).orElse(null))
+				.id(itemInfo.getId().toString())
+				.version(itemInfo.getVersion())
+				.message(itemInfo.getErrorMessage().orElse(null))
+				.success(itemInfo.hasError())
+				.blobUrlGet(itemInfo.getDownloadUrl().map(Object::toString).orElse(null))
+				.blobUrlGetExpires(itemInfo.getDownloadUrlExpiration().map(Object::toString).orElse(null))
+				.modifiedClient(itemInfo.getModificationTime().map(Object::toString).orElse(null))
+				.type(itemInfo.getType().orElse(null))
+				.visibleName(itemInfo.getName().orElse(null))
+				.currentPage(itemInfo.getCurrentPage().orElse(null))
+				.bookmarked(itemInfo.getBookmarked().orElse(null))
+				.parent(itemInfo.getParentId().map(Object::toString).orElse(null))
 				.build();
 	}
 

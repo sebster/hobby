@@ -13,10 +13,10 @@ public class RemarkableDownloadLink {
 
 	@NonNull UUID itemId;
 	@NonNull URI url;
-	Instant expirationTime;
+	Instant expiration;
 
-	public Optional<Instant> getExpirationTime() {
-		return Optional.ofNullable(expirationTime);
+	public Optional<Instant> getExpiration() {
+		return Optional.ofNullable(expiration);
 	}
 
 }
