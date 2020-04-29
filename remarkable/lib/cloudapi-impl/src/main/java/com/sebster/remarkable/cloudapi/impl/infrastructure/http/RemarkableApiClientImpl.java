@@ -122,7 +122,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	}
 
 	@Override
-	public List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos) {
+	public List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos) {
 		log.debug("delete: items={}", itemInfos);
 		return map(getBody(restTemplate.exchange(
 				getStorageUrlBuilder(sessionToken, "delete").build().toUri(),

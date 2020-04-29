@@ -41,6 +41,6 @@ public interface RemarkableApiClient {
 	/**
 	 * Delete files or folders.
 	 */
-	List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos);
+	List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos);
 
 }
