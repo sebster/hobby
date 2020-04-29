@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -25,20 +26,20 @@ public class Lists {
 		return result;
 	}
 
-	public static <T> List<T> filter(@NonNull List<T> list, @NonNull Predicate<? super T> predicate) {
-		return list.stream().filter(predicate).collect(toList());
+	public static <T> List<T> filter(@NonNull Collection<T> collection, @NonNull Predicate<? super T> predicate) {
+		return collection.stream().filter(predicate).collect(toList());
 	}
 
-	public static <S, T> List<T> map(@NonNull List<S> list, @NonNull Function<? super S, ? extends T> mapper) {
-		return list.stream().map(mapper).collect(toList());
+	public static <S, T> List<T> map(@NonNull Collection<S> collection, @NonNull Function<? super S, ? extends T> mapper) {
+		return collection.stream().map(mapper).collect(toList());
 	}
 
 	public static <S, T> List<T> filterAndMap(
-			@NonNull List<S> list,
+			@NonNull Collection<S> collection,
 			@NonNull Predicate<? super S> predicate,
 			@NonNull Function<? super S, ? extends T> mapper
 	) {
-		return list.stream().filter(predicate).map(mapper).collect(toList());
+		return collection.stream().filter(predicate).map(mapper).collect(toList());
 	}
 
 }
