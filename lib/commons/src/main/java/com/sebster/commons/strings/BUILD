@@ -6,5 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/collections",
+        "//lib/commons/src/main/java/com/sebster/commons/streams",
     ],
 )

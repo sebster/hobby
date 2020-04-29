@@ -1,5 +1,7 @@
 package com.sebster.commons.strings;
 
+import static com.sebster.commons.streams.Streams.stream;
+import static java.util.stream.Collectors.joining;
 import static lombok.AccessLevel.PRIVATE;
 
 import lombok.NoArgsConstructor;
@@ -22,6 +24,10 @@ public class Strings {
 
 	public static boolean startsWithIgnoreCase(@NonNull String string, @NonNull String prefix) {
 		return string.toLowerCase().startsWith(prefix.toLowerCase());
+	}
+
+	public static String join(@NonNull CharSequence delimiter, @NonNull Iterable<?> elements) {
+		return stream(elements).map(String::valueOf).collect(joining(delimiter));
 	}
 
 }
