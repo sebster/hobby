@@ -11,10 +11,11 @@ import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
 import picocli.CommandLine;
+import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
-@CommandLine.Command(
+@Command(
 		name = "download",
 		aliases = "get",
 		mixinStandardHelpOptions = true,

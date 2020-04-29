@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
+import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.ItemInfoDtoBuilder;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -48,8 +49,8 @@ public class ItemInfoJsonDto {
 	private String parent;
 
 	ItemInfoDto unmarshal() {
-		var builder = ItemInfoDto.builder().
-				id(UUID.fromString(id))
+		ItemInfoDtoBuilder builder = ItemInfoDto.builder()
+				.id(UUID.fromString(id))
 				.version(version)
 				.type(type)
 				.name(visibleName)
