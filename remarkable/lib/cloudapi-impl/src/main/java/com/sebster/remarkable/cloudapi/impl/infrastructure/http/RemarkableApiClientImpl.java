@@ -156,7 +156,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		if (authToken != null) {
 			headers.add(AUTHORIZATION, "Bearer " + authToken);
 		}
-		return new HttpEntity<T>(body, headers);
+		return new HttpEntity<>(body, headers);
 	}
 
 	private <T> T getBody(ResponseEntity<T> responseEntity) {
