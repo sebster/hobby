@@ -8,10 +8,9 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
 import lombok.Builder;
 import lombok.Data;
@@ -54,7 +53,7 @@ public class ItemInfoJsonDto {
 				.version(version)
 				.type(type)
 				.name(visibleName)
-				.parentId(Optional.ofNullable(parent).filter(StringUtils::isNotBlank).map(UUID::fromString).orElse(null))
+				.parentId(Optional.ofNullable(parent).filter(Strings::isNotBlank).map(UUID::fromString).orElse(null))
 				.downloadUrl(Optional.ofNullable(blobUrlGet).map(URI::create).orElse(null))
 				.downloadUrlExpiration(Optional.ofNullable(blobUrlGetExpires).map(Instant::parse).orElse(null))
 				.modificationTime(Optional.ofNullable(modifiedClient).map(Instant::parse).orElse(null))
@@ -62,7 +61,7 @@ public class ItemInfoJsonDto {
 				.bookmarked(bookmarked);
 
 		if (FALSE.equals(success)) {
-			builder.errorMessage(Optional.ofNullable(message).filter(StringUtils::isNotBlank).orElse("Unknown error"));
+			builder.errorMessage(Optional.ofNullable(message).filter(Strings::isNotBlank).orElse("Unknown error"));
 		}
 
 		return builder.build();
