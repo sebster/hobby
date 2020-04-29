@@ -92,7 +92,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		List<ItemInfoJsonDto> list = getBody(restTemplate.exchange(
 				getStorageUrlBuilder(sessionToken, DOCUMENT_URL_TEMPLATE)
 						.queryParam("withBlob", includeBlobUrl)
-						.toUriString(),
+						.build().toUri(),
 				GET,
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
@@ -108,7 +108,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 				getStorageUrlBuilder(sessionToken, DOCUMENT_URL_TEMPLATE)
 						.queryParam("doc", id.toString())
 						.queryParam("withBlob", includeBlobUrl)
-						.toUriString(),
+						.build().toUri(),
 				GET,
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
@@ -119,7 +119,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos) {
 		log.debug("updateMetadata: items={}", itemInfos);
 		return map(getBody(restTemplate.exchange(
-				getStorageUrlBuilder(sessionToken, UPDATE_METADATA_URL_TEMPLATE).toUriString(),
+				getStorageUrlBuilder(sessionToken, UPDATE_METADATA_URL_TEMPLATE).build().toUri(),
 				PUT,
 				request(map(itemInfos, ItemInfoJsonDto::marshal), sessionToken),
 				ITEM_LIST_TYPE
