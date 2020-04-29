@@ -69,10 +69,14 @@ public final class RemarkablePath implements Iterable<String> {
 		return new RemarkablePath(singletonList(name));
 	}
 
-	public static RemarkablePath path(@NonNull RemarkablePath parent, @NonNull String name) {
-		List<String> components = new ArrayList<>(parent.getComponents());
-		components.add(name);
-		return new RemarkablePath(components);
+	public static RemarkablePath path(RemarkablePath parent, @NonNull String name) {
+		if (parent == null) {
+			return path(name);
+		} else {
+			List<String> components = new ArrayList<>(parent.getComponents());
+			components.add(name);
+			return new RemarkablePath(components);
+		}
 	}
 
 }
