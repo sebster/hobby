@@ -6,6 +6,7 @@ java_library(
     visibility = ["//remarkable/apps/cli/src/main/java/com/sebster/remarkable/cli:__pkg__"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/collections",
         "//lib/commons/src/main/java/com/sebster/commons/uuids",
         "//remarkable/apps/cli/src/main/java/com/sebster/remarkable/cli/commands/completion",
         "//remarkable/lib/cloudapi",

@@ -41,6 +41,7 @@ import picocli.CommandLine.HelpCommand;
 				ListCommand.class,
 				MkdirCommand.class,
 				DownloadCommand.class,
+				DeleteCommand.class,
 				HelpCommand.class,
 		}
 )
