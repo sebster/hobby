@@ -40,16 +40,16 @@ public interface RemarkableClientManager {
 	default Optional<RemarkableClient> findClient(@NonNull String selector) {
 		List<RemarkableClient> clients = listClients();
 
-		// Can the selector be interpreted as the start of a client description?
-		var byId = clients.stream().filter(client -> client.getId().toString().startsWith(selector)).collect(toList());
-		if (byId.size() == 1) {
-			return Optional.of(byId.get(0));
-		}
-
 		// Can the selector be interpreted as the part of a client description?
 		var byDescription = clients.stream().filter(client -> client.getDescription().contains(selector)).collect(toList());
 		if (byDescription.size() == 1) {
 			return Optional.of(byDescription.get(0));
+		}
+
+		// Can the selector be interpreted as the start of a client id?
+		var byId = clients.stream().filter(client -> client.getId().toString().startsWith(selector)).collect(toList());
+		if (byId.size() == 1) {
+			return Optional.of(byId.get(0));
 		}
 
 		// No match.
