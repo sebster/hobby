@@ -38,12 +38,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 			"https://service-manager-production-dot-remarkable-production.appspot.com/service/json/1/document-storage" +
 					"?environment=production&group=auth0|5a68dc51cb30df3877a1d7c4&apiVer=2";
 
-	private static final String DOCUMENT_URL_TEMPLATE =
-			"https://storage-host//document-storage/json/2/docs";
-
-	private static final String UPDATE_METADATA_URL_TEMPLATE =
-			"https://storage-host/document-storage/json/2/upload/update-status";
-
 	private static final ParameterizedTypeReference<List<ItemInfoJsonDto>> ITEM_LIST_TYPE = new ParameterizedTypeReference<>() {
 	};
 
@@ -90,7 +84,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	public List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl) {
 		log.debug("list all: includeBlobUrl={}", includeBlobUrl);
 		List<ItemInfoJsonDto> list = getBody(restTemplate.exchange(
-				getStorageUrlBuilder(sessionToken, DOCUMENT_URL_TEMPLATE)
+				getStorageUrlBuilder(sessionToken, "docs")
 						.queryParam("withBlob", includeBlobUrl)
 						.build().toUri(),
 				GET,
@@ -105,7 +99,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	public ItemInfoDto list(@NonNull String sessionToken, @NonNull UUID id, boolean includeBlobUrl) {
 		log.debug("list: id={} includeBlobUrl={}", id, includeBlobUrl);
 		return getItemInfo(map(getBody(restTemplate.exchange(
-				getStorageUrlBuilder(sessionToken, DOCUMENT_URL_TEMPLATE)
+				getStorageUrlBuilder(sessionToken, "docs")
 						.queryParam("doc", id.toString())
 						.queryParam("withBlob", includeBlobUrl)
 						.build().toUri(),
@@ -119,7 +113,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos) {
 		log.debug("updateMetadata: items={}", itemInfos);
 		return map(getBody(restTemplate.exchange(
-				getStorageUrlBuilder(sessionToken, UPDATE_METADATA_URL_TEMPLATE).build().toUri(),
+				getStorageUrlBuilder(sessionToken, "upload/update-status").build().toUri(),
 				PUT,
 				request(map(itemInfos, ItemInfoJsonDto::marshal), sessionToken),
 				ITEM_LIST_TYPE
@@ -143,8 +137,11 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		});
 	}
 
-	private UriComponentsBuilder getStorageUrlBuilder(String sessionToken, String documentUrlTemplate) {
-		return UriComponentsBuilder.fromUriString(documentUrlTemplate).host(getStorageHost(sessionToken));
+	private UriComponentsBuilder getStorageUrlBuilder(String sessionToken, String serviceUrl) {
+		return UriComponentsBuilder
+				.fromUriString("https:///document-storage/json/2/")
+				.host(getStorageHost(sessionToken))
+				.path(serviceUrl);
 	}
 
 	private HttpEntity<Void> emptyRequest(String authToken) {
