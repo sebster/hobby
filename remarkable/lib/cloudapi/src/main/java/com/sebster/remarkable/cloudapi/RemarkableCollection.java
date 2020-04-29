@@ -15,6 +15,14 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 
 	List<RemarkableDocument> getDocuments();
 
+	default boolean isEmpty() {
+		return getFolders().isEmpty() && getDocuments().isEmpty();
+	}
+
+	default boolean isNotEmpty() {
+		return !isEmpty();
+	}
+
 	default Optional<RemarkableItem> findItem(@NonNull String name) {
 		return stream().filter(item -> Objects.equals(name, item.getName())).findFirst();
 	}
@@ -138,7 +146,7 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 
 	default Stream<RemarkableItem> recurse() {
 		return Stream.concat(
-				getFolders().stream().flatMap(folder -> Stream.concat(Stream.of(folder), folder.recurse())),
+				getFolders().stream().flatMap(RemarkableFolder::recurse),
 				getDocuments().stream()
 		);
 	}

@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import lombok.NonNull;
 
@@ -36,6 +37,11 @@ public final class RemarkableFolder extends RemarkableItem implements Remarkable
 
 	public RemarkableFolder asFolder() {
 		return this;
+	}
+
+	@Override
+	public Stream<RemarkableItem> recurse() {
+		return Stream.concat(Stream.of(this), RemarkableCollection.super.recurse());
 	}
 
 	void addDocument(@NonNull RemarkableDocument document) {
