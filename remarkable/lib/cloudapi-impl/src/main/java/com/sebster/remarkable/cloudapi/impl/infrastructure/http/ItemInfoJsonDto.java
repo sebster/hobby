@@ -55,7 +55,7 @@ public class ItemInfoJsonDto {
 				.type(type)
 				.name(visibleName)
 				.parentId(Optional.ofNullable(parent).filter(StringUtils::isNotBlank).map(UUID::fromString).orElse(null))
-				.downloadUrl(URI.create(blobUrlGet))
+				.downloadUrl(Optional.ofNullable(blobUrlGet).map(URI::create).orElse(null))
 				.downloadUrlExpiration(Optional.ofNullable(blobUrlGetExpires).map(Instant::parse).orElse(null))
 				.modificationTime(Optional.ofNullable(modifiedClient).map(Instant::parse).orElse(null))
 				.currentPage(currentPage)
