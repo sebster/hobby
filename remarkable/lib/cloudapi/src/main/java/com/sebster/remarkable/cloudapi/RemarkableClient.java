@@ -36,11 +36,11 @@ public interface RemarkableClient {
 		}
 	}
 
-	default void createFolders(@NonNull RemarkablePath path) {
-		createFolders(null, path);
+	default void createFolders(@NonNull Collection<RemarkablePath> paths) {
+		createFolders(null, paths);
 	}
 
-	void createFolders(RemarkableFolder parent, @NonNull RemarkablePath path);
+	void createFolders(RemarkableFolder parent, @NonNull Collection<RemarkablePath> paths);
 
 	void delete(@NonNull Collection<? extends RemarkableItem> items, boolean recursive);
 

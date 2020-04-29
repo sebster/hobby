@@ -8,9 +8,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -48,39 +48,42 @@ public class RemarkableClientImpl implements RemarkableClient {
 	}
 
 	@Override
-	public void createFolders(RemarkableFolder parent, @NonNull RemarkablePath path) {
-		// Navigate the path prefix until the component no longer exists.
-		RemarkableCollection collection = parent != null ? parent : list();
-		while (path != null && collection.hasFolder(path.getHead())) {
-			parent = collection.getFolder(path.getHead());
-			collection = parent;
-			path = path.getTail().orElse(null);
-		}
+	public void createFolders(RemarkableFolder parent, @NonNull Collection<RemarkablePath> paths) {
+		Map<RemarkablePath, ItemInfoDto> folderInfos = new LinkedHashMap<>();
+		for (RemarkablePath path : paths) {
+			// Navigate the path prefix until the component no longer exists.
+			RemarkableCollection collection = parent != null ? parent : list();
+			while (path != null && collection.hasFolder(path.getHead())) {
+				parent = collection.getFolder(path.getHead());
+				collection = parent;
+				path = path.getTail().orElse(null);
+			}
 
-		// Create the folder creation request DTOs.
-		Instant modificationTime = clock.instant();
-		UUID parentId = parent != null ? parent.getId() : null;
-		List<ItemInfoDto> folderInfos = new ArrayList<>();
-		while (path != null) {
-			UUID folderId = randomUUID();
-			folderInfos.add(
-					ItemInfoDto.builder()
-							.id(folderId)
-							.version(1)
-							.modificationTime(modificationTime)
-							.type(FOLDER_TYPE)
-							.name(path.getHead())
-							.parentId(parentId)
-							.build()
-			);
-			parentId = folderId;
-			path = path.getTail().orElse(null);
+			// Create the folder creation request DTOs.
+			Instant modificationTime = clock.instant();
+			RemarkablePath parentPath = parent != null ? parent.getPath() : null;
+			while (path != null) {
+				UUID folderId = randomUUID();
+				UUID parentId = parentPath != null ? folderInfos.get(parentPath).getId() : null;
+				folderInfos.putIfAbsent(path(parentPath, path.getHead()),
+						ItemInfoDto.builder()
+								.id(folderId)
+								.version(1)
+								.modificationTime(modificationTime)
+								.type(FOLDER_TYPE)
+								.name(path.getHead())
+								.parentId(parentId)
+								.build()
+				);
+				parentPath = path(parentPath, path.getHead());
+				path = path.getTail().orElse(null);
+			}
 		}
 
 		// If any folders need to be created, invoke the API and check the results.
 		if (!folderInfos.isEmpty()) {
 			String sessionToken = apiClient.login(info.getLoginToken());
-			apiClient.updateMetadata(sessionToken, folderInfos).forEach(ErrorDto::throwOnError);
+			apiClient.updateMetadata(sessionToken, folderInfos.values()).forEach(ErrorDto::throwOnError);
 		}
 	}
 

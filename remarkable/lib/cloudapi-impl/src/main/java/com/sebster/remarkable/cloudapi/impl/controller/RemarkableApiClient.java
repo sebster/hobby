@@ -1,5 +1,6 @@
 package com.sebster.remarkable.cloudapi.impl.controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public interface RemarkableApiClient {
 	/**
 	 * Update the metadata of one or more items on the reMarkable.
 	 */
-	List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos);
+	List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos);
 
 	/**
 	 * Delete files or folders.

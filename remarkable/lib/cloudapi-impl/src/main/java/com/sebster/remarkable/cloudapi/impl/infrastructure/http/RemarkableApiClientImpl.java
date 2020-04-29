@@ -6,6 +6,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -110,7 +111,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	}
 
 	@Override
-	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos) {
+	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos) {
 		log.debug("updateMetadata: items={}", itemInfos);
 		return map(getBody(restTemplate.exchange(
 				getStorageUrlBuilder(sessionToken, "upload/update-status").build().toUri(),
