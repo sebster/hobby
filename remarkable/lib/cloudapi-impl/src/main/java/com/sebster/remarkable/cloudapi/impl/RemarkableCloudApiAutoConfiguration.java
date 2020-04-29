@@ -30,7 +30,7 @@ public class RemarkableCloudApiAutoConfiguration {
 			Jackson2ObjectMapperBuilder objectMapperBuilder,
 			RestTemplateBuilder restTemplateBuilder
 	) {
-		ObjectMapper objectMapper = objectMapperBuilder.build();
+		ObjectMapper objectMapper = objectMapperBuilder.indentOutput(true).build();
 		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
 		messageConverter.setSupportedMediaTypes(singletonList(new MediaType("text", "plain")));
 		RestTemplate restTemplate = restTemplateBuilder.additionalMessageConverters(messageConverter).build();
