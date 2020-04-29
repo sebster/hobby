@@ -120,6 +120,17 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		)), ItemInfoJsonDto::unmarshal);
 	}
 
+	@Override
+	public List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos) {
+		log.debug("delete: items={}", itemInfos);
+		return map(getBody(restTemplate.exchange(
+				getStorageUrlBuilder(sessionToken, "delete").build().toUri(),
+				PUT,
+				request(map(itemInfos, ItemInfoJsonDto::marshalIdAndVersionOnly), sessionToken),
+				ITEM_LIST_TYPE
+		)), ItemInfoJsonDto::unmarshal);
+	}
+
 	private String getStorageHost(String sessionToken) {
 		return storageHosts.computeIfAbsent(sessionToken, token -> {
 			log.debug("getStorageHost");

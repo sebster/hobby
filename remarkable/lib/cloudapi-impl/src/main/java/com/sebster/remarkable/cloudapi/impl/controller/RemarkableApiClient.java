@@ -37,4 +37,9 @@ public interface RemarkableApiClient {
 	 */
 	List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos);
 
+	/**
+	 * Delete files or folders.
+	 */
+	List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull List<ItemInfoDto> itemInfos);
+
 }

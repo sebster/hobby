@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
+import com.sebster.remarkable.cloudapi.RemarkableItem;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -77,6 +78,23 @@ public class ItemInfoDto implements ErrorDto<ItemInfoDto> {
 	@Override
 	public Optional<String> getErrorMessage() {
 		return Optional.ofNullable(errorMessage);
+	}
+
+	public static ItemInfoDto fromItem(@NonNull RemarkableItem item) {
+		ItemInfoDtoBuilder builder = ItemInfoDto.builder()
+				.id(item.getId())
+				.version(item.getVersion())
+				.type(item.isFolder() ? FOLDER_TYPE : DOCUMENT_TYPE)
+				.name(item.getName())
+				.parentId(item.getParent().map(RemarkableItem::getId).orElse(null))
+				.modificationTime(item.getModificationTime());
+
+		if (item.isDocument()) {
+			builder.bookmarked(item.asDocument().isBookmarked());
+			builder.currentPage(item.asDocument().getCurrentPage());
+		}
+
+		return builder.build();
 	}
 
 }

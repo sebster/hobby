@@ -1,17 +1,24 @@
 package com.sebster.remarkable.cloudapi.impl.controller;
 
+import static com.sebster.commons.collections.Lists.filter;
+import static com.sebster.commons.collections.Lists.filterAndMap;
 import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER_TYPE;
 import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
+import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
+import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
 import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
 import lombok.AllArgsConstructor;
@@ -75,6 +82,24 @@ public class RemarkableClientImpl implements RemarkableClient {
 			String sessionToken = apiClient.login(info.getLoginToken());
 			apiClient.updateMetadata(sessionToken, folderInfos).forEach(ErrorDto::throwOnError);
 		}
+	}
+
+	@Override
+	public void delete(@NonNull Collection<? extends RemarkableItem> items, boolean recursive) {
+		var folders = filterAndMap(items, RemarkableItem::isFolder, RemarkableItem::asFolder);
+		if (!recursive) {
+			var nonEmptyFolders = filter(folders, RemarkableCollection::isNotEmpty);
+			if (!nonEmptyFolders.isEmpty()) {
+				throw new IllegalArgumentException("Folders not empty: " + Strings.join(", ", nonEmptyFolders));
+			}
+		}
+
+		var foldersRecursive = folders.stream().flatMap(RemarkableCollection::recurse);
+		var documents = items.stream().filter(RemarkableItem::isDocument);
+		var itemsToDelete = Stream.concat(foldersRecursive, documents).distinct();
+
+		String sessionToken = apiClient.login(info.getLoginToken());
+		apiClient.delete(sessionToken, itemsToDelete.map(ItemInfoDto::fromItem).collect(toList()));
 	}
 
 	@Override

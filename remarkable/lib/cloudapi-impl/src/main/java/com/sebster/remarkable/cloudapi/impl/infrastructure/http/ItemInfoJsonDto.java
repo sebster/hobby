@@ -84,4 +84,8 @@ public class ItemInfoJsonDto {
 				.build();
 	}
 
+	static ItemInfoJsonDto marshalIdAndVersionOnly(@NonNull ItemInfoDto itemInfo) {
+		return ItemInfoJsonDto.builder().id(itemInfo.getId().toString()).version(itemInfo.getVersion()).build();
+	}
+
 }

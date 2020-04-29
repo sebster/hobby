@@ -3,6 +3,7 @@ package com.sebster.remarkable.cloudapi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Collection;
 import java.util.UUID;
 
 import lombok.NonNull;
@@ -40,5 +41,7 @@ public interface RemarkableClient {
 	}
 
 	void createFolders(RemarkableFolder parent, @NonNull RemarkablePath path);
+
+	void delete(@NonNull Collection<? extends RemarkableItem> items, boolean recursive);
 
 }
