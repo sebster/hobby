@@ -2,6 +2,7 @@ package com.sebster.remarkable.cloudapi.impl.controller;
 
 import static com.sebster.commons.collections.Lists.filter;
 import static com.sebster.commons.collections.Lists.filterAndMap;
+import static com.sebster.commons.collections.Lists.map;
 import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER_TYPE;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
@@ -99,10 +100,13 @@ public class RemarkableClientImpl implements RemarkableClient {
 
 		var foldersRecursive = folders.stream().flatMap(RemarkableCollection::recurse);
 		var documents = items.stream().filter(RemarkableItem::isDocument);
-		var itemsToDelete = Stream.concat(foldersRecursive, documents).distinct();
+		var itemsToDelete = Stream.concat(foldersRecursive, documents).distinct().collect(toList());
 
-		String sessionToken = apiClient.login(info.getLoginToken());
-		apiClient.delete(sessionToken, itemsToDelete.map(ItemInfoDto::fromItem).collect(toList()));
+		// If any items need to be deleted, invoke the API and check the results.
+		if (!itemsToDelete.isEmpty()) {
+			String sessionToken = apiClient.login(info.getLoginToken());
+			apiClient.delete(sessionToken, map(itemsToDelete, ItemInfoDto::fromItem)).forEach(ErrorDto::throwOnError);
+		}
 	}
 
 	@Override
