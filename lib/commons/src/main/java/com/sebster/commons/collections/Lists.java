@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,8 +25,20 @@ public class Lists {
 		return result;
 	}
 
-	public static <U, V> List<V> map(@NonNull List<U> list, Function<U, V> function) {
-		return list.stream().map(function).collect(toList());
+	public static <T> List<T> filter(@NonNull List<T> list, @NonNull Predicate<? super T> predicate) {
+		return list.stream().filter(predicate).collect(toList());
+	}
+
+	public static <S, T> List<T> map(@NonNull List<S> list, @NonNull Function<? super S, ? extends T> mapper) {
+		return list.stream().map(mapper).collect(toList());
+	}
+
+	public static <S, T> List<T> filterAndMap(
+			@NonNull List<S> list,
+			@NonNull Predicate<? super S> predicate,
+			@NonNull Function<? super S, ? extends T> mapper
+	) {
+		return list.stream().filter(predicate).map(mapper).collect(toList());
 	}
 
 }

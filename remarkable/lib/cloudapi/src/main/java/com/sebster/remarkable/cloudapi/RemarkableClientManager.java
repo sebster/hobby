@@ -1,8 +1,8 @@
 package com.sebster.remarkable.cloudapi;
 
+import static com.sebster.commons.collections.Lists.filter;
 import static com.sebster.commons.strings.Strings.containsIgnoreCase;
 import static com.sebster.commons.strings.Strings.startsWithIgnoreCase;
-import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,17 +43,13 @@ public interface RemarkableClientManager {
 		List<RemarkableClient> clients = listClients();
 
 		// Can the selector be interpreted as the part of a client description?
-		var byDescription = clients.stream()
-				.filter(client -> containsIgnoreCase(client.getDescription(), selector))
-				.collect(toList());
+		var byDescription = filter(clients, client -> containsIgnoreCase(client.getDescription(), selector));
 		if (byDescription.size() == 1) {
 			return Optional.of(byDescription.get(0));
 		}
 
 		// Can the selector be interpreted as the start of a client id?
-		var byId = clients.stream()
-				.filter(client -> startsWithIgnoreCase(client.getId().toString(), selector))
-				.collect(toList());
+		var byId = filter(clients, client -> startsWithIgnoreCase(client.getId().toString(), selector));
 		if (byId.size() == 1) {
 			return Optional.of(byId.get(0));
 		}
