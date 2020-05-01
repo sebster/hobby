@@ -3,6 +3,7 @@ package com.sebster.remarkable.cloudapi.impl.controller;
 import static com.sebster.commons.collections.Lists.filter;
 import static com.sebster.commons.collections.Lists.filterAndMap;
 import static com.sebster.commons.collections.Lists.map;
+import static com.sebster.remarkable.cloudapi.RemarkablePath.path;
 import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER_TYPE;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
