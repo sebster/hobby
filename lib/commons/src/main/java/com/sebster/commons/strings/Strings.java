@@ -19,7 +19,7 @@ public class Strings {
 	}
 
 	public static boolean containsIgnoreCase(@NonNull String string, @NonNull String substring) {
-		return string.toLowerCase().contains(substring);
+		return string.toLowerCase().contains(substring.toLowerCase());
 	}
 
 	public static boolean startsWithIgnoreCase(@NonNull String string, @NonNull String prefix) {
