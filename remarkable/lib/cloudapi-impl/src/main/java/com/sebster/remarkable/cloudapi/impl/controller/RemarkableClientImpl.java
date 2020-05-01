@@ -24,9 +24,11 @@ import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
 import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class RemarkableClientImpl implements RemarkableClient {
 
 	private final @NonNull Clock clock;
@@ -34,6 +36,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 	private final @NonNull RemarkableApiClient apiClient;
 
 	@Override
+	@EqualsAndHashCode.Include
 	public UUID getId() {
 		return info.getClientId();
 	}
