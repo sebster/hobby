@@ -1,9 +1,11 @@
 package com.sebster.remarkable.cli.commands;
 
+import static com.sebster.commons.strings.Strings.isNotBlank;
 import static com.sebster.remarkable.cli.commands.completion.CommandCompleterBuilder.commandCompleter;
 
 import org.jline.builtins.Completers.SystemCompleter;
 
+import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cli.commands.completion.ClientsCompleter;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import picocli.CommandLine.Command;
@@ -25,18 +27,17 @@ public class ClientCommand implements Runnable {
 	@Parameters(
 			index = "0",
 			paramLabel = "client",
-			description = "The client (start of id, part of description).",
+			description = "The client (part of description, start of id).",
 			arity = "0..1"
-
 	)
 	private String selector;
 
 	@Override
 	public void run() {
-		if (selector != null) {
-			cli.doWithClient(selector.trim(), cli::selectClient);
+		if (isNotBlank(selector)) {
+			cli.selectClient(selector);
 		} else {
-			cli.doWithClient(cli::println);
+			cli.println(cli.getSelectedClient());
 		}
 	}
 

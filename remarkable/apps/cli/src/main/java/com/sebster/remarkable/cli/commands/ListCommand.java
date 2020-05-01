@@ -33,7 +33,7 @@ public class ListCommand implements Runnable {
 
 	@Override
 	public void run() {
-		cli.doWithClient(client -> printCollection(client.list()));
+		printCollection(cli.getSelectedClient().list());
 	}
 
 	private void printCollection(RemarkableCollection collection) {

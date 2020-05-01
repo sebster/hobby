@@ -1,14 +1,16 @@
 package com.sebster.remarkable.cloudapi;
 
+import static com.sebster.commons.collections.Lists.map;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toCollection;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
@@ -57,12 +59,16 @@ public final class RemarkablePath implements Iterable<String> {
 		return String.join("/", components);
 	}
 
-	public static RemarkablePath parse(String path) {
+	public static RemarkablePath parsePath(String path) {
 		return new RemarkablePath(
 				Stream.of(path.split("/"))
 						.filter(component -> !component.isEmpty())
-						.collect(Collectors.toCollection(ArrayList::new))
+						.collect(toCollection(ArrayList::new))
 		);
+	}
+
+	public static List<RemarkablePath> parsePaths(@NonNull Collection<String> paths) {
+		return map(paths, RemarkablePath::parsePath);
 	}
 
 	public static RemarkablePath path(@NonNull String name) {

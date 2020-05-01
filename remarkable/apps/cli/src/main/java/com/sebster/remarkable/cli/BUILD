@@ -22,6 +22,8 @@ java_library(
     ],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/collections",
+        "//lib/commons/src/main/java/com/sebster/commons/strings",
         "//remarkable/apps/cli/src/main/java/com/sebster/remarkable/cli/commands",
         "//remarkable/lib/cloudapi",
         "@maven//:info_picocli_picocli",

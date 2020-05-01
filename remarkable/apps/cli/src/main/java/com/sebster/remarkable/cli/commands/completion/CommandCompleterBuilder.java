@@ -1,5 +1,6 @@
 package com.sebster.remarkable.cli.commands.completion;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
@@ -17,18 +18,19 @@ import picocli.CommandLine.Model.CommandSpec;
 public class CommandCompleterBuilder {
 
 	private final @NonNull CommandSpec commandSpec;
-	private final @NonNull SystemCompleter completer;
+	private final @NonNull SystemCompleter systemCompleter;
 	private final @NonNull List<Completer> argumentCompleters = new ArrayList<>();
 
 	private CommandCompleterBuilder(Class<?> command) {
 		commandSpec = new CommandLine(command).getCommandSpec();
-		completer = new SystemCompleter();
-		completer.addAliases(Stream.of(commandSpec.aliases()).collect(toMap(alias -> alias, alias -> commandSpec.name())));
+		systemCompleter = new SystemCompleter();
+		systemCompleter.addAliases(Stream.of(commandSpec.aliases()).collect(toMap(identity(), alias -> commandSpec.name())));
 	}
 
 	public SystemCompleter build() {
-		commandSpec.names().forEach(name -> completer.add(name, new ArgumentCompleter(argumentCompleters)));
-		return completer;
+		ArgumentCompleter argumentCompleter = new ArgumentCompleter(argumentCompleters);
+		commandSpec.names().forEach(name -> systemCompleter.add(name, argumentCompleter));
+		return systemCompleter;
 	}
 
 	public static CommandCompleterBuilder commandCompleter(@NonNull Class<?> command) {

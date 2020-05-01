@@ -1,13 +1,7 @@
 package com.sebster.remarkable.cli.commands;
 
-import static com.sebster.commons.collections.Lists.map;
-
 import java.util.List;
 
-import com.sebster.remarkable.cloudapi.RemarkableClient;
-import com.sebster.remarkable.cloudapi.RemarkableItem;
-import com.sebster.remarkable.cloudapi.RemarkablePath;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -26,24 +20,18 @@ public class DeleteCommand implements Runnable {
 	private Cli cli;
 
 	@Parameters(
-			paramLabel = "file",
+			paramLabel = "item",
 			description = "The file or folder id or name.",
 			arity = "1..*"
 	)
-	private List<String> files;
+	private List<String> paths;
 
 	@Option(names = { "-r", "-R", "--recursive" }, description = "Recursively delete folders.")
 	private boolean recursive;
 
 	@Override
 	public void run() {
-		cli.doWithClient(client -> delete(client, files));
-	}
-
-	private void delete(RemarkableClient client, List<String> files) {
-		RemarkableRootFolder root = client.list();
-		List<RemarkableItem> items = map(files, file -> root.getItem(RemarkablePath.parse(file)));
-		client.delete(items, recursive);
+		cli.getSelectedClient().delete(cli.getItems(paths), recursive);
 	}
 
 }

@@ -9,6 +9,7 @@ java_library(
     ],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/strings",
         "//remarkable/lib/cloudapi",
         "@maven//:info_picocli_picocli",
         "@maven//:org_jline_jline",

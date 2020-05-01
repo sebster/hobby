@@ -1,14 +1,19 @@
 package com.sebster.remarkable.cli.commands;
 
+import static com.sebster.commons.collections.Lists.map;
+import static com.sebster.remarkable.cloudapi.RemarkablePath.parsePaths;
 import static org.jline.utils.AttributedStyle.BOLD;
 import static org.jline.utils.AttributedStyle.CYAN;
+import static org.jline.utils.AttributedStyle.DEFAULT;
 import static org.jline.utils.AttributedStyle.GREEN;
 import static org.jline.utils.AttributedStyle.RED;
+import static org.jline.utils.AttributedStyle.YELLOW;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
@@ -16,6 +21,7 @@ import org.jline.utils.AttributedStyle;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
+import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
+import picocli.CommandLine.IExecutionExceptionHandler;
+import picocli.CommandLine.ParseResult;
 
 @Command(
 		name = "",
@@ -46,27 +54,54 @@ import picocli.CommandLine.HelpCommand;
 		}
 )
 @RequiredArgsConstructor
-@Getter
-public class Cli implements Runnable {
+public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	private final @NonNull Terminal terminal;
-	private final @NonNull RemarkableClientManager clientManager;
-	private RemarkableClient client;
 
-	public Optional<RemarkableClient> getClient() {
-		return Optional.ofNullable(client);
-	}
+	@Getter
+	private final @NonNull RemarkableClientManager clientManager;
+
+	private RemarkableClient client;
 
 	public void run() {
 		println(new CommandLine(this).getUsageMessage());
 	}
 
-	public void selectClient(@NonNull RemarkableClient client) {
+	@Override
+	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) {
+		println(withErrorStyle(e.getMessage()));
+		return 1;
+	}
+
+	public void select(@NonNull RemarkableClient client) {
 		this.client = client;
 	}
 
-	public void deselectClient() {
+	public void selectClient(@NonNull String selector) {
+		select(getClient(selector));
+	}
+
+	public void deselect(@NonNull RemarkableClient client) {
+		if (client.equals(this.client)) {
+			deselectSelectedClient();
+		}
+	}
+
+	public void deselectSelectedClient() {
 		this.client = null;
+	}
+
+	public RemarkableClient getSelectedClient() {
+		return Optional.ofNullable(client).orElseThrow(() -> new RuntimeException("No client selected."));
+	}
+
+	public RemarkableClient getClient(String optionalSelector) {
+		return optionalSelector != null ? clientManager.getClient(optionalSelector.trim()) : getSelectedClient();
+	}
+
+	public List<RemarkableItem> getItems(@NonNull Collection<String> paths) {
+		RemarkableCollection root = getSelectedClient().list();
+		return map(parsePaths(paths), root::getItem);
 	}
 
 	public void println(@NonNull Object object) {
@@ -102,15 +137,7 @@ public class Cli implements Runnable {
 	}
 
 	public String withErrorStyle(@NonNull String message) {
-		return "Error: " + message;
-	}
-
-	public void doWithClient(@NonNull Consumer<RemarkableClient> action) {
-		getClient().ifPresentOrElse(action, () -> println(withErrorStyle("No client selected.")));
-	}
-
-	public void doWithClient(@NonNull String selector, @NonNull Consumer<RemarkableClient> action) {
-		clientManager.findClient(selector).ifPresentOrElse(action, () -> println(withErrorStyle("Unknown client: " + selector)));
+		return withStyle(DEFAULT.foreground(YELLOW), "Error: " + message);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.sebster.remarkable.cli;
 
+import static com.sebster.commons.collections.Lists.filter;
 import static java.util.Arrays.copyOfRange;
 import static org.jline.builtins.Builtins.Command.TTOP;
 import static org.jline.builtins.Widgets.CmdLine.DescriptionType.COMMAND;
@@ -19,7 +20,6 @@ import org.jline.builtins.Widgets.TailTipWidgets.TipType;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.MaskingCallback;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
 import org.jline.reader.UserInterruptException;
@@ -32,6 +32,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cli.commands.Cli;
 import com.sebster.remarkable.cli.commands.ClientCommand;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
@@ -76,20 +77,16 @@ public class RemarkableCli implements CommandLineRunner {
 		new Widgets.TailTipWidgets(reader, descriptionGenerator::commandDescription, 5, TipType.COMPLETER);
 
 		// Start the shell and process input until the user quits with Ctl-D.
-		String line;
 		while (true) {
 			try {
-				line = reader.readLine(cli.getPrompt(), null, (MaskingCallback) null, null);
-				if (line.matches("^\\s*#.*")) {
-					continue;
-				}
-				ParsedLine pl = reader.getParser().parse(line, 0);
-				String[] arguments = pl.words().toArray(new String[0]);
-				String command = Parser.getCommand(pl.word());
+				reader.readLine(cli.getPrompt());
+				ParsedLine parsedLine = reader.getParsedLine();
+				String[] arguments = filter(parsedLine.words(), Strings::isNotBlank).toArray(new String[0]);
+				String command = Parser.getCommand(parsedLine.word());
 				if (builtins.hasCommand(command)) {
 					builtins.execute(command, copyOfRange(arguments, 1, arguments.length), System.in, System.out, System.err);
 				} else {
-					new CommandLine(cli).execute(arguments);
+					new CommandLine(cli).setExecutionExceptionHandler(cli).execute(arguments);
 				}
 			} catch (HelpException e) {
 				HelpException.highlight(e.getMessage(), HelpException.defaultStyle()).print(terminal);

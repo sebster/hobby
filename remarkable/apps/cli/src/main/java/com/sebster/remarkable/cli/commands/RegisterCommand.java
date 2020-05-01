@@ -29,7 +29,7 @@ public class RegisterCommand implements Runnable {
 	public void run() {
 		RemarkableClient client = cli.getClientManager().register(code, description);
 		cli.println("Registered " + client);
-		cli.selectClient(client);
+		cli.select(client);
 	}
 
 }
