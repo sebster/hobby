@@ -23,7 +23,7 @@ public class MkdirCommand implements Runnable {
 			index = "0",
 			paramLabel = "folder",
 			description = "The new folder(s) to create.",
-			arity = "0..*"
+			arity = "1..*"
 	)
 	private List<String> paths;
 
