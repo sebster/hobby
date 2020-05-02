@@ -68,7 +68,10 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	@Override
-	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) {
+	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) throws Exception {
+		if (e.getMessage() == null) {
+			throw e;
+		}
 		println(withErrorStyle(e.getMessage()));
 		return 1;
 	}
