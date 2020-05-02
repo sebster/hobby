@@ -45,10 +45,9 @@ public class RemarkableItemCompleter implements Completer {
 			}
 			RemarkablePath parentPath = startPath.getParent().orElse(null);
 			RemarkableCollection parent = parentPath != null ? root.findFolder(parentPath).orElse(null) : root;
-			if (parent == null) {
-				return;
+			if (parent != null) {
+				completeCollection(parent, startPath.getName(), candidates);
 			}
-			completeCollection(parent, startPath.getName(), candidates);
 		});
 	}
 
