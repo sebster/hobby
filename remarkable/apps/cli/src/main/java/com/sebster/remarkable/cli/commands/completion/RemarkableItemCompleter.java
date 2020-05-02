@@ -42,14 +42,13 @@ public class RemarkableItemCompleter implements Completer {
 			if (start.endsWith("/")) {
 				root.findFolder(startPath).ifPresent(folder -> completeCollection(folder, "", candidates));
 				return;
-			} else {
-				RemarkablePath parentPath = startPath.getParent().orElse(null);
-				RemarkableCollection parent = parentPath != null ? root.findFolder(parentPath).orElse(null) : root;
-				if (parent == null) {
-					return;
-				}
-				completeCollection(parent, startPath.getName(), candidates);
 			}
+			RemarkablePath parentPath = startPath.getParent().orElse(null);
+			RemarkableCollection parent = parentPath != null ? root.findFolder(parentPath).orElse(null) : root;
+			if (parent == null) {
+				return;
+			}
+			completeCollection(parent, startPath.getName(), candidates);
 		});
 	}
 
