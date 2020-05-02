@@ -47,8 +47,12 @@ public abstract class RemarkableItem {
 		return Optional.ofNullable(parent);
 	}
 
+	public boolean hasType(@NonNull RemarkableItemType type) {
+		return getType() == type;
+	}
+
 	public boolean isFolder() {
-		return getType() == FOLDER;
+		return hasType(FOLDER);
 	}
 
 	public RemarkableFolder asFolder() {
@@ -56,7 +60,7 @@ public abstract class RemarkableItem {
 	}
 
 	public boolean isDocument() {
-		return getType() == DOCUMENT;
+		return hasType(DOCUMENT);
 	}
 
 	public RemarkableDocument asDocument() {
