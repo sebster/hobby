@@ -1,6 +1,13 @@
 package com.sebster.remarkable.cli.commands;
 
+import static com.sebster.remarkable.cli.commands.completion.CommandCompleterBuilder.commandCompleter;
+
+import org.jline.builtins.Completers;
+
+import com.sebster.remarkable.cli.commands.completion.RemarkableClientCompleter;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
+import com.sebster.remarkable.cloudapi.RemarkableClientManager;
+import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
@@ -30,6 +37,12 @@ public class UnregisterCommand implements Runnable {
 		cli.getClientManager().unregister(client);
 		cli.println("Unregistered " + client);
 		cli.deselect(client);
+	}
+
+	public static Completers.SystemCompleter completer(@NonNull RemarkableClientManager clientManager) {
+		return commandCompleter(UnregisterCommand.class)
+				.argumentCompleter(new RemarkableClientCompleter(clientManager))
+				.build();
 	}
 
 }

@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.jline.builtins.Builtins;
-import org.jline.builtins.Completers;
+import org.jline.builtins.Completers.SystemCompleter;
 import org.jline.builtins.Options.HelpException;
 import org.jline.builtins.Widgets;
 import org.jline.builtins.Widgets.CmdDesc;
@@ -34,7 +34,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cli.commands.Cli;
-import com.sebster.remarkable.cli.commands.ClientCommand;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -57,14 +56,14 @@ public class RemarkableCli implements CommandLineRunner {
 		builtins.rename(TTOP, "top");
 		builtins.alias("zle", "widget");
 		builtins.alias("bindkey", "keymap");
-		Completers.SystemCompleter systemCompleter = builtins.compileCompleters();
+		SystemCompleter systemCompleter = builtins.compileCompleters();
 
 		// Set up picocli commands.
 		Cli cli = new Cli(terminal, clientManager);
 		CommandLine cmd = new CommandLine(cli);
 		PicocliCommands picocliCommands = new PicocliCommands(workDir, cmd);
 		systemCompleter.add(picocliCommands.compileCompleters());
-		systemCompleter.add(ClientCommand.completer(clientManager));
+		systemCompleter.add(cli.completers());
 		systemCompleter.compile();
 		LineReader reader = LineReaderBuilder.builder()
 				.terminal(terminal)

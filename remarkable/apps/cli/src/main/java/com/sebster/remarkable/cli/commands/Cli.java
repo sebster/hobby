@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.jline.builtins.Completers.SystemCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
@@ -75,6 +76,15 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 		return 1;
 	}
 
+	public SystemCompleter completers() {
+		SystemCompleter systemCompleter = new SystemCompleter();
+		systemCompleter.add(ClientCommand.completer(clientManager));
+		systemCompleter.add(MkdirCommand.completer(this::findClient));
+		systemCompleter.add(DeleteCommand.completer(this::findClient));
+		systemCompleter.add(UnregisterCommand.completer(clientManager));
+		return systemCompleter;
+	}
+
 	public void select(@NonNull RemarkableClient client) {
 		this.client = client;
 	}
@@ -99,6 +109,10 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	public RemarkableClient getClient(String optionalSelector) {
 		return optionalSelector != null ? clientManager.getClient(optionalSelector.trim()) : getSelectedClient();
+	}
+
+	public Optional<RemarkableClient> findClient(String optionalSelector) {
+		return optionalSelector != null ? clientManager.findClient(optionalSelector.trim()) : Optional.ofNullable(client);
 	}
 
 	public List<RemarkableItem> getItems(@NonNull Collection<String> paths) {
