@@ -63,17 +63,18 @@ public class RemarkableClientImpl implements RemarkableClient {
 		Map<RemarkablePath, ItemInfoDto> folderInfos = new LinkedHashMap<>();
 		for (RemarkablePath path : paths) {
 			// Navigate the path prefix until the component no longer exists.
-			RemarkableCollection collection = parent != null ? parent : list();
-			while (path != null && collection.hasFolder(path.getHead())) {
-				parent = collection.getFolder(path.getHead());
-				collection = parent;
+			RemarkableCollection parentCollection = parent != null ? parent : list();
+			RemarkableFolder newParent = null;
+			while (path != null && parentCollection.hasFolder(path.getHead())) {
+				newParent = parentCollection.getFolder(path.getHead());
+				parentCollection = newParent;
 				path = path.getTail().orElse(null);
 			}
 
 			// Create the folder creation request DTOs.
 			Instant modificationTime = clock.instant();
-			RemarkablePath parentPath = parent != null ? parent.getPath() : null;
-			UUID parentId = parent != null ? parent.getId() : null;
+			RemarkablePath parentPath = newParent != null ? newParent.getPath() : null;
+			UUID parentId = newParent != null ? newParent.getId() : null;
 			while (path != null) {
 				UUID folderId = randomUUID();
 				RemarkablePath folderPath = path(parentPath, path.getHead());
