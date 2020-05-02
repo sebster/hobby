@@ -23,17 +23,19 @@ import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
 import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class RemarkableClientImpl implements RemarkableClient {
 
 	private final @NonNull Clock clock;
 	private final @NonNull RemarkableClientInfo info;
 	private final @NonNull RemarkableApiClient apiClient;
+
+	private RemarkableRootFolder cachedRoot;
 
 	@Override
 	@EqualsAndHashCode.Include
@@ -48,8 +50,12 @@ public class RemarkableClientImpl implements RemarkableClient {
 
 	@Override
 	public RemarkableRootFolder list() {
+		if (cachedRoot != null) {
+			return cachedRoot;
+		}
 		String sessionToken = apiClient.login(info.getLoginToken());
-		return new ItemInfoDtoListUnmarshaller(apiClient.list(sessionToken, true)).unmarshal();
+		cachedRoot = new ItemInfoDtoListUnmarshaller(apiClient.list(sessionToken, true)).unmarshal();
+		return cachedRoot;
 	}
 
 	@Override
@@ -91,6 +97,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 		if (!folderInfos.isEmpty()) {
 			String sessionToken = apiClient.login(info.getLoginToken());
 			apiClient.updateMetadata(sessionToken, folderInfos.values()).forEach(ErrorDto::throwOnError);
+			clearCaches();
 		}
 	}
 
@@ -112,7 +119,13 @@ public class RemarkableClientImpl implements RemarkableClient {
 		if (!itemsToDelete.isEmpty()) {
 			String sessionToken = apiClient.login(info.getLoginToken());
 			apiClient.delete(sessionToken, map(itemsToDelete, ItemInfoDto::fromItem)).forEach(ErrorDto::throwOnError);
+			clearCaches();
 		}
+	}
+
+	@Override
+	public void clearCaches() {
+		this.cachedRoot = null;
 	}
 
 	@Override

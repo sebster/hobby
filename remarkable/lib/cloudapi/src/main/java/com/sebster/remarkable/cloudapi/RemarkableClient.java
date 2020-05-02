@@ -44,4 +44,6 @@ public interface RemarkableClient {
 
 	void delete(@NonNull Collection<? extends RemarkableItem> items, boolean recursive);
 
+	void clearCaches();
+
 }
