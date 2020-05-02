@@ -1,5 +1,7 @@
 package com.sebster.remarkable.cloudapi;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +16,14 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 	List<RemarkableFolder> getFolders();
 
 	List<RemarkableDocument> getDocuments();
+
+	default List<RemarkableItem> getItems() {
+		return stream().collect(toList());
+	}
+
+	default List<RemarkableItem> getItems(RemarkableItemType type) {
+		return type == null ? getItems() : stream().filter(item -> item.hasType(type)).collect(toList());
+	}
 
 	default boolean isEmpty() {
 		return getFolders().isEmpty() && getDocuments().isEmpty();
@@ -149,6 +159,11 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 				getFolders().stream().flatMap(RemarkableFolder::recurse),
 				getDocuments().stream()
 		);
+	}
+
+	default Stream<RemarkableItem> recurse(RemarkableItemType itemType) {
+		Stream<RemarkableItem> allItems = recurse();
+		return itemType != null ? allItems.filter(item -> item.hasType(itemType)) : allItems;
 	}
 
 }
