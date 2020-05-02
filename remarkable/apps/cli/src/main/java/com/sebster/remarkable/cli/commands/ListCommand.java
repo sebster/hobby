@@ -5,6 +5,7 @@ import static java.time.ZoneId.systemDefault;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
+import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import picocli.CommandLine.Command;
@@ -33,7 +34,9 @@ public class ListCommand implements Runnable {
 
 	@Override
 	public void run() {
-		printCollection(cli.getSelectedClient().list());
+		RemarkableClient client = cli.getSelectedClient();
+		client.clearCaches();
+		printCollection(client.list());
 	}
 
 	private void printCollection(RemarkableCollection collection) {
