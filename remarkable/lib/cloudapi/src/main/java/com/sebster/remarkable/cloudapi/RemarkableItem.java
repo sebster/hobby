@@ -71,18 +71,15 @@ public abstract class RemarkableItem {
 		return Optional.ofNullable(downloadLink);
 	}
 
-	public RemarkableItem doWithFolder(Consumer<RemarkableFolder> action) {
+	public void doWithItem(
+			@NonNull Consumer<RemarkableFolder> folderAction,
+			@NonNull Consumer<RemarkableDocument> documentAction
+	) {
 		if (isFolder()) {
-			action.accept(this.asFolder());
+			folderAction.accept(this.asFolder());
+		} else if (isDocument()) {
+			documentAction.accept(this.asDocument());
 		}
-		return this;
-	}
-
-	public RemarkableItem doWithDocument(Consumer<RemarkableDocument> action) {
-		if (isDocument()) {
-			action.accept(this.asDocument());
-		}
-		return this;
 	}
 
 	@Override
