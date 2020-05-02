@@ -1,6 +1,7 @@
 package com.sebster.remarkable.cli.commands;
 
 import static com.sebster.commons.uuids.Uuids.isUuid;
+import static com.sebster.remarkable.cloudapi.RemarkablePath.parsePath;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class DownloadCommand implements Runnable {
 			RemarkableItem item;
 			String itemDisplay;
 			if (!isUuid(file)) {
-				item = client.list(RemarkablePath.parsePath(file));
+				item = client.list(parsePath(file));
 				itemDisplay = cli.withItemStyle(item);
 			} else {
 				item = client.list(UUID.fromString(file));
