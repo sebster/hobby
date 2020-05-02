@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @AllArgsConstructor
-public class ClientsCompleter implements Completer {
+public class RemarkableClientCompleter implements Completer {
 
 	private final @NonNull RemarkableClientManager clientManager;
 
