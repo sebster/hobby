@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.boot.loader.tools.Libraries;
 import org.springframework.boot.loader.tools.Library;
