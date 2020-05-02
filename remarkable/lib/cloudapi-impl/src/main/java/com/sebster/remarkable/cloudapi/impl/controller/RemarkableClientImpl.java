@@ -67,10 +67,11 @@ public class RemarkableClientImpl implements RemarkableClient {
 			// Create the folder creation request DTOs.
 			Instant modificationTime = clock.instant();
 			RemarkablePath parentPath = parent != null ? parent.getPath() : null;
+			UUID parentId = parent != null ? parent.getId() : null;
 			while (path != null) {
 				UUID folderId = randomUUID();
-				UUID parentId = parentPath != null ? folderInfos.get(parentPath).getId() : null;
-				folderInfos.putIfAbsent(path(parentPath, path.getHead()),
+				RemarkablePath folderPath = path(parentPath, path.getHead());
+				folderInfos.putIfAbsent(folderPath,
 						ItemInfoDto.builder()
 								.id(folderId)
 								.version(1)
@@ -80,7 +81,8 @@ public class RemarkableClientImpl implements RemarkableClient {
 								.parentId(parentId)
 								.build()
 				);
-				parentPath = path(parentPath, path.getHead());
+				parentPath = folderPath;
+				parentId = folderInfos.get(parentPath).getId();
 				path = path.getTail().orElse(null);
 			}
 		}
