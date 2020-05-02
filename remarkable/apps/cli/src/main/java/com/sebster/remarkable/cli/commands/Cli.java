@@ -35,11 +35,10 @@ import picocli.CommandLine.ParseResult;
 @Command(
 		name = "",
 		description = {
-				"reMarkable Cloud API CLI. " +
-						"Hit @|magenta <TAB>|@ to see available commands.",
-				"Type `@|bold,yellow keymap ^[s tailtip-toggle|@`, " +
-						"then hit @|magenta ALT-S|@ to toggle tailtips.",
-				"" },
+				"reMarkable Cloud API CLI. Hit @|magenta <TAB>|@ to see available commands.",
+				"Type `@|bold,yellow keymap ^[s tailtip-toggle|@`, then hit @|magenta ALT-S|@ to toggle tailtips.",
+				""
+		},
 		footer = { "", "Press Ctl-D to exit." },
 		subcommands = {
 				ClientsCommand.class,

@@ -7,6 +7,7 @@ import org.jline.builtins.Completers.SystemCompleter;
 
 import com.sebster.remarkable.cli.commands.completion.RemarkableClientCompleter;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
+import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
@@ -40,7 +41,7 @@ public class ClientCommand implements Runnable {
 		}
 	}
 
-	public static SystemCompleter completer(RemarkableClientManager clientManager) {
+	public static SystemCompleter completer(@NonNull RemarkableClientManager clientManager) {
 		return commandCompleter(ClientCommand.class)
 				.argumentCompleter(new RemarkableClientCompleter(clientManager))
 				.build();

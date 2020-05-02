@@ -26,7 +26,7 @@ public class ListCommand implements Runnable {
 	@ParentCommand
 	private Cli cli;
 
-	@Option(names = { "-l", "--long" }, description = "Long format: id, version, modification time, item.")
+	@Option(names = { "-l", "--long" }, description = "Use long format: id, version, modification time, item.")
 	private boolean longFormat;
 
 	@Option(names = { "-R", "--recursive" }, description = "Recurse into subfolders.")

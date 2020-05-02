@@ -18,7 +18,7 @@ import picocli.CommandLine.ParentCommand;
 		name = "download",
 		aliases = "get",
 		mixinStandardHelpOptions = true,
-		description = "Download a file or folder",
+		description = "Download a document or folder",
 		version = "1.0"
 )
 public class DownloadCommand implements Runnable {
@@ -27,15 +27,15 @@ public class DownloadCommand implements Runnable {
 	private Cli cli;
 
 	@Parameters(
-			paramLabel = "file",
-			description = "The file or folder id or name.",
+			paramLabel = "item",
+			description = "The document(s) or folder(s) to download.",
 			arity = "1..*"
 	)
-	private List<String> files;
+	private List<String> items;
 
 	@Override
 	public void run() {
-		files.forEach(file -> download(cli.getSelectedClient(), file));
+		items.forEach(file -> download(cli.getSelectedClient(), file));
 	}
 
 	private void download(RemarkableClient client, String file) {

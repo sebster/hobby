@@ -11,7 +11,7 @@ import picocli.CommandLine.ParentCommand;
 		name = "delete",
 		aliases = "rm",
 		mixinStandardHelpOptions = true,
-		description = "Delete a file or folder",
+		description = "Delete a document or folder",
 		version = "1.0"
 )
 public class DeleteCommand implements Runnable {
@@ -21,7 +21,7 @@ public class DeleteCommand implements Runnable {
 
 	@Parameters(
 			paramLabel = "item",
-			description = "The file or folder id or name.",
+			description = "The documents(s) or folder(s) to delete.",
 			arity = "1..*"
 	)
 	private List<String> paths;
