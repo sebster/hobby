@@ -67,6 +67,10 @@ public final class RemarkablePath implements Iterable<String> {
 		);
 	}
 
+	public static boolean isNonEmptyPath(String path) {
+		return Stream.of(path.split("/")).anyMatch(component -> !component.isEmpty());
+	}
+
 	public static List<RemarkablePath> parsePaths(@NonNull Collection<String> paths) {
 		return map(paths, RemarkablePath::parsePath);
 	}

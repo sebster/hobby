@@ -1,6 +1,7 @@
 package com.sebster.remarkable.cli.commands.completion;
 
 import static com.sebster.commons.collections.Lists.filter;
+import static com.sebster.remarkable.cloudapi.RemarkablePath.isNonEmptyPath;
 import static com.sebster.remarkable.cloudapi.RemarkablePath.parsePath;
 
 import java.util.List;
@@ -33,6 +34,10 @@ public class RemarkableItemCompleter implements Completer {
 		String start = line.word().substring(0, line.wordCursor());
 		clientProvider.apply(null).ifPresent(client -> {
 			RemarkableRootFolder root = client.list();
+			if (!isNonEmptyPath(start)) {
+				completeCollection(root, "", candidates);
+				return;
+			}
 			RemarkablePath startPath = parsePath(start);
 			if (start.endsWith("/")) {
 				root.findFolder(startPath).ifPresent(folder -> completeCollection(folder, "", candidates));
