@@ -23,6 +23,7 @@ import org.jline.utils.AttributedStyle;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
+import com.sebster.remarkable.cloudapi.RemarkableException;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import lombok.Getter;
 import lombok.NonNull;
@@ -71,10 +72,12 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	@Override
-	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) {
-		println(withErrorStyle(e.getMessage()));
-		log.debug(e.getMessage(), e);
-		return 1;
+	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) throws Exception {
+		if (e instanceof RemarkableException) {
+			println(withErrorStyle(e.getMessage()));
+			return 1;
+		}
+		throw e;
 	}
 
 	public SystemCompleter completers() {
