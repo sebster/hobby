@@ -13,17 +13,12 @@ import picocli.CommandLine.Parameters;
 @Command(name = "select", description = "Select a client")
 public class SelectCommand extends BaseCommand {
 
-	@Parameters(
-			index = "0",
-			paramLabel = "client",
-			description = "The client to select.",
-			arity = "1"
-	)
-	private String description;
+	@Parameters(index = "0", paramLabel = "client", description = "The client to select.")
+	private String clientDescription;
 
 	@Override
 	public void run() {
-		cli.selectClient(description);
+		cli.selectClient(clientDescription);
 	}
 
 	public static SystemCompleter completer(@NonNull RemarkableClientManager clientManager) {

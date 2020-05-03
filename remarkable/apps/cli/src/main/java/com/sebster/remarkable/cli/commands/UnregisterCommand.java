@@ -11,20 +11,15 @@ import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
-@Command(name = "unregister", description = "Unregister the selected or specified client")
+@Command(name = "unregister", description = "Unregister a client or the selected client")
 public class UnregisterCommand extends BaseCommand {
 
-	@Parameters(
-			index = "0",
-			paramLabel = "client",
-			description = "The client to unregister.",
-			arity = "0..1"
-	)
-	private String description;
+	@Parameters(index = "0", paramLabel = "client", description = "The client to unregister.", arity = "0..1")
+	private String clientDescription;
 
 	@Override
 	public void run() {
-		RemarkableClient client = cli.getClient(description);
+		RemarkableClient client = cli.getClient(clientDescription);
 		cli.getClientManager().unregister(client);
 		cli.deselect(client);
 	}

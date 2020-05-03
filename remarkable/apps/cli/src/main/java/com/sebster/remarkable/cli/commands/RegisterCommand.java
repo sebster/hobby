@@ -13,10 +13,10 @@ import picocli.CommandLine.Parameters;
 )
 public class RegisterCommand extends BaseCommand {
 
-	@Parameters(index = "0", description = "The registration code.")
+	@Parameters(index = "0", paramLabel = "code", description = "The registration code.")
 	private String code;
 
-	@Parameters(index = "1", description = "The client description.")
+	@Parameters(index = "1", paramLabel = "description", description = "The client description.")
 	private String description;
 
 	@Override
