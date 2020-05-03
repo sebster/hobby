@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.sebster.remarkable.cloudapi.RemarkableException;
 import lombok.NonNull;
 
 public interface RemarkableClientStore {
@@ -14,7 +15,7 @@ public interface RemarkableClientStore {
 		return loadClients().stream()
 				.filter(client -> Objects.equals(client.getClientId(), clientId))
 				.findFirst()
-				.orElseThrow(() -> new IllegalStateException("No client with id: " + clientId));
+				.orElseThrow(() -> new RemarkableException("No client with id: " + clientId));
 	}
 
 	void addClient(@NonNull RemarkableClientInfo clientInfo);

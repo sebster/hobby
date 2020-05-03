@@ -70,34 +70,38 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	@Override
 	public void unregister(@NonNull String loginToken) {
 		log.debug("unregister");
-		restTemplate.exchange(
+		handleClientError(() -> restTemplate.exchange(
 				DEREGISTRATION_URL,
 				POST,
 				emptyRequest(loginToken),
 				Void.class
-		);
-
+		), e -> new RemarkableException("Could not unregister: " + nullSafeTrim(e.getResponseBodyAsString())));
 	}
 
 	@Override
 	public String login(@NonNull String authToken) {
 		return sessionTokens.computeIfAbsent(authToken, token -> {
 			log.debug("login");
-			return getBody(restTemplate.exchange(TOKEN_URL, POST, emptyRequest(token), String.class));
+			return getBody(handleClientError(() -> restTemplate.exchange(
+					TOKEN_URL,
+					POST,
+					emptyRequest(token),
+					String.class
+			), e -> new RemarkableException("Could not authenticate: " + nullSafeTrim(e.getResponseBodyAsString()))));
 		});
 	}
 
 	@Override
 	public List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl) {
 		log.debug("list all: includeBlobUrl={}", includeBlobUrl);
-		List<ItemInfoJsonDto> list = getBody(restTemplate.exchange(
+		List<ItemInfoJsonDto> list = getBody(handleClientError(() -> restTemplate.exchange(
 				getStorageUrlBuilder(sessionToken, "docs")
 						.queryParam("withBlob", includeBlobUrl)
 						.build().toUri(),
 				GET,
 				emptyRequest(sessionToken),
 				ITEM_LIST_TYPE
-		));
+		), e -> new RemarkableException("Could not list items: " + nullSafeTrim(e.getResponseBodyAsString()))));
 		log.debug("list all: {} items", list.size());
 		return map(list, ItemInfoJsonDto::unmarshal);
 	}
@@ -105,36 +109,38 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	@Override
 	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos) {
 		log.debug("updateMetadata: items={}", itemInfos);
-		return map(getBody(restTemplate.exchange(
+		List<ItemInfoJsonDto> results = getBody(handleClientError(() -> restTemplate.exchange(
 				getStorageUrlBuilder(sessionToken, "upload/update-status").build().toUri(),
 				PUT,
 				request(map(itemInfos, ItemInfoJsonDto::marshal), sessionToken),
 				ITEM_LIST_TYPE
-		)), ItemInfoJsonDto::unmarshal);
+		), e -> new RemarkableException("Could not update items: " + nullSafeTrim(e.getResponseBodyAsString()))));
+		return map(results, ItemInfoJsonDto::unmarshal);
 	}
 
 	@Override
 	public List<ItemInfoDto> delete(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos) {
 		log.debug("delete: items={}", itemInfos);
-		return map(getBody(restTemplate.exchange(
+		List<ItemInfoJsonDto> results = getBody(handleClientError(() -> restTemplate.exchange(
 				getStorageUrlBuilder(sessionToken, "delete").build().toUri(),
 				PUT,
 				request(map(itemInfos, ItemInfoJsonDto::marshalIdAndVersionOnly), sessionToken),
 				ITEM_LIST_TYPE
-		)), ItemInfoJsonDto::unmarshal);
+		), e -> new RemarkableException("Could not delete items: " + nullSafeTrim(e.getResponseBodyAsString()))));
+		return map(results, ItemInfoJsonDto::unmarshal);
 	}
 
 	private String getStorageHost(String sessionToken) {
 		return storageHosts.computeIfAbsent(sessionToken, token -> {
 			log.debug("getStorageHost");
-			StorageHostResponseJsonDto response = getBody(restTemplate.exchange(
+			StorageHostResponseJsonDto response = getBody(handleClientError(() -> restTemplate.exchange(
 					STORAGE_DISCOVERY_URL,
 					GET,
 					emptyRequest(sessionToken),
 					StorageHostResponseJsonDto.class
-			));
+			), e -> new RemarkableException("Could not get storage host: " + nullSafeTrim(e.getResponseBodyAsString()))));
 			if (!"OK".equalsIgnoreCase(response.getStatus())) {
-				throw new RuntimeException("Storage host unavailable: status=" + response.getStatus());
+				throw new RemarkableException("Storage host not available: status=" + response.getStatus());
 			}
 			log.debug("getStorageHost: {}", response.getHost());
 			return response.getHost();
