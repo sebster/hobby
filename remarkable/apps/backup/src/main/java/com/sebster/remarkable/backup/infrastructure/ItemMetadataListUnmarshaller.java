@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableCollectionBuilder;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
@@ -19,10 +20,11 @@ import lombok.NonNull;
 @AllArgsConstructor
 class ItemMetadataListUnmarshaller {
 
+	private final @NonNull RemarkableClient client;
 	private final @NonNull Collection<ItemMetadata> itemMetadata;
 
 	RemarkableRoot unmarshal() {
-		RemarkableCollectionBuilder<RemarkableRoot> rootBuilder = RemarkableRoot.builder();
+		RemarkableCollectionBuilder<RemarkableRoot> rootBuilder = RemarkableRoot.builder(client);
 		unmarshalIntoCollection(rootBuilder);
 		return rootBuilder.build();
 	}

@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
+import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
@@ -47,7 +48,8 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 
 	@Override
 	public RemarkableRoot list(@NonNull UUID clientId) {
-		return new ItemMetadataListUnmarshaller(loadMetadata(clientId)).unmarshal();
+		RemarkableClient client = new RemarkableBackupClientImpl(clientId, this);
+		return new ItemMetadataListUnmarshaller(client, loadMetadata(clientId)).unmarshal();
 	}
 
 	@Override

@@ -2,20 +2,25 @@ package com.sebster.remarkable.cloudapi;
 
 import static com.sebster.remarkable.cloudapi.RemarkablePath.empty;
 import static java.util.Collections.unmodifiableList;
-import static lombok.AccessLevel.PACKAGE;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 
-@NoArgsConstructor(access = PACKAGE)
 public class RemarkableRoot implements RemarkableCollection {
+
+	@Getter
+	private final RemarkableClient client;
 
 	private final List<RemarkableFolder> folders = new ArrayList<>();
 	private final List<RemarkableDocument> documents = new ArrayList<>();
+
+	private RemarkableRoot(@NonNull RemarkableClient client) {
+		this.client = client;
+	}
 
 	@Override
 	public RemarkableCollection getParent() {
@@ -62,8 +67,8 @@ public class RemarkableRoot implements RemarkableCollection {
 		return "[Root]";
 	}
 
-	public static RemarkableCollectionBuilder<RemarkableRoot> builder() {
-		return new RemarkableRootBuilder(new RemarkableRoot());
+	public static RemarkableCollectionBuilder<RemarkableRoot> builder(@NonNull RemarkableClient client) {
+		return new RemarkableRootBuilder(new RemarkableRoot(client));
 	}
 
 	public static class RemarkableRootBuilder extends RemarkableCollectionBuilder<RemarkableRoot> {

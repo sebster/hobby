@@ -53,7 +53,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 			return cachedRoot;
 		}
 		String sessionToken = apiClient.login(info.getLoginToken());
-		cachedRoot = new ItemInfoDtoListUnmarshaller(apiClient.list(sessionToken, true)).unmarshal();
+		cachedRoot = new ItemInfoDtoListUnmarshaller(this, apiClient.list(sessionToken, true)).unmarshal();
 		return cachedRoot;
 	}
 

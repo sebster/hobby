@@ -45,6 +45,10 @@ public abstract class RemarkableItem {
 		this.downloadLink = downloadLink;
 	}
 
+	public RemarkableClient getClient() {
+		return parent.getClient();
+	}
+
 	public RemarkableCollection getParent() {
 		return parent;
 	}

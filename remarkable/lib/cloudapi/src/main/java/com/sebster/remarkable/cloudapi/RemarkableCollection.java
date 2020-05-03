@@ -14,6 +14,8 @@ import lombok.NonNull;
 
 public interface RemarkableCollection extends Iterable<RemarkableItem> {
 
+	RemarkableClient getClient();
+
 	List<RemarkableFolder> getFolders();
 
 	List<RemarkableDocument> getDocuments();
