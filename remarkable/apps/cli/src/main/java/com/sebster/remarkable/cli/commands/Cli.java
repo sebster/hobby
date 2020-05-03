@@ -47,6 +47,7 @@ import picocli.CommandLine.ParseResult;
 				UnregisterCommand.class,
 				ClientsCommand.class,
 				SelectCommand.class,
+				DeselectCommand.class,
 				ListCommand.class,
 				MkdirCommand.class,
 				DownloadCommand.class,
