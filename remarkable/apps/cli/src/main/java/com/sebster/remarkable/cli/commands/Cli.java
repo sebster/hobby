@@ -20,6 +20,7 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import com.sebster.remarkable.cli.commands.completion.CompletionContext;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
@@ -56,7 +57,7 @@ import picocli.CommandLine.ParseResult;
 		}
 )
 @RequiredArgsConstructor
-public class Cli implements Runnable, IExecutionExceptionHandler {
+public class Cli implements Runnable, IExecutionExceptionHandler, CompletionContext {
 
 	private final @NonNull Terminal terminal;
 
@@ -81,10 +82,10 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	public SystemCompleter completers() {
 		SystemCompleter systemCompleter = new SystemCompleter();
-		systemCompleter.add(SelectCommand.completer(clientManager));
-		systemCompleter.add(MkdirCommand.completer(this::findClient));
-		systemCompleter.add(RmCommand.completer(this::findClient));
-		systemCompleter.add(UnregisterCommand.completer(clientManager));
+		systemCompleter.add(SelectCommand.completer(this));
+		systemCompleter.add(MkdirCommand.completer(this));
+		systemCompleter.add(RmCommand.completer(this));
+		systemCompleter.add(UnregisterCommand.completer(this));
 		return systemCompleter;
 	}
 
@@ -102,6 +103,12 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 		}
 	}
 
+	@Override
+	public boolean hasSelectedClient() {
+		return selectedClient != null;
+	}
+
+	@Override
 	public RemarkableClient getSelectedClient() {
 		return Optional.ofNullable(selectedClient).orElseThrow(() -> new RemarkableException("No client selected."));
 	}

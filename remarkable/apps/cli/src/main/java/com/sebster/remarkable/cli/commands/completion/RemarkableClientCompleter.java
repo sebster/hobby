@@ -9,19 +9,18 @@ import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
 
-import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @AllArgsConstructor
 public class RemarkableClientCompleter implements Completer {
 
-	private final @NonNull RemarkableClientManager clientManager;
+	private final @NonNull CompletionContext completionContext;
 
 	@Override
 	public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 		String start = line.word().substring(0, line.wordCursor());
-		clientManager.listClients().forEach(client -> {
+		completionContext.getClientManager().listClients().forEach(client -> {
 			if (startsWithIgnoreCase(client.getDescription(), start)) {
 				candidates.add(new Candidate(client.getDescription()));
 			}

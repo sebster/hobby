@@ -3,13 +3,11 @@ package com.sebster.remarkable.cli.commands;
 import static com.sebster.remarkable.cli.commands.completion.CommandCompleterBuilder.commandCompleter;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 import org.jline.builtins.Completers.SystemCompleter;
 
+import com.sebster.remarkable.cli.commands.completion.CompletionContext;
 import com.sebster.remarkable.cli.commands.completion.RemarkableItemCompleter;
-import com.sebster.remarkable.cloudapi.RemarkableClient;
 import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -37,9 +35,9 @@ public class RmCommand extends BaseCommand {
 		cli.getSelectedClient().delete(cli.getItems(paths), recursive);
 	}
 
-	public static SystemCompleter completer(@NonNull Function<String, Optional<RemarkableClient>> clientProvider) {
+	public static SystemCompleter completer(@NonNull CompletionContext completionContext) {
 		return commandCompleter(RmCommand.class)
-				.argumentCompleter(new RemarkableItemCompleter(clientProvider, null, true))
+				.argumentCompleter(new RemarkableItemCompleter(completionContext, null, true))
 				.build();
 	}
 

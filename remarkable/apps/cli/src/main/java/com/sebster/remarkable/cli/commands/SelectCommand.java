@@ -4,8 +4,8 @@ import static com.sebster.remarkable.cli.commands.completion.CommandCompleterBui
 
 import org.jline.builtins.Completers.SystemCompleter;
 
+import com.sebster.remarkable.cli.commands.completion.CompletionContext;
 import com.sebster.remarkable.cli.commands.completion.RemarkableClientCompleter;
-import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -21,9 +21,9 @@ public class SelectCommand extends BaseCommand {
 		cli.selectClient(clientDescription);
 	}
 
-	public static SystemCompleter completer(@NonNull RemarkableClientManager clientManager) {
+	public static SystemCompleter completer(@NonNull CompletionContext completionContext) {
 		return commandCompleter(SelectCommand.class)
-				.argumentCompleter(new RemarkableClientCompleter(clientManager))
+				.argumentCompleter(new RemarkableClientCompleter(completionContext))
 				.build();
 	}
 
