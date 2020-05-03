@@ -11,7 +11,9 @@ import static org.jline.utils.AttributedStyle.YELLOW;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +28,7 @@ import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableException;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
+import com.sebster.remarkable.cloudapi.RemarkablePath;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +68,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler, CompletionCont
 	private final @NonNull RemarkableClientManager clientManager;
 
 	private RemarkableClient selectedClient;
+	private Map<RemarkableClient, RemarkablePath> workingDirectories = new HashMap<>();
 
 	@Override
 	public void run() {
@@ -112,6 +116,10 @@ public class Cli implements Runnable, IExecutionExceptionHandler, CompletionCont
 	public RemarkableClient getSelectedClient() {
 		return Optional.ofNullable(selectedClient).orElseThrow(() -> new RemarkableException("No client selected."));
 	}
+
+	@Override
+	public RemarkablePath getWorkingDirectory(@NonNull RemarkableClient client) {
+		return workingDirectories.computeIfAbsent(client, key -> RemarkablePath.empty());
 	}
 
 	public RemarkableClient getClient(String description) {
