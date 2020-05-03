@@ -93,6 +93,10 @@ public class Cli implements Runnable, IExecutionExceptionHandler, CompletionCont
 		return systemCompleter;
 	}
 
+	public String getPrompt() {
+		return withStyle(BOLD, (selectedClient != null ? selectedClient.getDescription() : "") + "> ");
+	}
+
 	public void select(@NonNull RemarkableClient client) {
 		selectedClient = client;
 	}
@@ -141,10 +145,6 @@ public class Cli implements Runnable, IExecutionExceptionHandler, CompletionCont
 
 	public void printf(@NonNull String format, Object... arguments) {
 		terminal.writer().printf(format, arguments);
-	}
-
-	public String getPrompt() {
-		return withStyle(BOLD, (selectedClient != null ? selectedClient.getDescription() : "") + "> ");
 	}
 
 	public String withStyle(@NonNull AttributedStyle style, @NonNull Object string) {
