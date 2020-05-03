@@ -8,6 +8,7 @@ import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
+import java.io.InputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
@@ -56,6 +57,11 @@ public class RemarkableClientImpl implements RemarkableClient {
 		String sessionToken = apiClient.login(info.getLoginToken());
 		cachedRoot = new ItemInfoDtoListUnmarshaller(apiClient.list(sessionToken, true)).unmarshal();
 		return cachedRoot;
+	}
+
+	@Override
+	public InputStream download(@NonNull RemarkableItem item) {
+		return item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("No download link: " + item)).download();
 	}
 
 	@Override

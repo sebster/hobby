@@ -1,8 +1,6 @@
 package com.sebster.remarkable.cloudapi;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -16,17 +14,7 @@ public interface RemarkableClient {
 
 	RemarkableRootFolder list();
 
-	default InputStream download(@NonNull RemarkableItem item) {
-		return download(item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("No download link: " + item)));
-	}
-
-	default InputStream download(@NonNull RemarkableDownloadLink link) {
-		try {
-			return link.getUrl().toURL().openStream();
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
+	InputStream download(@NonNull RemarkableItem item);
 
 	default void createFolders(@NonNull Collection<RemarkablePath> paths) {
 		createFolders(null, paths);

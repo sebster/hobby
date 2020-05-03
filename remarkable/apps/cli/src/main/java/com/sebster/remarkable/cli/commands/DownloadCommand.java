@@ -51,7 +51,7 @@ public class DownloadCommand implements Runnable {
 			}
 			File target = new File(item.getId() + ".zip");
 			cli.printf("Downloading %s to %s...\n", itemDisplay, cli.withFileStyle(target));
-			copyInputStreamToFile(client.download(item.getDownloadLink().orElseThrow()), target);
+			copyInputStreamToFile(client.download(item), target);
 		} catch (Exception e) {
 			cli.println(cli.withErrorStyle(e.getMessage()));
 		}
