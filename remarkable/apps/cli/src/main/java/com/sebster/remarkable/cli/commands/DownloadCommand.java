@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
-import com.sebster.remarkable.cloudapi.RemarkablePath;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
@@ -44,10 +43,10 @@ public class DownloadCommand implements Runnable {
 			RemarkableItem item;
 			String itemDisplay;
 			if (!isUuid(file)) {
-				item = client.list(parsePath(file));
+				item = client.list().getItem(parsePath(file));
 				itemDisplay = cli.withItemStyle(item);
 			} else {
-				item = client.list(UUID.fromString(file));
+				item = client.list().getItem(UUID.fromString(file));
 				itemDisplay = cli.withItemIdStyle(item.getId());
 			}
 			File target = new File(item.getId() + ".zip");

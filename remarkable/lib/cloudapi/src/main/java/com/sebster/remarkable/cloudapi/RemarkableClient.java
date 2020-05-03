@@ -16,14 +16,6 @@ public interface RemarkableClient {
 
 	RemarkableRootFolder list();
 
-	default RemarkableItem list(@NonNull UUID id) {
-		return list().getItem(id);
-	}
-
-	default RemarkableItem list(@NonNull RemarkablePath path) {
-		return list().getItem(path);
-	}
-
 	default InputStream download(@NonNull RemarkableItem item) {
 		return download(item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("No download link: " + item)));
 	}

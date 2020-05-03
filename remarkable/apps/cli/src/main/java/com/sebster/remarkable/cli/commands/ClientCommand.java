@@ -37,7 +37,7 @@ public class ClientCommand implements Runnable {
 		if (isNotBlank(selector)) {
 			cli.selectClient(selector);
 		} else {
-			cli.println(cli.getSelectedClient());
+			cli.deselectSelectedClient();
 		}
 	}
 
