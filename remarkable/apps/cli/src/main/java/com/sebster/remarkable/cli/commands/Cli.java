@@ -63,7 +63,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	@Getter
 	private final @NonNull RemarkableClientManager clientManager;
 
-	private RemarkableClient client;
+	private RemarkableClient selectedClient;
 
 	@Override
 	public void run() {
@@ -89,7 +89,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	public void select(@NonNull RemarkableClient client) {
-		this.client = client;
+		selectedClient = client;
 	}
 
 	public void selectClient(@NonNull String description) {
@@ -97,13 +97,14 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	public void deselect(@NonNull RemarkableClient client) {
-		if (client.equals(this.client)) {
-			this.client = null;
+		if (client.equals(selectedClient)) {
+			selectedClient = null;
 		}
 	}
 
 	public RemarkableClient getSelectedClient() {
-		return Optional.ofNullable(client).orElseThrow(() -> new RemarkableException("No client selected."));
+		return Optional.ofNullable(selectedClient).orElseThrow(() -> new RemarkableException("No client selected."));
+	}
 	}
 
 	public RemarkableClient getClient(String description) {
@@ -111,7 +112,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	public Optional<RemarkableClient> findClient(String description) {
-		return description != null ? clientManager.findClient(description) : Optional.ofNullable(client);
+		return description != null ? clientManager.findClient(description) : Optional.ofNullable(selectedClient);
 	}
 
 	public List<RemarkableItem> getItems(@NonNull Collection<String> paths) {
@@ -128,7 +129,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	public String getPrompt() {
-		return withStyle(BOLD, (client != null ? client.getDescription() : "") + "> ");
+		return withStyle(BOLD, (selectedClient != null ? selectedClient.getDescription() : "") + "> ");
 	}
 
 	public String withStyle(@NonNull AttributedStyle style, @NonNull Object string) {
