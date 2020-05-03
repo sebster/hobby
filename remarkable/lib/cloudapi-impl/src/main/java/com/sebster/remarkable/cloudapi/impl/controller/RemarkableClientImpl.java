@@ -133,7 +133,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 
 	@Override
 	public String toString() {
-		return info.getDescription() + " (" + info.getClientId() + ")";
+		return info.getDescription();
 	}
 
 }
