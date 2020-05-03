@@ -14,7 +14,7 @@ public interface RemarkableClient {
 
 	String getDescription();
 
-	RemarkableRootFolder list();
+	RemarkableRoot list();
 
 	InputStream download(@NonNull RemarkableItem item);
 

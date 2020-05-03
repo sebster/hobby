@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @NoArgsConstructor(access = PACKAGE)
-public class RemarkableRootFolderBuilder implements RemarkableCollectionBuilder {
+public class RemarkableRootBuilder implements RemarkableCollectionBuilder {
 
-	private RemarkableRootFolder rootFolder = new RemarkableRootFolder();
+	private RemarkableRoot rootFolder = new RemarkableRoot();
 
 	@Override
 	public Optional<RemarkableFolder> getFolder() {
@@ -29,9 +29,9 @@ public class RemarkableRootFolderBuilder implements RemarkableCollectionBuilder 
 	}
 
 	@Override
-	public RemarkableRootFolder build() {
+	public RemarkableRoot build() {
 		requireNonNull(rootFolder);
-		RemarkableRootFolder result = rootFolder;
+		RemarkableRoot result = rootFolder;
 		rootFolder = null;
 		return result;
 	}

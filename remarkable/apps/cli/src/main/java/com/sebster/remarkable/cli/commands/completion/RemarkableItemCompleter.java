@@ -18,7 +18,7 @@ import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkableItemType;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
+import com.sebster.remarkable.cloudapi.RemarkableRoot;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -33,7 +33,7 @@ public class RemarkableItemCompleter implements Completer {
 	public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
 		String start = line.word().substring(0, line.wordCursor());
 		clientProvider.apply(null).ifPresent(client -> {
-			RemarkableRootFolder root = client.list();
+			RemarkableRoot root = client.list();
 			if (!isNonEmptyPath(start)) {
 				completeCollection(root, "", candidates);
 				return;

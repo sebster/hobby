@@ -6,12 +6,12 @@ import java.util.UUID;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
+import com.sebster.remarkable.cloudapi.RemarkableRoot;
 import lombok.NonNull;
 
 public interface RemarkableBackupStorageService {
 
-	RemarkableRootFolder list(@NonNull UUID clientId);
+	RemarkableRoot list(@NonNull UUID clientId);
 
 	void storeFolder(@NonNull UUID clientId, @NonNull RemarkableFolder folder);
 

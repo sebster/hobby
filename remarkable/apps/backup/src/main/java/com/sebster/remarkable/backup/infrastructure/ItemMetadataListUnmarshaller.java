@@ -14,8 +14,8 @@ import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableFolderBuilder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolderBuilder;
+import com.sebster.remarkable.cloudapi.RemarkableRoot;
+import com.sebster.remarkable.cloudapi.RemarkableRootBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -24,8 +24,8 @@ class ItemMetadataListUnmarshaller {
 
 	private final @NonNull Collection<ItemMetadata> itemMetadata;
 
-	RemarkableRootFolder unmarshal() {
-		RemarkableRootFolderBuilder rootFolderBuilder = RemarkableRootFolder.builder();
+	RemarkableRoot unmarshal() {
+		RemarkableRootBuilder rootFolderBuilder = RemarkableRoot.builder();
 		unmarshalIntoCollection(rootFolderBuilder);
 		return rootFolderBuilder.build();
 	}

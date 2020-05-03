@@ -23,7 +23,7 @@ import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
+import com.sebster.remarkable.cloudapi.RemarkableRoot;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	}
 
 	@Override
-	public RemarkableRootFolder list(@NonNull UUID clientId) {
+	public RemarkableRoot list(@NonNull UUID clientId) {
 		return new ItemMetadataListUnmarshaller(loadMetadata(clientId)).unmarshal();
 	}
 

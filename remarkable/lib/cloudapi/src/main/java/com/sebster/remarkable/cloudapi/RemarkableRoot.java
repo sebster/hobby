@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @NoArgsConstructor(access = PACKAGE)
-public class RemarkableRootFolder implements RemarkableCollection {
+public class RemarkableRoot implements RemarkableCollection {
 
 	private final List<RemarkableFolder> folders = new ArrayList<>();
 	private final List<RemarkableDocument> documents = new ArrayList<>();
@@ -36,8 +36,8 @@ public class RemarkableRootFolder implements RemarkableCollection {
 		folders.add(folder);
 	}
 
-	public static RemarkableRootFolderBuilder builder() {
-		return new RemarkableRootFolderBuilder();
+	public static RemarkableRootBuilder builder() {
+		return new RemarkableRootBuilder();
 	}
 
 }

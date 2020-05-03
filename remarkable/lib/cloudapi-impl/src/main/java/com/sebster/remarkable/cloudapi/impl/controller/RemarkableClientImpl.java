@@ -23,7 +23,7 @@ import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
-import com.sebster.remarkable.cloudapi.RemarkableRootFolder;
+import com.sebster.remarkable.cloudapi.RemarkableRoot;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 	private final @NonNull RemarkableClientInfo info;
 	private final @NonNull RemarkableApiClient apiClient;
 
-	private RemarkableRootFolder cachedRoot;
+	private RemarkableRoot cachedRoot;
 
 	@Override
 	@EqualsAndHashCode.Include
@@ -50,7 +50,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 	}
 
 	@Override
-	public RemarkableRootFolder list() {
+	public RemarkableRoot list() {
 		if (cachedRoot != null) {
 			return cachedRoot;
 		}
