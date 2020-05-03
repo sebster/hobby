@@ -30,7 +30,7 @@ public interface RemarkableClientManager {
 	 * Get a client by its description.
 	 */
 	default RemarkableClient getClient(@NonNull String description) {
-		return findClient(description).orElseThrow(() -> new IllegalArgumentException("No such client: " + description));
+		return findClient(description).orElseThrow(() -> new RemarkableException("No such client: " + description));
 	}
 
 	/**

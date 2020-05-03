@@ -110,7 +110,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 	}
 
 	public RemarkableClient getSelectedClient() {
-		return Optional.ofNullable(client).orElseThrow(() -> new RuntimeException("No client selected."));
+		return Optional.ofNullable(client).orElseThrow(() -> new RemarkableException("No client selected."));
 	}
 
 	public RemarkableClient getClient(String description) {
