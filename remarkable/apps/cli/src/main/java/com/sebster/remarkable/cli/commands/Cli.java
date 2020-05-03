@@ -35,6 +35,8 @@ import picocli.CommandLine.HelpCommand;
 import picocli.CommandLine.IExecutionExceptionHandler;
 import picocli.CommandLine.ParseResult;
 
+
+
 @Command(
 		name = "",
 		description = {
@@ -44,14 +46,14 @@ import picocli.CommandLine.ParseResult;
 		},
 		footer = { "", "Press Ctl-D to exit." },
 		subcommands = {
-				ClientsCommand.class,
-				SelectCommand.class,
 				RegisterCommand.class,
 				UnregisterCommand.class,
+				ClientsCommand.class,
+				SelectCommand.class,
 				ListCommand.class,
 				MkdirCommand.class,
 				DownloadCommand.class,
-				DeleteCommand.class,
+				RmCommand.class,
 				HelpCommand.class,
 		}
 )
@@ -84,7 +86,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 		SystemCompleter systemCompleter = new SystemCompleter();
 		systemCompleter.add(SelectCommand.completer(clientManager));
 		systemCompleter.add(MkdirCommand.completer(this::findClient));
-		systemCompleter.add(DeleteCommand.completer(this::findClient));
+		systemCompleter.add(RmCommand.completer(this::findClient));
 		systemCompleter.add(UnregisterCommand.completer(clientManager));
 		return systemCompleter;
 	}

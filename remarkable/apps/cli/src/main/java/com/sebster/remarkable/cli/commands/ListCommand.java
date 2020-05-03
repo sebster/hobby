@@ -10,21 +10,11 @@ import com.sebster.remarkable.cloudapi.RemarkableCollection;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.ParentCommand;
 
-@Command(
-		name = "list",
-		aliases = "ls",
-		mixinStandardHelpOptions = true,
-		description = "List the contents of the reMarkable",
-		version = "1.0"
-)
-public class ListCommand implements Runnable {
+@Command(name = "ls", description = "List the contents of the reMarkable")
+public class ListCommand extends BaseCommand {
 
 	private final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(systemDefault());
-
-	@ParentCommand
-	private Cli cli;
 
 	@Option(names = { "-l", "--long" }, description = "Use long format: id, version, modification time, item.")
 	private boolean longFormat;

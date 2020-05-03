@@ -16,14 +16,8 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
-@Command(
-		name = "delete",
-		aliases = "rm",
-		mixinStandardHelpOptions = true,
-		description = "Delete a document or folder",
-		version = "1.0"
-)
-public class DeleteCommand implements Runnable {
+@Command(name = "rm", description = "Delete a document or folder")
+public class RmCommand extends BaseCommand {
 
 	@ParentCommand
 	private Cli cli;
@@ -44,7 +38,7 @@ public class DeleteCommand implements Runnable {
 	}
 
 	public static SystemCompleter completer(@NonNull Function<String, Optional<RemarkableClient>> clientProvider) {
-		return commandCompleter(DeleteCommand.class)
+		return commandCompleter(RmCommand.class)
 				.argumentCompleter(new RemarkableItemCompleter(clientProvider, null, true))
 				.build();
 	}

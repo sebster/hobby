@@ -12,19 +12,9 @@ import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-import picocli.CommandLine.ParentCommand;
 
-@Command(
-		name = "download",
-		aliases = "get",
-		mixinStandardHelpOptions = true,
-		description = "Download a document or folder",
-		version = "1.0"
-)
-public class DownloadCommand implements Runnable {
-
-	@ParentCommand
-	private Cli cli;
+@Command(name = "get", description = "Download a document or folder")
+public class DownloadCommand extends BaseCommand {
 
 	@Parameters(
 			paramLabel = "item",

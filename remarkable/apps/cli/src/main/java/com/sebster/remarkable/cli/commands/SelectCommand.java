@@ -10,18 +10,9 @@ import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-import picocli.CommandLine.ParentCommand;
 
-@Command(
-		name = "select",
-		mixinStandardHelpOptions = true,
-		description = "Select or deselect a client",
-		version = "1.0"
-)
-public class SelectCommand implements Runnable {
-
-	@ParentCommand
-	private Cli cli;
+@Command(name = "select", description = "Select or deselect a client")
+public class SelectCommand extends BaseCommand {
 
 	@Parameters(
 			index = "0",

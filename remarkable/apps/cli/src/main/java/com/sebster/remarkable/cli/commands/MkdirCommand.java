@@ -15,18 +15,9 @@ import com.sebster.remarkable.cloudapi.RemarkableClient;
 import lombok.NonNull;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-import picocli.CommandLine.ParentCommand;
 
-@Command(
-		name = "mkdir",
-		mixinStandardHelpOptions = true,
-		description = "Make new folders",
-		version = "1.0"
-)
-public class MkdirCommand implements Runnable {
-
-	@ParentCommand
-	private Cli cli;
+@Command(name = "mkdir", description = "Make new folders")
+public class MkdirCommand extends BaseCommand {
 
 	@Parameters(
 			index = "0",
