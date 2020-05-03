@@ -1,6 +1,7 @@
 package com.sebster.remarkable.cloudapi.impl.infrastructure.http;
 
 import static com.sebster.commons.collections.Lists.map;
+import static com.sebster.commons.strings.Strings.nullSafeTrim;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -10,14 +11,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.sebster.remarkable.cloudapi.RemarkableException;
 import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
 import com.sebster.remarkable.cloudapi.impl.controller.RemarkableApiClient;
 import lombok.NonNull;
@@ -54,12 +59,12 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	@Override
 	public String register(@NonNull UUID clientId, @NonNull String clientType, @NonNull String code) {
 		log.debug("register: clientId={} clientType={} code={}", clientId, clientType, code);
-		return getBody(restTemplate.exchange(
+		return getBody(handleClientError(() -> restTemplate.exchange(
 				REGISTRATION_URL,
 				POST,
 				request(new RegistrationRequestJsonDto(code, clientType, clientId.toString()), null),
 				String.class
-		));
+		), e -> new RemarkableException("Could not register: " + nullSafeTrim(e.getResponseBodyAsString()))));
 	}
 
 	@Override
@@ -71,6 +76,7 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 				emptyRequest(loginToken),
 				Void.class
 		);
+
 	}
 
 	@Override
@@ -174,7 +180,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 			// Should not happen.
 			throw new IllegalStateException("No response body");
 		}
-		;
 		return body;
 	}
 
@@ -184,6 +189,21 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 			throw new IllegalStateException("Incorrect number of items: expected 1, got " + items.size());
 		}
 		return items.get(0);
+	}
+
+	private <T> ResponseEntity<T> handleClientError(
+			Supplier<ResponseEntity<T>> requestExecutor,
+			Function<HttpClientErrorException, RemarkableException> exceptionFactory
+	) {
+		try {
+			return requestExecutor.get();
+		} catch (HttpClientErrorException e) {
+			if (e.getStatusCode().is4xxClientError()) {
+				throw exceptionFactory.apply(e);
+			} else {
+				throw e;
+			}
+		}
 	}
 
 }

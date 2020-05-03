@@ -7,9 +7,9 @@ import java.time.Clock;
 import java.util.List;
 import java.util.UUID;
 
-import com.sebster.remarkable.cloudapi.DuplicateClientException;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
+import com.sebster.remarkable.cloudapi.RemarkableException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -25,7 +25,7 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	@Override
 	public RemarkableClient register(@NonNull String code, @NonNull String description) {
 		if (findClient(description).isPresent()) {
-			throw new DuplicateClientException("Duplicate client: " + description);
+			throw new RemarkableException("Duplicate client: " + description);
 		}
 		UUID clientId = randomUUID();
 		String loginToken = apiClient.register(clientId, WINDOWS_CLIENT_TYPE, code);

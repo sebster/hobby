@@ -12,7 +12,7 @@ public interface RemarkableClientManager {
 	/**
 	 * Register and return a new client.
 	 *
-	 * @throws DuplicateClientException if a client with that description already exists
+	 * @throws RemarkableException if the registration fails
 	 */
 	RemarkableClient register(@NonNull String code, String description);
 

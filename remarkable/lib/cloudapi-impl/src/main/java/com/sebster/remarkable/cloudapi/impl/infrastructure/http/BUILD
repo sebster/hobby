@@ -10,6 +10,7 @@ java_library(
         "//lib/commons/src/main/java/com/sebster/commons/collections",
         "//lib/commons/src/main/java/com/sebster/commons/strings",
         "//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl/controller",
+        "//remarkable/lib/cloudapi/src/main/java/com/sebster/remarkable/cloudapi",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:org_slf4j_slf4j_api",
         "@maven//:org_springframework_spring_context",
