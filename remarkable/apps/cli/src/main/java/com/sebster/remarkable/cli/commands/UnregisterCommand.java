@@ -26,7 +26,6 @@ public class UnregisterCommand extends BaseCommand {
 	public void run() {
 		RemarkableClient client = cli.getClient(description);
 		cli.getClientManager().unregister(client);
-		cli.println("Unregistered " + client);
 		cli.deselect(client);
 	}
 

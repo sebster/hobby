@@ -16,13 +16,12 @@ public class RegisterCommand extends BaseCommand {
 	@Parameters(index = "0", description = "The registration code.")
 	private String code;
 
-	@Parameters(index = "1", description = "The device description.")
+	@Parameters(index = "1", description = "The client description.")
 	private String description;
 
 	@Override
 	public void run() {
 		RemarkableClient client = cli.getClientManager().register(code, description);
-		cli.println("Registered " + client);
 		cli.select(client);
 	}
 
