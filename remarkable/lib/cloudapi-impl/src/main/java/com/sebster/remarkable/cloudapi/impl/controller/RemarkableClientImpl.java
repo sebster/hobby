@@ -65,7 +65,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 	}
 
 	@Override
-	public void createFolders(RemarkableFolder parent, @NonNull Collection<RemarkablePath> paths) {
+	public void createFolders(@NonNull RemarkableCollection parent, @NonNull Collection<RemarkablePath> paths) {
 		Map<RemarkablePath, ItemInfoDto> folderInfos = new LinkedHashMap<>();
 		for (RemarkablePath path : paths) {
 			// Navigate the path prefix until the component no longer exists.
