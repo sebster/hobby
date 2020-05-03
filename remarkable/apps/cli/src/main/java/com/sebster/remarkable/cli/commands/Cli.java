@@ -94,7 +94,9 @@ public class Cli implements Runnable, IExecutionExceptionHandler, CompletionCont
 	}
 
 	public String getPrompt() {
-		return withStyle(BOLD, (selectedClient != null ? selectedClient.getDescription() : "") + "> ");
+		String clientPart = selectedClient != null ? selectedClient.getDescription() + ":" : "";
+		String pathPart = selectedClient != null ? "/" + getWorkingDirectory(selectedClient) : "";
+		return withStyle(BOLD, clientPart + pathPart + "> ");
 	}
 
 	public void select(@NonNull RemarkableClient client) {
