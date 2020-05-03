@@ -103,20 +103,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 	}
 
 	@Override
-	public ItemInfoDto list(@NonNull String sessionToken, @NonNull UUID id, boolean includeBlobUrl) {
-		log.debug("list: id={} includeBlobUrl={}", id, includeBlobUrl);
-		return getItemInfo(map(getBody(restTemplate.exchange(
-				getStorageUrlBuilder(sessionToken, "docs")
-						.queryParam("doc", id.toString())
-						.queryParam("withBlob", includeBlobUrl)
-						.build().toUri(),
-				GET,
-				emptyRequest(sessionToken),
-				ITEM_LIST_TYPE
-		)), ItemInfoJsonDto::unmarshal));
-	}
-
-	@Override
 	public List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos) {
 		log.debug("updateMetadata: items={}", itemInfos);
 		return map(getBody(restTemplate.exchange(
@@ -181,14 +167,6 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 			throw new IllegalStateException("No response body");
 		}
 		return body;
-	}
-
-	private ItemInfoDto getItemInfo(List<ItemInfoDto> items) {
-		if (items.size() != 1) {
-			// Should not happen.
-			throw new IllegalStateException("Incorrect number of items: expected 1, got " + items.size());
-		}
-		return items.get(0);
 	}
 
 	private <T> ResponseEntity<T> handleClientError(

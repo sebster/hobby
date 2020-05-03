@@ -29,11 +29,6 @@ public interface RemarkableApiClient {
 	List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl);
 
 	/**
-	 * List the specified file on the reMarkable. You can choose whether to include a download link. Note that the link expires.
-	 */
-	ItemInfoDto list(@NonNull String sessionToken, @NonNull UUID id, boolean includeBlobUrl);
-
-	/**
 	 * Update the metadata of one or more items on the reMarkable.
 	 */
 	List<ItemInfoDto> updateMetadata(@NonNull String sessionToken, @NonNull Collection<ItemInfoDto> itemInfos);
