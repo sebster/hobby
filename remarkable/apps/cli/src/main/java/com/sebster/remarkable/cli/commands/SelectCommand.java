@@ -13,13 +13,12 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
 @Command(
-		name = "client",
-		aliases = "select",
+		name = "select",
 		mixinStandardHelpOptions = true,
 		description = "Select or deselect a client",
 		version = "1.0"
 )
-public class ClientCommand implements Runnable {
+public class SelectCommand implements Runnable {
 
 	@ParentCommand
 	private Cli cli;
@@ -42,7 +41,7 @@ public class ClientCommand implements Runnable {
 	}
 
 	public static SystemCompleter completer(@NonNull RemarkableClientManager clientManager) {
-		return commandCompleter(ClientCommand.class)
+		return commandCompleter(SelectCommand.class)
 				.argumentCompleter(new RemarkableClientCompleter(clientManager))
 				.build();
 	}

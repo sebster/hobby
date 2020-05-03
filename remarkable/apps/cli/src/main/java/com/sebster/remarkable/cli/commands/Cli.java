@@ -44,7 +44,7 @@ import picocli.CommandLine.ParseResult;
 		footer = { "", "Press Ctl-D to exit." },
 		subcommands = {
 				ClientsCommand.class,
-				ClientCommand.class,
+				SelectCommand.class,
 				RegisterCommand.class,
 				UnregisterCommand.class,
 				ListCommand.class,
@@ -79,7 +79,7 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	public SystemCompleter completers() {
 		SystemCompleter systemCompleter = new SystemCompleter();
-		systemCompleter.add(ClientCommand.completer(clientManager));
+		systemCompleter.add(SelectCommand.completer(clientManager));
 		systemCompleter.add(MkdirCommand.completer(this::findClient));
 		systemCompleter.add(DeleteCommand.completer(this::findClient));
 		systemCompleter.add(UnregisterCommand.completer(clientManager));
