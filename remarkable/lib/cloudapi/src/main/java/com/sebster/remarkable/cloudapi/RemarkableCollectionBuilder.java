@@ -13,7 +13,7 @@ public abstract class RemarkableCollectionBuilder<T extends RemarkableCollection
 
 	private T collection;
 
-	public RemarkableCollection getCollection() {
+	public T getCollection() {
 		return collection;
 	}
 

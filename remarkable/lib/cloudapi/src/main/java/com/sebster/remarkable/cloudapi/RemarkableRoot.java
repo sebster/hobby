@@ -63,18 +63,25 @@ public class RemarkableRoot implements RemarkableCollection {
 	}
 
 	public static RemarkableCollectionBuilder<RemarkableRoot> builder() {
-		RemarkableRoot underConstruction = new RemarkableRoot();
-		return new RemarkableCollectionBuilder<>(underConstruction) {
-			@Override
-			public void addFolder(@NonNull RemarkableFolder folder) {
-				underConstruction.folders.add(folder);
-			}
+		return new RemarkableRootBuilder(new RemarkableRoot());
+	}
 
-			@Override
-			public void addDocument(@NonNull RemarkableDocument document) {
-				underConstruction.documents.add(document);
-			}
-		};
+	public static class RemarkableRootBuilder extends RemarkableCollectionBuilder<RemarkableRoot> {
+
+		public RemarkableRootBuilder(RemarkableRoot underConstruction) {
+			super(underConstruction);
+		}
+
+		@Override
+		public void addFolder(@NonNull RemarkableFolder folder) {
+			getCollection().folders.add(folder);
+		}
+
+		@Override
+		public void addDocument(@NonNull RemarkableDocument document) {
+			getCollection().documents.add(document);
+		}
+
 	}
 
 }

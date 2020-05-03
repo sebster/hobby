@@ -47,7 +47,12 @@ public final class RemarkableFolder extends RemarkableItem implements Remarkable
 		return Stream.concat(Stream.of(this), RemarkableCollection.super.recurse());
 	}
 
-	public static RemarkableCollectionBuilder<RemarkableFolder> builder(
+	@Override
+	public String toString() {
+		return super.toString() + "/";
+	}
+
+	public static RemarkableFolderBuilder builder(
 			@NonNull UUID id,
 			int version,
 			@NonNull RemarkableCollection parent,
@@ -55,23 +60,25 @@ public final class RemarkableFolder extends RemarkableItem implements Remarkable
 			@NonNull Instant modificationTime,
 			RemarkableDownloadLink downloadLink
 	) {
-		RemarkableFolder underConstruction = new RemarkableFolder(id, version, parent, name, modificationTime, downloadLink);
-		return new RemarkableCollectionBuilder<>(underConstruction) {
-			@Override
-			public void addFolder(@NonNull RemarkableFolder folder) {
-				underConstruction.folders.add(folder);
-			}
-
-			@Override
-			public void addDocument(@NonNull RemarkableDocument document) {
-				underConstruction.documents.add(document);
-			}
-		};
+		return new RemarkableFolderBuilder(new RemarkableFolder(id, version, parent, name, modificationTime, downloadLink));
 	}
 
-	@Override
-	public String toString() {
-		return super.toString() + "/";
+	public static class RemarkableFolderBuilder extends RemarkableCollectionBuilder<RemarkableFolder> {
+
+		public RemarkableFolderBuilder(RemarkableFolder folder) {
+			super(folder);
+		}
+
+		@Override
+		public void addFolder(@NonNull RemarkableFolder folder) {
+			getCollection().folders.add(folder);
+		}
+
+		@Override
+		public void addDocument(@NonNull RemarkableDocument document) {
+			getCollection().documents.add(document);
+		}
+
 	}
 
 }
