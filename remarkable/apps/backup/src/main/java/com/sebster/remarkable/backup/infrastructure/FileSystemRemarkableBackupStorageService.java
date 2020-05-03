@@ -90,7 +90,7 @@ public class FileSystemRemarkableBackupStorageService implements RemarkableBacku
 	private void updateItemMetadata(ItemMetadata itemMetadata, RemarkableItem item) {
 		itemMetadata.setId(item.getId());
 		itemMetadata.setVersion(item.getVersion());
-		itemMetadata.setParentId(item.getParent().map(RemarkableItem::getId).orElse(null));
+		itemMetadata.setParentId(item.getParentFolder().map(RemarkableItem::getId).orElse(null));
 		itemMetadata.setName(item.getName());
 		itemMetadata.setModificationTime(item.getModificationTime());
 	}

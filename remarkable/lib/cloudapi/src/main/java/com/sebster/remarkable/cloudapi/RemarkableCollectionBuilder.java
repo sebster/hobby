@@ -1,16 +1,35 @@
 package com.sebster.remarkable.cloudapi;
 
-import java.util.Optional;
+import static java.util.Objects.requireNonNull;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-public interface RemarkableCollectionBuilder {
+@AllArgsConstructor
+public abstract class RemarkableCollectionBuilder<T extends RemarkableCollection> {
 
-	Optional<RemarkableFolder> getFolder();
+	private T collection;
 
-	void addFolder(@NonNull RemarkableFolder folder);
+	public RemarkableCollection getCollection() {
+		return collection;
+	}
 
-	void addDocument(@NonNull RemarkableDocument document);
+	public Optional<UUID> getId() {
+		return collection.isFolder() ? Optional.ofNullable(collection.asFolder().getId()) : Optional.empty();
+	}
 
-	RemarkableCollection build();
+	public abstract void addFolder(@NonNull RemarkableFolder folder);
+
+	public abstract void addDocument(@NonNull RemarkableDocument document);
+
+	public T build() {
+		requireNonNull(collection, "Collection was already built");
+		T result = collection;
+		collection = null;
+		return result;
+	}
+
 }

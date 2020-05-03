@@ -14,10 +14,7 @@ import java.util.stream.Stream;
 import com.sebster.remarkable.cloudapi.RemarkableCollectionBuilder;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
-import com.sebster.remarkable.cloudapi.RemarkableFolderBuilder;
-import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkableRoot;
-import com.sebster.remarkable.cloudapi.RemarkableRootBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -27,25 +24,25 @@ class ItemInfoDtoListUnmarshaller {
 	private final @NonNull List<ItemInfoDto> itemInfos;
 
 	public RemarkableRoot unmarshal() {
-		RemarkableRootBuilder rootFolderBuilder = RemarkableRoot.builder();
-		unmarshalIntoCollection(rootFolderBuilder);
-		return rootFolderBuilder.build();
+		RemarkableCollectionBuilder<RemarkableRoot> rootBuilder = RemarkableRoot.builder();
+		unmarshalIntoCollection(rootBuilder);
+		return rootBuilder.build();
 	}
 
-	private void unmarshalIntoCollection(RemarkableCollectionBuilder parent) {
+	private void unmarshalIntoCollection(RemarkableCollectionBuilder<?> parent) {
 		unmarshalFolders(parent).forEach(parent::addFolder);
 		unmarshalDocuments(parent).forEach(parent::addDocument);
 	}
 
-	private Stream<RemarkableFolder> unmarshalFolders(RemarkableCollectionBuilder parent) {
+	private Stream<RemarkableFolder> unmarshalFolders(RemarkableCollectionBuilder<?> parent) {
 		return getChildren(parent, FOLDER_TYPE).map(itemInfo -> unmarshalFolder(parent, itemInfo));
 	}
 
-	private RemarkableFolder unmarshalFolder(RemarkableCollectionBuilder parent, ItemInfoDto itemInfo) {
-		RemarkableFolderBuilder folderBuilder = RemarkableFolder.builder(
+	private RemarkableFolder unmarshalFolder(RemarkableCollectionBuilder<?> parent, ItemInfoDto itemInfo) {
+		RemarkableCollectionBuilder<RemarkableFolder> folderBuilder = RemarkableFolder.builder(
 				itemInfo.getId(),
 				itemInfo.getVersion(),
-				parent.getFolder().orElse(null),
+				parent.getCollection(),
 				itemInfo.getName().orElse(itemInfo.getId().toString()),
 				itemInfo.getModificationTime().orElse(EPOCH),
 				itemInfo.getDownloadLink().orElse(null)
@@ -54,15 +51,15 @@ class ItemInfoDtoListUnmarshaller {
 		return folderBuilder.build();
 	}
 
-	private Stream<RemarkableDocument> unmarshalDocuments(RemarkableCollectionBuilder parent) {
+	private Stream<RemarkableDocument> unmarshalDocuments(RemarkableCollectionBuilder<?> parent) {
 		return getChildren(parent, DOCUMENT_TYPE).map(itemInfo -> unmarshalDocument(parent, itemInfo));
 	}
 
-	private RemarkableDocument unmarshalDocument(RemarkableCollectionBuilder parent, ItemInfoDto itemInfo) {
+	private RemarkableDocument unmarshalDocument(RemarkableCollectionBuilder<?> parent, ItemInfoDto itemInfo) {
 		return new RemarkableDocument(
 				itemInfo.getId(),
 				itemInfo.getVersion(),
-				parent.getFolder().orElse(null),
+				parent.getCollection(),
 				itemInfo.getName().orElse(itemInfo.getId().toString()),
 				itemInfo.getModificationTime().orElse(EPOCH),
 				itemInfo.getDownloadLink().orElse(null),
@@ -71,8 +68,8 @@ class ItemInfoDtoListUnmarshaller {
 		);
 	}
 
-	private Stream<ItemInfoDto> getChildren(RemarkableCollectionBuilder parent, String type) {
-		UUID parentId = parent.getFolder().map(RemarkableItem::getId).orElse(null);
+	private Stream<ItemInfoDto> getChildren(RemarkableCollectionBuilder<?> parent, String type) {
+		UUID parentId = parent.getId().orElse(null);
 		return itemInfos.stream()
 				.filter(itemInfo -> Objects.equals(parentId, itemInfo.getParentId().orElse(null)))
 				.filter(itemInfo -> Objects.equals(type, itemInfo.getType().orElse(null)))

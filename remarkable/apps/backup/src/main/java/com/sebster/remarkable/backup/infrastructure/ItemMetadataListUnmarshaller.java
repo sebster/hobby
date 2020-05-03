@@ -12,10 +12,7 @@ import java.util.stream.Stream;
 import com.sebster.remarkable.cloudapi.RemarkableCollectionBuilder;
 import com.sebster.remarkable.cloudapi.RemarkableDocument;
 import com.sebster.remarkable.cloudapi.RemarkableFolder;
-import com.sebster.remarkable.cloudapi.RemarkableFolderBuilder;
-import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkableRoot;
-import com.sebster.remarkable.cloudapi.RemarkableRootBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -25,25 +22,25 @@ class ItemMetadataListUnmarshaller {
 	private final @NonNull Collection<ItemMetadata> itemMetadata;
 
 	RemarkableRoot unmarshal() {
-		RemarkableRootBuilder rootFolderBuilder = RemarkableRoot.builder();
-		unmarshalIntoCollection(rootFolderBuilder);
-		return rootFolderBuilder.build();
+		RemarkableCollectionBuilder<RemarkableRoot> rootBuilder = RemarkableRoot.builder();
+		unmarshalIntoCollection(rootBuilder);
+		return rootBuilder.build();
 	}
 
-	private void unmarshalIntoCollection(RemarkableCollectionBuilder parent) {
+	private void unmarshalIntoCollection(RemarkableCollectionBuilder<?> parent) {
 		unmarshalFolders(parent).forEach(parent::addFolder);
 		unmarshalDocuments(parent).forEach(parent::addDocument);
 	}
 
-	private Stream<RemarkableFolder> unmarshalFolders(RemarkableCollectionBuilder parent) {
+	private Stream<RemarkableFolder> unmarshalFolders(RemarkableCollectionBuilder<?> parent) {
 		return getChildren(parent, FOLDER).map(itemMetadata -> unmarshalFolder(parent, itemMetadata));
 	}
 
-	private RemarkableFolder unmarshalFolder(RemarkableCollectionBuilder parent, ItemMetadata itemMetadata) {
-		RemarkableFolderBuilder folderBuilder = RemarkableFolder.builder(
+	private RemarkableFolder unmarshalFolder(RemarkableCollectionBuilder<?> parent, ItemMetadata itemMetadata) {
+		RemarkableCollectionBuilder<RemarkableFolder> folderBuilder = RemarkableFolder.builder(
 				itemMetadata.getId(),
 				itemMetadata.getVersion(),
-				parent.getFolder().orElse(null),
+				parent.getCollection(),
 				itemMetadata.getName(),
 				itemMetadata.getModificationTime(),
 				null
@@ -52,15 +49,15 @@ class ItemMetadataListUnmarshaller {
 		return folderBuilder.build();
 	}
 
-	private Stream<RemarkableDocument> unmarshalDocuments(RemarkableCollectionBuilder parent) {
+	private Stream<RemarkableDocument> unmarshalDocuments(RemarkableCollectionBuilder<?> parent) {
 		return getChildren(parent, DOCUMENT).map(itemInfo -> unmarshalDocument(parent, itemInfo));
 	}
 
-	private RemarkableDocument unmarshalDocument(RemarkableCollectionBuilder parent, ItemMetadata itemMetadata) {
+	private RemarkableDocument unmarshalDocument(RemarkableCollectionBuilder<?> parent, ItemMetadata itemMetadata) {
 		return new RemarkableDocument(
 				itemMetadata.getId(),
 				itemMetadata.getVersion(),
-				parent.getFolder().orElse(null),
+				parent.getCollection(),
 				itemMetadata.getName(),
 				itemMetadata.getModificationTime(),
 				null,
@@ -69,8 +66,8 @@ class ItemMetadataListUnmarshaller {
 		);
 	}
 
-	private Stream<ItemMetadata> getChildren(RemarkableCollectionBuilder parent, ItemMetadata.ItemType type) {
-		UUID parentId = parent.getFolder().map(RemarkableItem::getId).orElse(null);
+	private Stream<ItemMetadata> getChildren(RemarkableCollectionBuilder<?> parent, ItemMetadata.ItemType type) {
+		UUID parentId = parent.getId().orElse(null);
 		return itemMetadata.stream()
 				.filter(itemInfo -> Objects.equals(itemInfo.getParentId(), parentId))
 				.filter(itemInfo -> itemInfo.getType() == type)

@@ -17,7 +17,7 @@ public final class RemarkableDocument extends RemarkableItem {
 	public RemarkableDocument(
 			@NonNull UUID id,
 			int version,
-			RemarkableFolder parent,
+			@NonNull RemarkableCollection parent,
 			@NonNull String name,
 			@NonNull Instant modificationTime,
 			RemarkableDownloadLink downloadLink,

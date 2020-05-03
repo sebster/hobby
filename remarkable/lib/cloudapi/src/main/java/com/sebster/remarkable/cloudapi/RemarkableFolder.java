@@ -19,7 +19,7 @@ public final class RemarkableFolder extends RemarkableItem implements Remarkable
 	RemarkableFolder(
 			UUID id,
 			int version,
-			RemarkableFolder parent,
+			RemarkableCollection parent,
 			String name,
 			Instant modificationTime,
 			RemarkableDownloadLink downloadLink
@@ -27,14 +27,17 @@ public final class RemarkableFolder extends RemarkableItem implements Remarkable
 		super(id, version, FOLDER, parent, name, modificationTime, downloadLink);
 	}
 
+	@Override
 	public List<RemarkableFolder> getFolders() {
 		return unmodifiableList(folders);
 	}
 
+	@Override
 	public List<RemarkableDocument> getDocuments() {
 		return unmodifiableList(documents);
 	}
 
+	@Override
 	public RemarkableFolder asFolder() {
 		return this;
 	}
@@ -44,23 +47,26 @@ public final class RemarkableFolder extends RemarkableItem implements Remarkable
 		return Stream.concat(Stream.of(this), RemarkableCollection.super.recurse());
 	}
 
-	void addDocument(@NonNull RemarkableDocument document) {
-		documents.add(document);
-	}
-
-	void addFolder(@NonNull RemarkableFolder folder) {
-		folders.add(folder);
-	}
-
-	public static RemarkableFolderBuilder builder(
+	public static RemarkableCollectionBuilder<RemarkableFolder> builder(
 			@NonNull UUID id,
 			int version,
-			RemarkableFolder parent,
+			@NonNull RemarkableCollection parent,
 			@NonNull String name,
 			@NonNull Instant modificationTime,
 			RemarkableDownloadLink downloadLink
 	) {
-		return new RemarkableFolderBuilder(id, version, parent, name, modificationTime, downloadLink);
+		RemarkableFolder underConstruction = new RemarkableFolder(id, version, parent, name, modificationTime, downloadLink);
+		return new RemarkableCollectionBuilder<>(underConstruction) {
+			@Override
+			public void addFolder(@NonNull RemarkableFolder folder) {
+				underConstruction.folders.add(folder);
+			}
+
+			@Override
+			public void addDocument(@NonNull RemarkableDocument document) {
+				underConstruction.documents.add(document);
+			}
+		};
 	}
 
 	@Override

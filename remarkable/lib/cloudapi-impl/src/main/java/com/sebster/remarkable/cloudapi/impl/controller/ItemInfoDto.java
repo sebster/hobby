@@ -86,7 +86,7 @@ public class ItemInfoDto implements ErrorDto<ItemInfoDto> {
 				.version(item.getVersion())
 				.type(item.isFolder() ? FOLDER_TYPE : DOCUMENT_TYPE)
 				.name(item.getName())
-				.parentId(item.getParent().map(RemarkableItem::getId).orElse(null))
+				.parentId(item.getParentFolder().map(RemarkableItem::getId).orElse(null))
 				.modificationTime(item.getModificationTime());
 
 		if (item.isDocument()) {

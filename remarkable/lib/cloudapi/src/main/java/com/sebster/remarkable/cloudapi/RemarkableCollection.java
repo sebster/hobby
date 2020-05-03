@@ -1,5 +1,6 @@
 package com.sebster.remarkable.cloudapi;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Iterator;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import lombok.NonNull;
@@ -22,7 +24,7 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 	}
 
 	default List<RemarkableItem> getItems(RemarkableItemType type) {
-		return type == null ? getItems() : stream().filter(item -> item.hasType(type)).collect(toList());
+		return stream(type).collect(toList());
 	}
 
 	default boolean isEmpty() {
@@ -32,6 +34,30 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 	default boolean isNotEmpty() {
 		return !isEmpty();
 	}
+
+	RemarkableCollection getParent();
+
+	Optional<RemarkableFolder> getParentFolder();
+
+	default boolean isRoot() {
+		return false;
+	}
+
+	default RemarkableRoot asRoot() {
+		throw new UnsupportedOperationException("Not the root: " + this);
+	}
+
+	default boolean isFolder() {
+		return false;
+	}
+
+	default RemarkableFolder asFolder() {
+		throw new UnsupportedOperationException("Not a folder: " + this);
+	}
+
+	RemarkablePath getPath();
+
+	RemarkablePath getParentPath();
 
 	default Optional<RemarkableItem> findItem(@NonNull String name) {
 		return stream().filter(item -> Objects.equals(name, item.getName())).findFirst();
@@ -70,11 +96,32 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 	}
 
 	default Optional<RemarkableItem> findItem(@NonNull RemarkablePath path) {
-		if (path.getTail().isEmpty()) {
-			return findItem(path.getHead());
-		} else {
-			return findFolder(path.getHead()).flatMap(folder -> folder.findItem(path.getTail().get()));
+		if (path.isEmpty()) {
+			return this.isFolder() ? Optional.of(this.asFolder()) : Optional.empty();
 		}
+		String first = path.getHead();
+		RemarkablePath rest = path.getTail();
+		if (".".equals(first)) {
+			return findItem(rest);
+		}
+		if ("..".equals(first)) {
+			return getParent().findItem(rest);
+		}
+		Optional<RemarkableItem> item = findItem(first);
+		if (item.isEmpty()) {
+			return item;
+		}
+		if (rest.isEmpty()) {
+			return item;
+		}
+		if (item.get().isDocument()) {
+			return Optional.empty();
+		}
+		return item.get().asFolder().findItem(rest);
+	}
+
+	default Optional<RemarkableCollection> findCollection(@NonNull RemarkablePath path) {
+		return path.isEmpty() ? Optional.of(this) : findFolder(path).map(identity());
 	}
 
 	default Optional<RemarkableFolder> findFolder(@NonNull RemarkablePath path) {
@@ -147,6 +194,10 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 
 	default Stream<RemarkableItem> stream() {
 		return Stream.concat(getFolders().stream(), getDocuments().stream());
+	}
+
+	default Stream<RemarkableItem> stream(RemarkableItemType type) {
+		return type != null ? stream().filter(item -> item.hasType(type)) : stream();
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.sebster.remarkable.cloudapi.impl.controller;
 import static com.sebster.commons.collections.Lists.filter;
 import static com.sebster.commons.collections.Lists.filterAndMap;
 import static com.sebster.commons.collections.Lists.map;
-import static com.sebster.remarkable.cloudapi.RemarkablePath.path;
 import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER_TYPE;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
@@ -20,7 +19,6 @@ import java.util.stream.Stream;
 import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
-import com.sebster.remarkable.cloudapi.RemarkableFolder;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
 import com.sebster.remarkable.cloudapi.RemarkableRoot;
@@ -69,21 +67,19 @@ public class RemarkableClientImpl implements RemarkableClient {
 		Map<RemarkablePath, ItemInfoDto> folderInfos = new LinkedHashMap<>();
 		for (RemarkablePath path : paths) {
 			// Navigate the path prefix until the component no longer exists.
-			RemarkableCollection parentCollection = parent != null ? parent : list();
-			RemarkableFolder newParent = null;
-			while (path != null && parentCollection.hasFolder(path.getHead())) {
-				newParent = parentCollection.getFolder(path.getHead());
-				parentCollection = newParent;
-				path = path.getTail().orElse(null);
+			RemarkableCollection newParent = parent;
+			while (path.isNotEmpty() && newParent.hasFolder(path.getHead())) {
+				newParent = newParent.getFolder(path.getHead());
+				path = path.getTail();
 			}
 
 			// Create the folder creation request DTOs.
 			Instant modificationTime = clock.instant();
-			RemarkablePath parentPath = newParent != null ? newParent.getPath() : null;
-			UUID parentId = newParent != null ? newParent.getId() : null;
-			while (path != null) {
+			RemarkablePath parentPath = newParent.getPath();
+			UUID parentId = newParent.isFolder() ? newParent.asFolder().getId() : null;
+			while (path.isNotEmpty()) {
 				UUID folderId = randomUUID();
-				RemarkablePath folderPath = path(parentPath, path.getHead());
+				RemarkablePath folderPath = parentPath.append(path.getHead());
 				folderInfos.putIfAbsent(folderPath,
 						ItemInfoDto.builder()
 								.id(folderId)
@@ -96,7 +92,7 @@ public class RemarkableClientImpl implements RemarkableClient {
 				);
 				parentPath = folderPath;
 				parentId = folderInfos.get(parentPath).getId();
-				path = path.getTail().orElse(null);
+				path = path.getTail();
 			}
 		}
 
