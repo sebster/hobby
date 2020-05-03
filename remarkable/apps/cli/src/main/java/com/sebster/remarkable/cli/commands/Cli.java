@@ -98,12 +98,8 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	public void deselect(@NonNull RemarkableClient client) {
 		if (client.equals(this.client)) {
-			deselectSelectedClient();
+			this.client = null;
 		}
-	}
-
-	public void deselectSelectedClient() {
-		this.client = null;
 	}
 
 	public RemarkableClient getSelectedClient() {
