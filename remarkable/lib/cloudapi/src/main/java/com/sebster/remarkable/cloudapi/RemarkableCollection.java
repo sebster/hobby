@@ -213,8 +213,7 @@ public interface RemarkableCollection extends Iterable<RemarkableItem> {
 	}
 
 	default Stream<RemarkableItem> recurse(RemarkableItemType itemType) {
-		Stream<RemarkableItem> allItems = recurse();
-		return itemType != null ? allItems.filter(item -> item.hasType(itemType)) : allItems;
+		return itemType != null ? recurse().filter(item -> item.hasType(itemType)) : recurse();
 	}
 
 }
