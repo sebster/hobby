@@ -27,6 +27,7 @@ import com.sebster.remarkable.cloudapi.RemarkableItem;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
@@ -54,6 +55,7 @@ import picocli.CommandLine.ParseResult;
 		}
 )
 @RequiredArgsConstructor
+@Slf4j
 public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	private final @NonNull Terminal terminal;
@@ -63,16 +65,15 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	private RemarkableClient client;
 
+	@Override
 	public void run() {
 		println(new CommandLine(this).getUsageMessage());
 	}
 
 	@Override
-	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) throws Exception {
-		if (e.getMessage() == null) {
-			throw e;
-		}
+	public int handleExecutionException(Exception e, CommandLine commandLine, ParseResult parseResult) {
 		println(withErrorStyle(e.getMessage()));
+		log.debug(e.getMessage(), e);
 		return 1;
 	}
 
