@@ -30,4 +30,8 @@ public class Strings {
 		return stream(elements).map(String::valueOf).collect(joining(delimiter));
 	}
 
+	public static String nullSafeTrim(String string) {
+		return string != null ? string.trim() : null;
+	}
+
 }
