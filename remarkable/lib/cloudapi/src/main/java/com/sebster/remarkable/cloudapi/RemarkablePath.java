@@ -41,22 +41,22 @@ public final class RemarkablePath implements Iterable<String> {
 	}
 
 	public String getName() {
-		checkNotEmpty("Empty path does not have a name.");
+		checkNotEmpty("Empty path does not have a name");
 		return components.get(components.size() - 1);
 	}
 
 	public RemarkablePath getParent() {
-		checkNotEmpty("Empty path does not have a parent.");
+		checkNotEmpty("Empty path does not have a parent");
 		return new RemarkablePath(components.subList(0, components.size() - 1));
 	}
 
 	public String getHead() {
-		checkNotEmpty("Empty path does not have a head.");
+		checkNotEmpty("Empty path does not have a head");
 		return components.get(0);
 	}
 
 	public RemarkablePath getTail() {
-		checkNotEmpty("Empty path does not have a tail.");
+		checkNotEmpty("Empty path does not have a tail");
 		return new RemarkablePath(components.subList(1, components.size()));
 	}
 
