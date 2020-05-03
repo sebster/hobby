@@ -184,9 +184,8 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		} catch (HttpClientErrorException e) {
 			if (e.getStatusCode().is4xxClientError()) {
 				throw exceptionFactory.apply(e);
-			} else {
-				throw e;
 			}
+			throw e;
 		}
 	}
 
