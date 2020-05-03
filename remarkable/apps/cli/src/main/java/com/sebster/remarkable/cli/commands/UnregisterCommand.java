@@ -29,11 +29,11 @@ public class UnregisterCommand implements Runnable {
 			description = "The client to unregister.",
 			arity = "0..1"
 	)
-	private String selector;
+	private String description;
 
 	@Override
 	public void run() {
-		RemarkableClient client = cli.getClient(selector);
+		RemarkableClient client = cli.getClient(description);
 		cli.getClientManager().unregister(client);
 		cli.println("Unregistered " + client);
 		cli.deselect(client);

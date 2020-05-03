@@ -16,7 +16,7 @@ import picocli.CommandLine.ParentCommand;
 		name = "client",
 		aliases = "select",
 		mixinStandardHelpOptions = true,
-		description = "Select a client or show the selected client",
+		description = "Select or deselect a client",
 		version = "1.0"
 )
 public class ClientCommand implements Runnable {
@@ -27,15 +27,15 @@ public class ClientCommand implements Runnable {
 	@Parameters(
 			index = "0",
 			paramLabel = "client",
-			description = "The client (part of description, start of id).",
+			description = "The client to select.",
 			arity = "0..1"
 	)
-	private String selector;
+	private String description;
 
 	@Override
 	public void run() {
-		if (isNotBlank(selector)) {
-			cli.selectClient(selector);
+		if (isNotBlank(description)) {
+			cli.selectClient(description);
 		} else {
 			cli.deselectSelectedClient();
 		}

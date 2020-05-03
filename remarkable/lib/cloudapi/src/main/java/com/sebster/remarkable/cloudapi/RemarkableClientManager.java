@@ -1,10 +1,7 @@
 package com.sebster.remarkable.cloudapi;
 
-import static com.sebster.commons.collections.Lists.filter;
-import static com.sebster.commons.strings.Strings.containsIgnoreCase;
-import static com.sebster.commons.strings.Strings.startsWithIgnoreCase;
-
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +11,8 @@ public interface RemarkableClientManager {
 
 	/**
 	 * Register and return a new client.
+	 *
+	 * @throws DuplicateClientException if a client with that description already exists
 	 */
 	RemarkableClient register(@NonNull String code, String description);
 
@@ -28,34 +27,17 @@ public interface RemarkableClientManager {
 	RemarkableClient getClient(@NonNull UUID id);
 
 	/**
-	 * Get a client by its index in the list, the start of its id, or part of its description.
-	 * Throws an illegal argument exception if no clients match, or if multiple clients match.
+	 * Get a client by its description.
 	 */
-	default RemarkableClient getClient(@NonNull String selector) {
-		return findClient(selector).orElseThrow(() -> new IllegalArgumentException("No such client: " + selector));
+	default RemarkableClient getClient(@NonNull String description) {
+		return findClient(description).orElseThrow(() -> new IllegalArgumentException("No such client: " + description));
 	}
 
 	/**
-	 * Find a client by part of its description or the start of its id (case insensitive).
-	 * Returns an empty optional if no or if multiple clients match.
+	 * Find a client its description.
 	 */
-	default Optional<RemarkableClient> findClient(@NonNull String selector) {
-		List<RemarkableClient> clients = listClients();
-
-		// Can the selector be interpreted as the part of a client description?
-		var byDescription = filter(clients, client -> containsIgnoreCase(client.getDescription(), selector));
-		if (byDescription.size() == 1) {
-			return Optional.of(byDescription.get(0));
-		}
-
-		// Can the selector be interpreted as the start of a client id?
-		var byId = filter(clients, client -> startsWithIgnoreCase(client.getId().toString(), selector));
-		if (byId.size() == 1) {
-			return Optional.of(byId.get(0));
-		}
-
-		// No match.
-		return Optional.empty();
+	default Optional<RemarkableClient> findClient(@NonNull String description) {
+		return listClients().stream().filter(client -> Objects.equals(description, client.getDescription())).findFirst();
 	}
 
 	/**

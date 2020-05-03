@@ -90,8 +90,8 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 		this.client = client;
 	}
 
-	public void selectClient(@NonNull String selector) {
-		select(getClient(selector));
+	public void selectClient(@NonNull String description) {
+		select(getClient(description));
 	}
 
 	public void deselect(@NonNull RemarkableClient client) {
@@ -108,12 +108,12 @@ public class Cli implements Runnable, IExecutionExceptionHandler {
 		return Optional.ofNullable(client).orElseThrow(() -> new RuntimeException("No client selected."));
 	}
 
-	public RemarkableClient getClient(String optionalSelector) {
-		return optionalSelector != null ? clientManager.getClient(optionalSelector.trim()) : getSelectedClient();
+	public RemarkableClient getClient(String description) {
+		return description != null ? clientManager.getClient(description.trim()) : getSelectedClient();
 	}
 
-	public Optional<RemarkableClient> findClient(String optionalSelector) {
-		return optionalSelector != null ? clientManager.findClient(optionalSelector.trim()) : Optional.ofNullable(client);
+	public Optional<RemarkableClient> findClient(String description) {
+		return description != null ? clientManager.findClient(description) : Optional.ofNullable(client);
 	}
 
 	public List<RemarkableItem> getItems(@NonNull Collection<String> paths) {
