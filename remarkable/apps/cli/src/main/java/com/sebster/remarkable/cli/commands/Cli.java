@@ -28,14 +28,11 @@ import com.sebster.remarkable.cloudapi.RemarkableItem;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
 import picocli.CommandLine.IExecutionExceptionHandler;
 import picocli.CommandLine.ParseResult;
-
-
 
 @Command(
 		name = "",
@@ -58,7 +55,6 @@ import picocli.CommandLine.ParseResult;
 		}
 )
 @RequiredArgsConstructor
-@Slf4j
 public class Cli implements Runnable, IExecutionExceptionHandler {
 
 	private final @NonNull Terminal terminal;
