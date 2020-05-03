@@ -5,15 +5,15 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import com.sebster.remarkable.cloudapi.RemarkableException;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-@AllArgsConstructor
 public class RemarkableClientManagerImpl implements RemarkableClientManager {
 
 	public static final String WINDOWS_CLIENT_TYPE = "desktop-windows";
@@ -21,6 +21,18 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	private final @NonNull Clock clock;
 	private final @NonNull RemarkableClientStore clientStore;
 	private final @NonNull RemarkableApiClient apiClient;
+
+	private final Map<RemarkableClientInfo, RemarkableClient> clientCache = new ConcurrentHashMap<>();
+
+	public RemarkableClientManagerImpl(
+			@NonNull Clock clock,
+			@NonNull RemarkableClientStore clientStore,
+			@NonNull RemarkableApiClient apiClient
+	) {
+		this.clock = clock;
+		this.clientStore = clientStore;
+		this.apiClient = apiClient;
+	}
 
 	@Override
 	public RemarkableClient register(@NonNull String code, @NonNull String description) {
@@ -47,12 +59,13 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	@Override
 	public void unregister(@NonNull RemarkableClient client) {
 		RemarkableClientInfo clientInfo = clientStore.loadClient(client.getId());
+		clientCache.remove(clientInfo);
 		apiClient.unregister(clientInfo.getLoginToken());
 		clientStore.removeClient(client.getId());
 	}
 
 	private RemarkableClient createClient(RemarkableClientInfo clientInfo) {
-		return new RemarkableClientImpl(clock, clientInfo, apiClient);
+		return clientCache.computeIfAbsent(clientInfo, key -> new RemarkableClientImpl(clock, clientInfo, apiClient));
 	}
 
 }
