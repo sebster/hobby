@@ -73,6 +73,7 @@ maven_install(
         "commons-io:commons-io:2.6",
         "org.apache.commons:commons-lang3:3.9",
         "org.apache.commons:commons-text:1.8",
+        "org.apache.httpcomponents:httpcore:4.4.13",
         "org.apache.httpcomponents:httpclient:4.5.12",
         "org.slf4j:jul-to-slf4j:1.7.30",
         "org.slf4j:slf4j-api:1.7.30",
