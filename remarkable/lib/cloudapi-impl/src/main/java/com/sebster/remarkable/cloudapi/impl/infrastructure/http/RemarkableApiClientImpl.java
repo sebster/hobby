@@ -22,6 +22,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.sebster.commons.io.InputStreamProcessor;
+import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
 import com.sebster.remarkable.cloudapi.RemarkableException;
 import com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto;
 import com.sebster.remarkable.cloudapi.impl.controller.RemarkableApiClient;
@@ -104,6 +106,15 @@ public class RemarkableApiClientImpl implements RemarkableApiClient {
 		), e -> new RemarkableException("Could not list items: " + nullSafeTrim(e.getResponseBodyAsString()))));
 		log.debug("list all: {} items", list.size());
 		return map(list, ItemInfoJsonDto::unmarshal);
+	}
+
+	@Override
+	public void download(@NonNull RemarkableDownloadLink link, @NonNull InputStreamProcessor processor) {
+		log.debug("download: link={}", link);
+		restTemplate.execute(link.getUrl(), GET, null, response -> {
+			processor.process(response.getBody());
+			return null;
+		});
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import static com.sebster.remarkable.cloudapi.impl.controller.ItemInfoDto.FOLDER
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
-import java.io.InputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
@@ -16,9 +15,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.sebster.commons.io.InputStreamProcessor;
 import com.sebster.commons.strings.Strings;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
+import com.sebster.remarkable.cloudapi.RemarkableException;
 import com.sebster.remarkable.cloudapi.RemarkableItem;
 import com.sebster.remarkable.cloudapi.RemarkablePath;
 import com.sebster.remarkable.cloudapi.RemarkableRoot;
@@ -58,8 +59,11 @@ public class RemarkableClientImpl implements RemarkableClient {
 	}
 
 	@Override
-	public InputStream download(@NonNull RemarkableItem item) {
-		return item.getDownloadLink().orElseThrow(() -> new IllegalArgumentException("No download link: " + item)).download();
+	public void download(@NonNull RemarkableItem item, @NonNull InputStreamProcessor processor) {
+		apiClient.download(
+				item.getDownloadLink().orElseThrow(() -> new RemarkableException("No download link: " + item)),
+				processor
+		);
 	}
 
 	@Override

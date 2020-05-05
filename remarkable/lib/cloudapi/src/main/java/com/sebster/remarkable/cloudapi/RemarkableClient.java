@@ -2,10 +2,10 @@ package com.sebster.remarkable.cloudapi;
 
 import static java.util.Collections.singleton;
 
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.UUID;
 
+import com.sebster.commons.io.InputStreamProcessor;
 import lombok.NonNull;
 
 public interface RemarkableClient {
@@ -16,7 +16,7 @@ public interface RemarkableClient {
 
 	RemarkableRoot list();
 
-	InputStream download(@NonNull RemarkableItem item);
+	void download(@NonNull RemarkableItem item, @NonNull InputStreamProcessor processor);
 
 	void createFolders(@NonNull RemarkableCollection parent, @NonNull Collection<RemarkablePath> paths);
 

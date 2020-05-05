@@ -8,6 +8,7 @@ java_library(
     deps = [
         "//3rdparty/org/projectlombok/lombok",
         "//lib/commons/src/main/java/com/sebster/commons/collections",
+        "//lib/commons/src/main/java/com/sebster/commons/io",
         "//lib/commons/src/main/java/com/sebster/commons/strings",
         "//remarkable/lib/cloudapi-impl/src/main/java/com/sebster/remarkable/cloudapi/impl/controller",
         "//remarkable/lib/cloudapi/src/main/java/com/sebster/remarkable/cloudapi",

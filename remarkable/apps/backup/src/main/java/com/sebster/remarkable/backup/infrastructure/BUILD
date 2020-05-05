@@ -6,6 +6,7 @@ java_library(
     visibility = ["//remarkable/apps/backup/src/main/java/com/sebster/remarkable/backup:__subpackages__"],
     deps = [
         "//3rdparty/org/projectlombok/lombok",
+        "//lib/commons/src/main/java/com/sebster/commons/io",
         "//remarkable/apps/backup/src/main/java/com/sebster/remarkable/backup/domain",
         "//remarkable/lib/cloudapi",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",

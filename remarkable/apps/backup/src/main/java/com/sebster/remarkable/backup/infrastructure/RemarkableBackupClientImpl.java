@@ -1,9 +1,9 @@
 package com.sebster.remarkable.backup.infrastructure;
 
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.UUID;
 
+import com.sebster.commons.io.InputStreamProcessor;
 import com.sebster.remarkable.backup.domain.RemarkableBackupStorageService;
 import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableCollection;
@@ -37,7 +37,7 @@ public class RemarkableBackupClientImpl implements RemarkableClient {
 	}
 
 	@Override
-	public InputStream download(@NonNull RemarkableItem item) {
+	public void download(@NonNull RemarkableItem item, @NonNull InputStreamProcessor processor) {
 		// TODO: Implement.
 		throw new UnsupportedOperationException();
 	}

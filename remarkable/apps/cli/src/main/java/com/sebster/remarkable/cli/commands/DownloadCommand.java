@@ -41,7 +41,7 @@ public class DownloadCommand extends BaseCommand {
 			}
 			File target = new File(item.getId() + ".zip");
 			cli.printf("Downloading %s to %s...\n", itemDisplay, cli.withFileStyle(target));
-			copyInputStreamToFile(client.download(item), target);
+			client.download(item, data -> copyInputStreamToFile(data, target));
 		} catch (Exception e) {
 			cli.println(cli.withErrorStyle(e.getMessage()));
 		}

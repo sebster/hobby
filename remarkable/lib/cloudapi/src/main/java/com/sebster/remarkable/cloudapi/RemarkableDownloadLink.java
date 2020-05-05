@@ -1,8 +1,5 @@
 package com.sebster.remarkable.cloudapi;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
@@ -20,14 +17,6 @@ public class RemarkableDownloadLink {
 
 	public Optional<Instant> getExpiration() {
 		return Optional.ofNullable(expiration);
-	}
-
-	public InputStream download() {
-		try {
-			return url.toURL().openStream();
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
 	}
 
 }

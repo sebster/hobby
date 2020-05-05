@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import com.sebster.commons.io.InputStreamProcessor;
+import com.sebster.remarkable.cloudapi.RemarkableDownloadLink;
 import lombok.NonNull;
 
 public interface RemarkableApiClient {
@@ -27,6 +29,11 @@ public interface RemarkableApiClient {
 	 * List all files on the reMarkable. You can choose whether to include a download link. Note that the link expires.
 	 */
 	List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl);
+
+	/**
+	 * Download the specified link using the specified data processor.
+	 */
+	void download(@NonNull RemarkableDownloadLink link, @NonNull InputStreamProcessor processor);
 
 	/**
 	 * Update the metadata of one or more items on the reMarkable.
