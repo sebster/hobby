@@ -18,6 +18,7 @@ java_library(
     ],
     resource_jars = ["properties"],
     runtime_deps = [
+        "//lib/commons/src/main/java/com/sebster/commons/web/springboot/httpclient",
         "//remarkable/lib/cloudapi-impl",
     ],
     deps = [

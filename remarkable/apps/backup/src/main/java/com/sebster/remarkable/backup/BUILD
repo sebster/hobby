@@ -18,6 +18,7 @@ java_library(
     ],
     resource_jars = ["properties"],
     runtime_deps = [
+        "//lib/commons/src/main/java/com/sebster/commons/web/springboot/httpclient",
         "//remarkable/lib/cloudapi-impl",
         "@maven//:org_apache_httpcomponents_httpclient",
         "@maven//:org_springframework_boot_spring_boot_starter_json",
