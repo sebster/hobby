@@ -24,7 +24,7 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	private final @NonNull RemarkableClientStore clientStore;
 	private final @NonNull RemarkableApiClient apiClient;
 
-	private final Map<RemarkableClientInfo, RemarkableClient> clientCache = new ConcurrentHashMap<>();
+	private final Map<UUID, RemarkableClient> clientCache = new ConcurrentHashMap<>();
 
 	@Override
 	public RemarkableClient register(@NonNull String code, @NonNull String description) {
@@ -51,13 +51,13 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	@Override
 	public void unregister(@NonNull RemarkableClient client) {
 		RemarkableClientInfo clientInfo = clientStore.loadClient(client.getId());
-		clientCache.remove(clientInfo);
+		clientCache.remove(client.getId());
 		apiClient.unregister(clientInfo.getLoginToken());
 		clientStore.removeClient(client.getId());
 	}
 
 	private RemarkableClient createClient(RemarkableClientInfo clientInfo) {
-		return clientCache.computeIfAbsent(clientInfo, key -> new RemarkableClientImpl(clock, clientInfo, apiClient));
+		return clientCache.computeIfAbsent(clientInfo.getClientId(), key -> new RemarkableClientImpl(clock, clientInfo, apiClient));
 	}
 
 }

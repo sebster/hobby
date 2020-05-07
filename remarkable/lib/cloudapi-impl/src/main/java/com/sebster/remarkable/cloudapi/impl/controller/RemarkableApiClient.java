@@ -16,7 +16,7 @@ public interface RemarkableApiClient {
 	String register(@NonNull UUID clientId, @NonNull String clientType, @NonNull String code);
 
 	/**
-	 * Unregister the client with the specified login code.
+	 * Unregister the client with the specified login token.
 	 */
 	void unregister(@NonNull String loginToken);
 
@@ -31,7 +31,7 @@ public interface RemarkableApiClient {
 	List<ItemInfoDto> list(@NonNull String sessionToken, boolean includeBlobUrl);
 
 	/**
-	 * Download the specified link using the specified data processor.
+	 * Download the specified link to the specified input stream processor.
 	 */
 	void download(@NonNull RemarkableDownloadLink link, @NonNull InputStreamProcessor processor);
 

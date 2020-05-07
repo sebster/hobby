@@ -34,44 +34,41 @@ public class FileSystemRemarkableClientStore implements RemarkableClientStore {
 			return emptyList();
 		}
 		try {
-			return mapper.readValue(clientsFile, getClientDescriptorListType());
+			CollectionType type = mapper.getTypeFactory().constructCollectionType(List.class, RemarkableClientInfo.class);
+			return mapper.readValue(clientsFile, type);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
 	}
 
 	@Override
-	public void addClient(@NonNull RemarkableClientInfo clientDescriptor) {
+	public void addClient(@NonNull RemarkableClientInfo clientInfo) {
 		ensureClientsFileExistsAndHasCorrectPermissions();
-		List<RemarkableClientInfo> clientDescriptors = new ArrayList<>(loadClients());
-		if (clientAlreadyExists(clientDescriptor.getClientId(), clientDescriptors)) {
-			throw new IllegalArgumentException("Duplicate client with id: " + clientDescriptor.getClientId());
+		List<RemarkableClientInfo> clientInfos = new ArrayList<>(loadClients());
+		if (clientExists(clientInfo.getClientId(), clientInfos)) {
+			throw new IllegalArgumentException("Duplicate client with id: " + clientInfo.getClientId());
 		}
-		clientDescriptors.add(clientDescriptor);
-		saveClientDescriptors(clientDescriptors);
+		clientInfos.add(clientInfo);
+		saveClientInfos(clientInfos);
 	}
 
 	@Override
 	public void removeClient(@NonNull UUID clientId) {
-		List<RemarkableClientInfo> clientDescriptors = new ArrayList<>(loadClients());
-		if (!clientAlreadyExists(clientId, clientDescriptors)) {
+		List<RemarkableClientInfo> clientInfos = new ArrayList<>(loadClients());
+		if (!clientExists(clientId, clientInfos)) {
 			throw new IllegalArgumentException("No client with id: " + clientId);
 		}
-		clientDescriptors.removeIf(descriptor -> Objects.equals(descriptor.getClientId(), clientId));
-		saveClientDescriptors(clientDescriptors);
+		clientInfos.removeIf(clientInfo -> Objects.equals(clientInfo.getClientId(), clientId));
+		saveClientInfos(clientInfos);
 	}
 
-	private boolean clientAlreadyExists(@NonNull UUID clientId, List<RemarkableClientInfo> clientDescriptors) {
-		return clientDescriptors.stream().anyMatch(descriptor -> Objects.equals(descriptor.getClientId(), clientId));
+	private boolean clientExists(UUID clientId, List<RemarkableClientInfo> clientInfos) {
+		return clientInfos.stream().anyMatch(clientInfo -> Objects.equals(clientInfo.getClientId(), clientId));
 	}
 
-	private CollectionType getClientDescriptorListType() {
-		return mapper.getTypeFactory().constructCollectionType(List.class, RemarkableClientInfo.class);
-	}
-
-	private void saveClientDescriptors(List<RemarkableClientInfo> clientDescriptors) {
+	private void saveClientInfos(List<RemarkableClientInfo> clientInfos) {
 		try {
-			mapper.writeValue(clientsFile, clientDescriptors);
+			mapper.writeValue(clientsFile, clientInfos);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
