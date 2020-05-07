@@ -13,7 +13,9 @@ import com.sebster.remarkable.cloudapi.RemarkableClient;
 import com.sebster.remarkable.cloudapi.RemarkableClientManager;
 import com.sebster.remarkable.cloudapi.RemarkableException;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class RemarkableClientManagerImpl implements RemarkableClientManager {
 
 	public static final String WINDOWS_CLIENT_TYPE = "desktop-windows";
@@ -23,16 +25,6 @@ public class RemarkableClientManagerImpl implements RemarkableClientManager {
 	private final @NonNull RemarkableApiClient apiClient;
 
 	private final Map<RemarkableClientInfo, RemarkableClient> clientCache = new ConcurrentHashMap<>();
-
-	public RemarkableClientManagerImpl(
-			@NonNull Clock clock,
-			@NonNull RemarkableClientStore clientStore,
-			@NonNull RemarkableApiClient apiClient
-	) {
-		this.clock = clock;
-		this.clientStore = clientStore;
-		this.apiClient = apiClient;
-	}
 
 	@Override
 	public RemarkableClient register(@NonNull String code, @NonNull String description) {
