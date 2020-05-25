@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: ingress-certificate
+spec:
+  secretName: ingress-certificate
+  duration: 24h
+  renewBefore: 4h
+  commonName: eeyore.local
+  dnsNames:
+  - eeyore.local
+  organization:
+  - Insight Information Technologies
+  isCA: false
+  keySize: 2048
+  keyAlgorithm: rsa
+  keyEncoding: pkcs1
+  usages:
+    - server auth
+  issuerRef:
+    name: ca-issuer
+    kind: ClusterIssuer

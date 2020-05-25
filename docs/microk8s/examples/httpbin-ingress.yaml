@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: httpbin-ingress
+spec:
+  rules:
+    - host: eeyore.local
+      http:
+        paths:
+          - backend:
+              serviceName: httpbin
+              servicePort: 8000
+            path: /
