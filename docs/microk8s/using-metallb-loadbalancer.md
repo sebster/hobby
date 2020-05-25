@@ -1,6 +1,6 @@
 # Using MetalLB Load Balancer
 
-We will use MetaLB load balancer with an nginx ingress controller.
+We will use MetaLB load balancer with an NGINX Ingress Controller.
 
 The "external" IP range will be local to the host, as this is a purely "development" setup. It will not be reachable from
 the outside world.

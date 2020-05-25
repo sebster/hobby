@@ -3,6 +3,12 @@
 We will create a secure ingress (HTTPS). The certificate management will be done with `cert-manager`. In this example we will
 be using our own CA to issue certificates.
 
+## 0) Prerequisites
+
+Make sure you have the `httpbin` service installed in the default namespace. See [Running a Service](running-a-service.md).
+
+If you don't have a CA key pair, create one first. See [Creating a CA key pair with EasyRSA](creating-a-ca-keypair-with-easyrsa.md).
+
 ## 1) Install cert-manager
 
 Install cert-manager:

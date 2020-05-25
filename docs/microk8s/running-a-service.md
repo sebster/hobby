@@ -1,5 +1,7 @@
 # Running the `httpbin` Service
 
+We will deploy the `httpbin` service which is a useful service for example and diagnostic purposes.
+
 ## 0) Prerequisites
 
 Make sure you have the cluster up and running. See [Getting Started](getting-started.md).
