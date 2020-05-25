@@ -1,4 +1,7 @@
-# Deploying cert-manager With Your Own CA
+# Creating an Ingress with HTTPS
+
+We will create a secure ingress (HTTPS). The certificate management will be done with `cert-manager`. In this example we will
+be using our own CA to issue certificates.
 
 ## 1) Install cert-manager
 
@@ -147,3 +150,6 @@ Date: Mon, 25 May 2020 14:42:22 GMT
 Server: openresty/1.15.8.1
 Strict-Transport-Security: max-age=15724800; includeSubDomains
 ```
+
+If you want you can import the CA certificate (ca.crt) into your browser, which will then accept the any certificates issued by
+the cluster.

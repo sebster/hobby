@@ -6,9 +6,9 @@ spec:
   secretName: ingress-certificate
   duration: 24h
   renewBefore: 4h
-  commonName: eeyore.local
+  commonName: httpbin.microk8s
   dnsNames:
-  - eeyore.local
+  - httpbin.microk8s
   organization:
   - Insight Information Technologies
   isCA: false

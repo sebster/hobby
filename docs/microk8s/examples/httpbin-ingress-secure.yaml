@@ -6,7 +6,7 @@ metadata:
   name: httpbin-ingress
 spec:
   rules:
-    - host: eeyore.local
+    - host: httpbin.microk8s
       http:
         paths:
           - backend:

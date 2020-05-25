@@ -1,5 +1,11 @@
 # Running the `httpbin` Service
 
+## 0) Prerequisites
+
+Make sure you have the cluster up and running. See [Getting Started](getting-started.md).
+
+## 1) Deploy `httpbin`
+
 To deploy `httpbin` in the default namespace:
 
 ```shell script
