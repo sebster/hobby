@@ -44,6 +44,7 @@ ingress.extensions/httpbin-ingress configured
 ## Troubleshooting
 
 If `kubectl -n ingress get all` gives output similar to this, you can check to the logs to see what's going on.
+
 ```
 NAME                                          READY   STATUS             RESTARTS   AGE
 pod/nginx-ingress-microk8s-controller-srs8q   0/1     CrashLoopBackOff   8          18m
@@ -59,6 +60,7 @@ kubectl -n ingress logs nginx-ingress-microk8s-controller-srs8q
 ```
 
 Potentially the port is already being used:
+
 ```
 -------------------------------------------------------------------------------
 NGINX Ingress controller

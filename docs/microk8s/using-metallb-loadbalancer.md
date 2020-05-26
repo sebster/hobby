@@ -47,12 +47,12 @@ kubectl -n metallb-system get all
 
 If the nginx ingress controller is installed using the microk8s plugin, it will use the host network IP and a `DaemonSets.apps`
 resource instead of a deployment. This is not compatible with the load balancer. We will disable the `ingress` plugin and
-install it manually, after which we will reconfigure it to use the load balancer. 
+install it manually, after which we will reconfigure it to use the load balancer.
 
 First disable the `ingress` plugin:
 
 ```shell script
-sudo microk8s disable ingress 
+sudo microk8s disable ingress
 ```
 
 ## 3) Install the `nginx` Ingress Controller
@@ -70,6 +70,7 @@ kubectl -n ingress-nginx get all
 ```
 
 This will look like this:
+
 ```
 NAME                                            READY   STATUS      RESTARTS   AGE
 pod/ingress-nginx-admission-create-9kgkc        0/1     Completed   0          40m
@@ -139,6 +140,7 @@ http http://httpbin.microk8s/status/200
 ```
 
 This should return:
+
 ```http request
 HTTP/1.1 200 OK
 Access-Control-Allow-Credentials: true

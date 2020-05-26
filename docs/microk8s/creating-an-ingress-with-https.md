@@ -20,7 +20,7 @@ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.1
 Check that it's running:
 
 ```shell script
-kubectl -n cert-manager get all --watch
+kubectl -n cert-manager get pods --watch
 ```
 
 ## 2) Create a CA Secret
@@ -49,7 +49,6 @@ It should report:
 ```
 secret/ca-keypair created
 ```
-
 
 ## 3) Create the ClusterIssuer Resource
 

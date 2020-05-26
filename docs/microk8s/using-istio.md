@@ -6,20 +6,29 @@ to expose the service.
 ## 0) Prequisites
 
 Make sure you have MetalLB load balancer running. See [Using MetalLB Load Balancer](using-metallb-loadbalancer.md).
+
 ## 1) Remove the Ingress Controller
 
-Delete the ingress-nginx namespace:
+If you have the NGINX IngressController installed, delete the ingress-nginx namespace:
 
 ```shell script
-kubectl delete namespaces ingress-nginx 
+kubectl delete namespaces ingress-nginx
 ```
 
-## 2) Enable the Istio Plugin
+## 2) Download and Install Istio
 
-Enable the Istio plugin in microk8s.
+Go to the directory where you want to install Istio, e.g., `$HOME/Programs`. Then install Istio:
 
 ```shell script
-sudo microk8s enable istio
+curl -L https://istio.io/downloadIstio | sh -
+```
+
+This will create an istio-<version> subdirectory with Istio (1.6 a the time of writing).
+
+Now use `istioctl` to install the `demo` profile of Istio:
+
+```shell script
+istioctl install --set profile=demo
 ```
 
 Check that everything is working:
@@ -98,6 +107,7 @@ kubectl apply -f docs/microk8s/examples/httpbin-gateway.yaml
 ```
 
 It should report:
+
 ```
 gateway.networking.istio.io/httpbin-gateway created
 virtualservice.networking.istio.io/httpbin created

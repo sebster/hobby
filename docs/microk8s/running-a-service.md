@@ -15,6 +15,7 @@ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.6/sampl
 ```
 
 This should return:
+
 ```
 serviceaccount/httpbin created
 service/httpbin created

@@ -9,10 +9,10 @@ sudo systemctl disable firewalld.service
 
 ## Install the Snap
 
-We're using the edge channel so we get a recent version of Istio:
+Install the microk8s snap:
 
 ```shell script
-sudo snap install microk8s --classic --edge
+sudo snap install microk8s --classic
 ```
 
 ## Optional: Install and Configure `kubectl`
@@ -137,9 +137,9 @@ kubectl exec -ti dnsutils -- dig google.com
 
 ## Reboot
 
-Reboot your machine and check that everything comes up as expected. 
+Reboot your machine and check that everything comes up as expected.
 
-- Check your UFW status: `sudo ufw status`
-- Check your dnsutils pod came back up: `kubectl get all`
-- Check your network connectivity: `kubectl exec -ti dnsutils -- ping google.com.`
-- Check your dns: `kubectl exec -ti dnsutils -- dig google.com`
+-   Check your UFW status: `sudo ufw status`
+-   Check your dnsutils pod came back up: `kubectl get all`
+-   Check your network connectivity: `kubectl exec -ti dnsutils -- ping google.com.`
+-   Check your dns: `kubectl exec -ti dnsutils -- dig google.com`

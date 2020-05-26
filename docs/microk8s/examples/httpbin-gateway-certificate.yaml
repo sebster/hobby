@@ -1,9 +1,10 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: ingress-certificate
+  name: httpbin-certificate
+  namespace: istio-system
 spec:
-  secretName: ingress-certificate
+  secretName: httpbin-certificate
   duration: 24h
   renewBefore: 4h
   commonName: httpbin.microk8s
