@@ -1,5 +1,11 @@
 # Using an Ingress on microk8s
 
+## 0) Prerequisites
+
+Make sure you are unning the `httpbin` service. See [Running a Service](running-a-service.md).
+
+## 1) Enable the microk8s `ingress` Plugin
+
 Enable the microk8s ingress plugin:
 
 ```shell script
@@ -29,7 +35,9 @@ Check that it is running:
 kubectl -n ingress get all
 ```
 
-Next create the ingres:
+## 2) Create the Ingress
+
+Next create the ingress:
 
 ```shell script
 kubectl apply -f examples/httpbin-ingress.yaml
@@ -41,7 +49,7 @@ This should report the following:
 ingress.extensions/httpbin-ingress configured
 ```
 
-## Troubleshooting
+## Appendix: Troubleshooting
 
 If `kubectl -n ingress get all` gives output similar to this, you can check to the logs to see what's going on.
 

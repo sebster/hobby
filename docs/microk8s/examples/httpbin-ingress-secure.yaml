@@ -15,5 +15,5 @@ spec:
             path: /
   tls:
     - hosts:
-        - eeyore.local
+        - httpbin.microk8s
       secretName: ingress-certificate

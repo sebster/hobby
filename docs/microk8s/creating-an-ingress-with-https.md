@@ -134,10 +134,10 @@ This should report:
 ingress.extensions/httpbin-ingress configured
 ```
 
-You can now test that it works with httpie:
+Map the `httpbin.microk8s` to your external host IP (or to 127.0.0.1) in `/etc/hosts`. You can now test that it works with httpie:
 
 ```shell script
-http --verify ca.crt https://eeyore.local/status/200
+http --verify ca.crt https://httpbin.microk8s/status/200
 ```
 
 Here ca.crt is the path to the CA certificate file.

@@ -19,7 +19,7 @@ You need to enter an address range for the load balancer to use. The output shou
 
 ```
 Enabling MetalLB
-Enter the IP address range (e.g., 10.64.140.43-10.64.140.49): 10.64.10.64.140.100-10.64.140.200
+Enter the IP address range (e.g., 10.64.140.43-10.64.140.49): 10.64.140.100-10.64.140.200
 Applying registry manifest
 namespace/metallb-system created
 podsecuritypolicy.policy/speaker created

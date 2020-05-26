@@ -1,13 +1,15 @@
 # Running microk8s on Ubuntu 20.04
 
-## Disable firewalld
+Set up a basic microk8s install with the `dns` plugin enabled and the firewall on the Ubuntu machine working correctly.
+
+## 1) Disable firewalld
 
 ```shell script
 sudo systemctl stop firewalld.service
 sudo systemctl disable firewalld.service
 ```
 
-## Install the Snap
+## 2) Install the Snap
 
 Install the microk8s snap:
 
@@ -15,7 +17,7 @@ Install the microk8s snap:
 sudo snap install microk8s --classic
 ```
 
-## Optional: Install and Configure `kubectl`
+## 3) Optional: Install and Configure `kubectl`
 
 ```shell script
 sudo snap install kubectl
@@ -47,7 +49,7 @@ NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes   ClusterIP   10.152.183.1   <none>        443/TCP   5m4s
 ```
 
-## Configure Uncomplicated Firewall
+## 4) Configure Uncomplicated Firewall
 
 Install UFW if necessary:
 
@@ -103,7 +105,7 @@ Check your UFW status:
 ufw status
 ```
 
-## Configuring DNS
+## 5) Configuring DNS
 
 First enable the DNS plugin in microk8s:
 
@@ -135,7 +137,7 @@ Test your DNS lookups:
 kubectl exec -ti dnsutils -- dig google.com
 ```
 
-## Reboot
+## 6) Reboot
 
 Reboot your machine and check that everything comes up as expected.
 
@@ -143,3 +145,11 @@ Reboot your machine and check that everything comes up as expected.
 -   Check your dnsutils pod came back up: `kubectl get all`
 -   Check your network connectivity: `kubectl exec -ti dnsutils -- ping google.com.`
 -   Check your dns: `kubectl exec -ti dnsutils -- dig google.com`
+
+## 7) Optional: Clean Up
+
+You can delete the `dnsutils` pod from the default namespace:
+
+```shell script
+kubectl delete pod dnsutils
+```
